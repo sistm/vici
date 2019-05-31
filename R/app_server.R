@@ -60,7 +60,7 @@ app_server <- function(input, output,session) {
         },
         error = function(e){ stop(safeError(e)) } # return a safeError if a parsing error occurs
       )
-      clean_output()
+      clean_output(output)
       output$mod <- reactive(NULL)
       output$mod_display <- reactive(FALSE)
       df}
@@ -122,7 +122,7 @@ app_server <- function(input, output,session) {
                                                                            input$selectStim),
                                                                      input$selectResponse),
                                                                input$selectArm))
-      clean_output()
+      clean_output(output)
     }
   })
 
@@ -154,7 +154,7 @@ app_server <- function(input, output,session) {
         output$warningstimisfactor <- reactive(paste0("WARNING: '", input$selectStim, "' is not a column in the input data"))
         data$fact_stim_OK <- FALSE
       }
-      clean_output()
+      clean_output(output)
     }
   })
 
@@ -164,7 +164,7 @@ app_server <- function(input, output,session) {
                                                                            input$selectStim),
                                                                      input$selectResponse),
                                                                input$selectArm))
-      clean_output()
+      clean_output(output)
     }
   })
 
@@ -201,13 +201,13 @@ app_server <- function(input, output,session) {
         output$warningarmisfactor <- reactive(paste0("WARNING: '", input$selectArm, "' is not a column in the input data"))
         data$fact_arm_OK <- FALSE
       }
-      clean_output()
+      clean_output(output)
     }
   })
 
 
   observeEvent({input$selectRefArm; input$selectRefStim}, {
-    clean_output()
+    clean_output(output)
   })
 
 
@@ -319,7 +319,7 @@ app_server <- function(input, output,session) {
         }else{
           output$res_error <- reactive(paste0("Model was not able to run with the following error message:\n\n", mgls[1],
                                               "\nMake sure analysis parameters are correct"))
-          clean_output()
+          clean_output(output)
         }
       }else{
         output$res_error <- reactive("Please select adequate analysis parameters before trying to fit the model...")
@@ -374,7 +374,7 @@ app_server <- function(input, output,session) {
       output$mod_display <- reactive(FALSE)
     }
 
-    clean_output()
+    clean_output(output)
   }
   )
 }

@@ -45,7 +45,7 @@ app_ui <- function() {
                        options = list(placeholder = 'Please select a column name below')
         ),
 
-        selectizeInput("selectResponse", label = "Select the column that identifies the ICS measured value",
+        selectizeInput("selectResponse", label = "Select the column that identifies the ICS response",
                        choices = c(Choose = "", NULL),
                        options = list(placeholder = 'Please select a column name below')
         ),
@@ -104,8 +104,8 @@ app_ui <- function() {
                                ),
                                conditionalPanel(
                                  condition = "output.res_lik != null",
-                                 wellPanel(textOutput("res_sentence")),
-                                 h3(""),
+                                 #wellPanel(textOutput("res_sentence")),
+                                 #h3(""),
                                  wellPanel(
                                    fluidRow(
                                      column(6, plotOutput("heatmap"),

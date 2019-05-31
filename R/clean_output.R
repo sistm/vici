@@ -1,4 +1,4 @@
-clean_output <- function(){
+clean_output <- function(output){
   output$res_tab <- reactive(NULL)
   output$res_lik <- reactive(NULL)
   output$heatmap <- reactive(NULL)
