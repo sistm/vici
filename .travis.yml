@@ -6,13 +6,16 @@ cache: packages
 sudo: false
 warnings_are_errors: false
 
-r:
-- release
-- devel
+matrix:
+  include:
+    - os: linux
+      r: release
 
-os:
-- linux
-- osx
+    - os: linux
+      r: devel
+
+    - os: osx
+      r: release
 
 r_packages:
 - DT
@@ -22,8 +25,6 @@ r_packages:
 - ggpubr
 - nlme
 - shiny
-- stats
-- utils
 
 r_build_args: "--no-manual --no-resave-data"
 r_check_args: "--as-cran --no-build-vignettes --no-manual --timings"
