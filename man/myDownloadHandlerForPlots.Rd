@@ -4,7 +4,7 @@
 \alias{myDownloadHandlerForPlots}
 \title{Custom download handler for plots}
 \usage{
-myDownloadHandlerForPlots(name, plot_obj)
+myDownloadHandlerForPlots(name, plot_obj, outputArgs = list())
 }
 \arguments{
 \item{name}{output file name}

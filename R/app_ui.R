@@ -45,9 +45,10 @@ app_ui <- function() {
                        options = list(placeholder = 'Please select a column name below')
         ),
 
-        selectizeInput("selectResponse", label = "Select the column that identifies the ICS response",
+        selectizeInput("selectResponse", label = "Select the column(s) that identify ICS response",
                        choices = c(Choose = "", NULL),
-                       options = list(placeholder = 'Please select a column name below')
+                       options = list(placeholder = 'Please select a column name below'),
+                       multiple = TRUE
         ),
 
         selectizeInput("selectStim", label = "Select the column that identifies the stimulation",
@@ -95,7 +96,7 @@ app_ui <- function() {
                              # ),
 
                              conditionalPanel(
-                               condition = "output.res_tab != null | output.res_error != null",
+                               condition = "output.heatmap != null | output.res_error != null",
                                tags$hr(),
                                h3("Analysis results"),
                                conditionalPanel(
@@ -108,34 +109,21 @@ app_ui <- function() {
                                  #h3(""),
                                  wellPanel(
                                    fluidRow(
-                                     column(6, plotOutput("heatmap"),
-                                            h6(""),
-                                            downloadButton("downloadHM", label = "Download heatmap [PNG]",
-                                                           class = "btn-primary")
-                                     ),
-                                     column(6, plotOutput("boxplot"),
-                                            h6(""),
-                                            downloadButton("downloadBP", label = "Download boxplot [PNG]",
-                                                           class = "btn-primary")
-                                     )
+                                     #column(6,
+                                     plotOutput("heatmap"),
+                                     h6(""),
+                                     downloadButton("downloadHM", label = "Download heatmap [PNG]",
+                                                    class = "btn-primary")
+                                     #),
+                                     # column(6, plotOutput("boxplot"),
+                                     #        h6(""),
+                                     #        downloadButton("downloadBP", label = "Download boxplot [PNG]",
+                                     #                       class = "btn-primary")
+                                     # )
                                    )
                                  ),
                                  h2(""),
-                                 #wellPanel(
-                                 h4("Numerical results"),
-                                 tableOutput("res_tab")
-                                 #)
-                                 #h5("")#,
-                                 # actionButton("addinfo", label = "Show/hide additionnal info"),
-                                 # h5(""),
-                                 # conditionalPanel(
-                                 #   condition = "input.addinfo % 2",
-                                 #   wellPanel(
-                                 #     tableOutput("res_lik"),
-                                 #     tableOutput("res_nparam"),
-                                 #     tableOutput("res_var")
-                                 #   )
-                                 # )
+                                 uiOutput('boxplotsAndTabs')
                                )
                              )
                     ),
@@ -155,7 +143,7 @@ app_ui <- function() {
                              conditionalPanel(
                                condition = "output.mod_display",
                                withMathJax(),
-                               h4("Statistical model:"),
+                               h4("Statistical model fitted for each ICS response:"),
                                uiOutput('mod')
                                #)
                              ),
@@ -172,8 +160,6 @@ app_ui <- function() {
                     )
         )
       )
-
     )
-
   )
 }

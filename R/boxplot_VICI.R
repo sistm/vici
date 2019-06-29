@@ -14,7 +14,7 @@
 #'@import ggplot2
 #'@import ggpubr
 
-boxplot_VICI <- function(data_df, pval_2plot){
+boxplot_VICI <- function(data_df, pval_2plot, response_name){
 
   p <- ggboxplot(data_df, x="stim", y="response", color="arm", fill="arm", alpha=0.3) +
     #theme_bw() +
@@ -22,9 +22,9 @@ boxplot_VICI <- function(data_df, pval_2plot){
     scale_fill_viridis_d("Arm") +
     scale_color_viridis_d("Arm") +
     stat_pvalue_manual(data = pval_2plot, label = "pvalue_format", tip.length = 0.03*max(data_df$response)) +
-    ylab("Response") +
+    ylab(paste0("Response ", response_name)) +
     xlab("Stimulation") +
-    ggtitle("Arm effect on ICS response",
+    ggtitle(paste0("Arm effect on ", response_name),
             subtitle = "taking into account background response levels") +
     labs(caption = "made with VICI")
 

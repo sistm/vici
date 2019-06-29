@@ -4,7 +4,7 @@
 \alias{boxplot_VICI}
 \title{Plotting function for displaying boxplots and associated p-values}
 \usage{
-boxplot_VICI(data_df, pval_2plot)
+boxplot_VICI(data_df, pval_2plot, response_name)
 }
 \arguments{
 \item{pval_2plot}{a \code{data.frame} with the p-values to display}
