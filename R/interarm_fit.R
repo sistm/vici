@@ -29,6 +29,7 @@ interarm_fit <- function(transformed_data, input){
     s_mgls <- summary(mgls)
     res_tab <- s_mgls$tTable[, c(1,2,4)]
     colnames(res_tab) <- c("Estimate", "Standard error", "p-value")
+    sigmas <- stats::coef(mgls$modelStruct$varStruct, uncons = FALSE, allCoef = TRUE) * mgls$sigma
     res_nparam <- renderText({paste0("<b>Number of estimated model parameters:</b> ", nrow(res_tab) + length(sigmas))})
 
     # pretty coef names

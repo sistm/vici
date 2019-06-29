@@ -2,7 +2,7 @@
 #' @import ggpubr
 #' @importFrom nlme gls varIdent
 #' @importFrom utils read.csv
-#' @importFrom stats coef relevel
+#' @importFrom stats coef relevel as.formula model.matrix
 app_server <- function(input, output, session) {
 
   # initialize everything ----

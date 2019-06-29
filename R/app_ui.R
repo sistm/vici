@@ -2,7 +2,7 @@
 app_ui <- function() {
   fluidPage(
     titlePanel("VICI: accurate estimation of Vaccine Induced Cellular Immunogenicity with bivariate modeling",
-               windowTitle = "VICI"),
+               windowTitle = "VICI v0.2.0"),
 
     sidebarLayout(
       sidebarPanel(
