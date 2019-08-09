@@ -10,7 +10,7 @@ interarm_postprocessres <- function(data_df, fit_res){
   rownames(vars) <- c("Variance")
 
   # model output ----
-  res_lik <- t(c("AIC" = aic, "-2 Res. loglikelihood" = fit_res$m2resloglik))
+  res_lik <- t(c("AIC" = aic, "-2 Res. logLikelihood" = m2resloglik))
 
   res_2plot <- fit_res$res_tab[grep("Effect of arm", rownames(fit_res$res_tab)), ]
   metainfo_2plot <- do.call(rbind, strsplit(gsub(" reference", "", gsub(" stimulation", "",

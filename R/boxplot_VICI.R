@@ -2,8 +2,10 @@
 #'
 #'Internal function for displaying significance boxplots
 #'
-#'@param res_2plot a \code{data.frame}
-#'@param pval_2plot a \code{data.frame} with the p-values to display
+#'@param res_2plot a \code{data.frame}.
+#'@param pval_2plot a \code{data.frame} with the p-values to display.
+#'@param inter a logical flag indicating whether we are in the interarm setting or not.
+#'Default is \code{TRUE}.
 #'
 #'@return a \code{ggpubr} plot object
 #'
@@ -14,19 +16,36 @@
 #'@import ggplot2
 #'@import ggpubr
 
-boxplot_VICI <- function(data_df, pval_2plot, response_name){
+boxplot_VICI <- function(data_df, pval_2plot, response_name, inter=TRUE, baseline=NULL){
 
-  p <- ggboxplot(data_df, x="stim", y="response", color="arm", fill="arm", alpha=0.3) +
-    #theme_bw() +
-    theme(panel.grid.major.x = element_blank()) +
-    scale_fill_viridis_d("Arm") +
-    scale_color_viridis_d("Arm") +
-    stat_pvalue_manual(data = pval_2plot, label = "pvalue_format", tip.length = 0.03*max(data_df$response)) +
-    ylab(paste0("Response ", response_name)) +
-    xlab("Stimulation") +
-    ggtitle(paste0("Arm effect on ", response_name),
-            subtitle = "taking into account background response levels") +
-    labs(caption = "made with VICI")
+  p <- NULL
+
+  if(inter){
+    p <- ggboxplot(data_df, x="stim", y="response", color="arm", fill="arm", alpha=0.3) +
+      #theme_bw() +
+      theme(panel.grid.major.x = element_blank()) +
+      scale_fill_viridis_d("Arm") +
+      scale_color_viridis_d("Arm") +
+      stat_pvalue_manual(data = pval_2plot, label = "pvalue_format", tip.length = 0.03*max(data_df$response)) +
+      ylab(paste0("Response ", response_name)) +
+      xlab("Stimulation") +
+      ggtitle(paste0("Arm effect on ", response_name),
+              subtitle = "taking into account background response levels") +
+      labs(caption = "made with VICI")
+  }else{
+    p <-
+      ggboxplot(data_df, x="stim", y="response", color="time", fill="time", alpha=0.3) +
+      #theme_bw() +
+      theme(panel.grid.major.x = element_blank()) +
+      scale_fill_viridis_d("Time-point") +
+      scale_color_viridis_d("Time-point") +
+      stat_pvalue_manual(data = pval_2plot, label = "pvalue_format", tip.length = 0.03*max(data_df$response)) +
+      ylab(paste0("Response ", response_name)) +
+      xlab("Stimulation") +
+      ggtitle(paste0("Intra-arm vaccine effect on ", response_name, " compared to baseline ", baseline),
+              subtitle = "taking into account background response levels") +
+      labs(caption = "made with VICI")
+  }
 
   return(p)
 

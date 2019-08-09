@@ -1,6 +1,8 @@
 make_nice_pvals <- function(res_2plot, data_df){
+  data_df$stim <- as.factor(as.numeric(data_df$stim))
   pval_2plot <- res_2plot
-  pval_2plot$y.position <- as.vector(by(data_df$response, INDICES = data_df$stim, FUN = max)) + 0.05*max(data_df$response)
+  pval_2plot$y.position <- as.vector(by(data_df$response, INDICES = data_df$stim, FUN = max, na.rm=TRUE)) +
+    0.05*max(data_df$response, na.rm = TRUE)
   pval_2plot$group1 <- 1:nlevels(data_df$stim) - 0.2
   pval_2plot$group2 <- 1:nlevels(data_df$stim) + 0.2
   pval_2plot$pvalue_format <- formatC(pval_2plot$pvalue, format = "e", digits=2)

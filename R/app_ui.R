@@ -3,7 +3,7 @@ app_ui <- function() {
   fluidPage(
     titlePanel("VICI: accurate estimation of Vaccine Induced Cellular Immunogenicity with bivariate modeling",
                windowTitle = "VICI"),
-    h6("v0.2.0"),
+    h6("v0.3.0"),
     sidebarLayout(
       sidebarPanel(
         # Input: Select a file ----
@@ -65,24 +65,51 @@ app_ui <- function() {
                          choices =c(Choose = "", NULL))
         ),
 
-        selectizeInput("selectArm", label = "Select the column that identifies the arm",
-                       choices = c(Choose = "", NULL),
-                       options = list(placeholder = 'Please select a column name below')
+        conditionalPanel(
+          condition = "input.selectModel == 1",
+          selectizeInput("selectArm", label = "Select the column that identifies the arm",
+                         choices = c(Choose = "", NULL),
+                         options = list(placeholder = 'Please select a column name below')
+          )
         ),
         conditionalPanel(
-          condition = "input.selectArm != '' & !output.armisfactor",
+          condition = "input.selectModel == 1 & input.selectArm != '' & !output.armisfactor & output.warningarmisfactor != null",
           verbatimTextOutput("warningarmisfactor")
         ),
         conditionalPanel(
-          condition = "input.selectArm != '' & output.armisfactor",
+          condition = "input.selectModel == 1 & input.selectArm != '' & output.armisfactor",
           selectizeInput("selectRefArm", label = "Select the value that identifies the reference arm",
                          choices =c(Choose = "", NULL))
         ),
 
+        conditionalPanel(
+          condition = "input.selectModel == 2",
+          selectizeInput("selectTime", label = "Select the column that identifies the time-points",
+                         choices = c(Choose = "", NULL),
+                         options = list(placeholder = 'Please select a column name below')
+          )
+        ),
+        conditionalPanel(
+          condition = "input.selectModel == 2 & input.selectTime != ''",
+          selectizeInput("selectRefTime", label = "Select the value that identifies the reference time-point",
+                         choices =c(Choose = "", NULL))
+        ),
+
+
         tags$hr(),
         h3("Run analysis"),
         actionButton("modelfit", label = "Fit model",
-                     class = "btn-primary")
+                     class = "btn-primary"),
+
+        h3(),
+        tags$hr(),
+        h3("Example data"),
+        fluidRow(
+          actionButton("loadExample", label = "load example data")
+        ),
+        fluidRow(
+          downloadButton("downloadExData", label = "download example data")
+        )
       ),
 
       mainPanel(
@@ -143,19 +170,22 @@ app_ui <- function() {
                              conditionalPanel(
                                condition = "output.mod_display",
                                withMathJax(),
-                               h4("Statistical model fitted for each ICS response:"),
+                               h3("Statistical model fitted for each ICS response:"),
                                uiOutput('mod')
                                #)
                              ),
-                             h5(""),
+                             h2(),
+                             tags$hr(),
 
                              conditionalPanel(
                                condition = "output.res_lik != null",
+                               h3("Additional estimates:"),
                                wellPanel(htmlOutput("res_nparam")),
                                h5(""),
                                wellPanel(tableOutput("res_lik")),
                                h5(""),
-                               wellPanel(tableOutput("res_var"))
+                               wellPanel(h4("Estimated variances"),
+                                         tableOutput("res_var"))
                              )
                     )
         )

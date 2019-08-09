@@ -4,10 +4,13 @@
 \alias{heatmap_vici}
 \title{A heatmap function for displaying}
 \usage{
-heatmap_vici(res_2plot)
+heatmap_vici(res_2plot, inter = TRUE, baseline = NULL)
 }
 \arguments{
 \item{res_2plot}{a \code{data.frame}}
+
+\item{inter}{a logical flag indicating whether we are in the interarm setting or not.
+Default is \code{TRUE}.}
 }
 \value{
 a \code{ggplot2} plot object

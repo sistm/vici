@@ -4,12 +4,16 @@
 \alias{boxplot_VICI}
 \title{Plotting function for displaying boxplots and associated p-values}
 \usage{
-boxplot_VICI(data_df, pval_2plot, response_name)
+boxplot_VICI(data_df, pval_2plot, response_name, inter = TRUE,
+  baseline = NULL)
 }
 \arguments{
-\item{pval_2plot}{a \code{data.frame} with the p-values to display}
+\item{pval_2plot}{a \code{data.frame} with the p-values to display.}
 
-\item{res_2plot}{a \code{data.frame}}
+\item{inter}{a logical flag indicating whether we are in the interarm setting or not.
+Default is \code{TRUE}.}
+
+\item{res_2plot}{a \code{data.frame}.}
 }
 \value{
 a \code{ggpubr} plot object
