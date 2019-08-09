@@ -1,3 +1,8 @@
+#'Fitting GLS For Intra-Arm Setting
+#'
+#'
+#' @keywords internal
+#' @importFrom stats na.omit
 intraarm_fit <- function(transformed_data, tested_time, input){
 
   res_tab <- NULL
@@ -12,7 +17,7 @@ intraarm_fit <- function(transformed_data, tested_time, input){
                         data = transformed_data,
                         #correlation =  nlme::corCompSymm(form= ~ 1 | signal),
                         weights = nlme::varIdent(value = c("1" = 1), form = ~ 1 | stim),
-                        method="REML", na.action = na.omit
+                        method="REML", na.action = stats::na.omit
   ), silent = TRUE)
   # nlme::lme(fixed = response ~ -1 + signal + nosignal + signal:arm + nosignal:arm + bkg,
   #           data = transformed_data,

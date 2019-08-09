@@ -18,13 +18,13 @@ matrix:
       r: release
 
 r_packages:
+- cowplot
 - DT
 - ggplot2
-- grDevices
-- magrittr
 - ggpubr
 - nlme
 - shiny
+- tidyr
 
 r_build_args: "--no-manual --no-resave-data"
 r_check_args: "--as-cran --no-build-vignettes --no-manual --timings"

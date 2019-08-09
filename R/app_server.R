@@ -1,7 +1,7 @@
 #' @import shiny
 #' @import ggpubr
 #' @importFrom nlme gls varIdent
-#' @importFrom utils read.csv
+#' @importFrom utils read.csv write.table
 #' @importFrom stats coef relevel as.formula model.matrix
 #' @importFrom tidyr spread
 #' @importFrom cowplot plot_grid
@@ -58,12 +58,12 @@ app_server <- function(input, output, session) {
   output$downloadExData <- downloadHandler(
     filename = "exampleICSdata.txt",
     content = function(file) {
-      write.table(ICS_ex, file, row.names = FALSE, sep="\t", quote = FALSE)
+      utils::write.table(vici::ICS_ex, file, row.names = FALSE, sep="\t", quote = FALSE)
     }
   )
   observeEvent(input$loadExample,{
     #cat("observe loadExample", "\n")
-    data$df <- ICS_ex
+    data$df <- vici::ICS_ex
     clean_output(output)
     output$table2render <- DT::renderDataTable(data$df,
                                                options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
@@ -443,7 +443,7 @@ app_server <- function(input, output, session) {
             data_df$stim <- stats::relevel(data_df$stim, ref=input$selectRefStim)
             transformed_data <- data_df
             transformed_data$time <- stats::relevel(transformed_data$time, ref=input$selectRefTime)
-            transformed_data <- tidyr::spread(transformed_data, key = time, value = response)
+            transformed_data <- tidyr::spread(transformed_data, key = "time", value = "response")
             for(i in ncol(transformed_data):3){
               transformed_data[, i] <- (transformed_data[, i] - transformed_data[, 3])
             }

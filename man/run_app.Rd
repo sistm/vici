@@ -2,10 +2,19 @@
 % Please edit documentation in R/run_app.R
 \name{run_app}
 \alias{run_app}
-\title{run the Shiny Application}
+\title{Launch VICI Shiny App}
 \usage{
 run_app(...)
 }
+\arguments{
+\item{...}{additional arguments to be passed to the \link[shiny]{runApp} function.}
+}
 \description{
-run the Shiny Application
+Launch VICI Shiny App
+}
+\examples{
+\dontrun{
+vici::run_app()
+}
+
 }
