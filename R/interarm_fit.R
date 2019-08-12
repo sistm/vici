@@ -52,18 +52,17 @@ interarm_fit <- function(transformed_data, input){
     }
     narm <- nlevels(transformed_data$arm)
     for(i in 1:(narm-1)){
-      rownames(res_tab)[nstim*2-1 + i] <- paste0("Effect of arm ", levels(transformed_data$arm)[1 + i],
-                                                 " on response in reference stimulation ", input$selectRefStim)
-    }
-    for(i in 1:(nstim-1)){
-      for(j in 1:(narm-1))
-        rownames(res_tab)[nstim*2-1 + narm-1 + (i-1)*(narm-1) + j] <- paste0("Effect of arm ", levels(transformed_data$arm)[1 + j],
-                                                                             " on response in stimulation ", levels(transformed_data$stim)[1 + i])
+      rownames(res_tab)[nstim*2-1 + 1 + (i-1)*nstim] <- paste0("Effect of arm ", levels(transformed_data$arm)[1 + i],
+                                                               " on response in reference stimulation ", input$selectRefStim)
+      for(j in 1:(nstim-1)){
+        rownames(res_tab)[nstim*2-1 + nstim*(i-1) + j + 1] <- paste0("Effect of arm ", levels(transformed_data$arm)[1 + i],
+                                                                     " on response in stimulation ", levels(transformed_data$stim)[1 + j])
+      }
     }
 
   }else{
     res_error <- paste0("Model was not able to run with the following error message:\n\n", mgls[1],
-                                 "\nMake sure analysis parameters are correct")
+                        "\nMake sure analysis parameters are correct")
   }
 
   return(list("mgls" = mgls,

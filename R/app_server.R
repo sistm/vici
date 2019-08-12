@@ -80,25 +80,25 @@ app_server <- function(input, output, session) {
                          options = list(placeholder = 'Please select a variable below')
     )
     updateSelectizeInput(session, "selectResponse",
-                         selected = 'response',
+                         selected = c('Response1', 'Response2'),
                          choices = c('', available_vars_init),
                          options = list(placeholder = 'Please select a variable below')
     )
     updateSelectizeInput(session, "selectStim",
-                         selected = 'stimulation',
+                         selected = 'StimulationPool',
                          choices = c('', available_vars_init),
                          options = list(placeholder = 'Please select a variable below')
     )
+    updateSelectizeInput(session, "selectRefStim",
+                         selected = 'S1'
+    )
     updateSelectizeInput(session, "selectArm",
-                         selected = 'arm',
+                         selected = 'Arm',
                          choices = c('', available_vars_init),
                          options = list(placeholder = 'Please select a variable below')
     )
     updateSelectizeInput(session, "selectRefArm",
-                         selected = 'Placebo'
-    )
-    updateSelectizeInput(session, "selectRefStim",
-                         selected = 'NS'
+                         selected = 'A3'
     )
     updateTabsetPanel(session, "inTabset", selected = "dataTab")
   }
@@ -425,7 +425,7 @@ app_server <- function(input, output, session) {
               responses_res[[response]]$res_error <- NULL
               responses_res[[response]]$postprocess_res <- interarm_postprocessres(data_df, fit_res)
               boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-                                                        response_name = response)
+                                                        response_name = response, input = input)
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
               heatmap_data2plot[[response]]$response <- response
               heatmap_data2plot[[response]]$pvalue <- cut(heatmap_data2plot[[response]]$pvalue,
@@ -475,6 +475,7 @@ app_server <- function(input, output, session) {
               boxplot_print[[response]] <- do.call(cowplot::plot_grid, lapply(responses_res[[response]]$postprocess_res$pval_2plot, function(x){
                 boxplot_VICI(data_df, x,
                              response_name = response,
+                             input = input,
                              inter = FALSE,
                              baseline = input$selectRefTime)
               })
@@ -581,8 +582,8 @@ app_server <- function(input, output, session) {
         for(s in levels(data$df[, input$selectStim])){
 
           if(s != input$selectRefStim){
+            arm_coefs <- NULL
             for(a in levels(data$df[, input$selectArm])){
-              arm_coefs <- NULL
               if(a != input$selectRefArm){
                 arm_coefs <- paste0(arm_coefs, '+ \\beta_{', a,'}^{', s, '}', a,
                                     '_i')
