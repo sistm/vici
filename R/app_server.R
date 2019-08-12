@@ -597,18 +597,43 @@ app_server <- function(input, output, session) {
         output$mod <- renderUI({
           withMathJax(statmodel)
         })
-      }else if (input$selectModel == 2) {
+      }else if(input$selectModel == 2 & input$selectRefStim != '' & input$selectRefTime != '' & input$selectStim !='' &
+               input$selectTime %in% colnames(data$df) & input$selectStim %in% colnames(data$df)) {
         output$mod_display <- reactive(TRUE)
+
+        statmodel <- NULL
+        for(t in levels(data$df[, input$selectTime])){
+          if(t != input$selectRefTime){
+            statmodel <- paste0(statmodel, '$$y_{diff\\,',t ,'\\, _i}^{', input$selectRefStim, '} = \\beta_{0\\,',t ,'}^{', input$selectRefStim,
+                                '} ', '+ \\varepsilon_{',t ,'\\, _i}^{', input$selectRefStim, '}$$')
+          }
+        }
+        for(s in levels(data$df[, input$selectStim])){
+          if(s != input$selectRefStim){
+            for(t in levels(data$df[, input$selectTime])){
+              if(t != input$selectRefTime){
+                statmodel <- paste0(statmodel, '$$y_{diff\\,',t ,'\\, _i}^{', s, '} = \\beta_{0\\,',t ,'}^{', s,
+                                    '} + \\beta_{', input$selectRefStim, '\\,',t ,'}^{', s, '} \\,y^{',
+                                    input$selectRefStim, '}_{diff\\,',t ,'\\, _i} + \\varepsilon_{',t ,'\\, _i}^{', s, '}$$'
+                )
+              }
+            }
+          }
+        }
+        diffdef <- paste0('where \\(y_{diff\\,\\{\\textsf{t}\\}\\, _i}^{\\{\\textsf{s}\\}} = y_i^{\\{\\textsf{s}\\}}(\\{\\textsf{t}\\}) - y_i^{\\{\\textsf{s}\\}}(',
+                          input$selectRefTime, ')\\)'
+        )
         output$mod <- renderUI({
-          withMathJax(
-            helpText('not implemented yet')
+          tagList(
+            withMathJax(statmodel),
+            div(""),
+            div(diffdef)
           )
         })
       }else{
         output$mod <- reactive(NULL)
         output$mod_display <- reactive(FALSE)
       }
-
       clean_output(output)
     })
 }
