@@ -35,6 +35,7 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
               subtitle = "taking into account background response levels") +
       labs(caption = "made with VICI")
   }else{
+    data_df$time <- relevel(data_df$time, ref=input$selectRefTime)
     p <-
       ggboxplot(data_df, x="stim", y="response", color="time", fill="time", alpha=0.3) +
       #theme_bw() +

@@ -45,7 +45,7 @@ intraarm_fit <- function(transformed_data, tested_time, input){
       rownames(res_tab)[1 + i] <- paste0("Vaccine effect on response in stimulation ", levels(transformed_data$stim)[1 + i],
                                          " at ", tested_time, " compared to baseline ", input$selectRefTime)
       rownames(res_tab)[nstim + i] <- paste0("Effect of reference stimulation ", input$selectRefStim,
-                                             " on response in stimulation", levels(transformed_data$stim)[1 + i],
+                                             " on response in stimulation ", levels(transformed_data$stim)[1 + i],
                                              "  at ", tested_time, " compared to baseline ", input$selectRefTime)
     }
 

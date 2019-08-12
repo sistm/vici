@@ -20,15 +20,19 @@ app_server <- function(input, output, session) {
   output$downloadBP <- reactive(NULL)
   output$res_var <- reactive(NULL)
   output$armisfactor <- reactive(TRUE)
+  output$arm2isfactor <- reactive(TRUE)
   output$timeisfactor <- reactive(TRUE)
   output$stimisfactor <- reactive(TRUE)
   output$warningarmisfactor <- reactive(NULL)
+  output$warningarm2isfactor <- reactive(NULL)
   output$warningstimisfactor <- reactive(NULL)
   output$warningtimeisfactor <- reactive(NULL)
   outputOptions(output, "mod_display", suspendWhenHidden = FALSE)
   outputOptions(output, "warningarmisfactor", suspendWhenHidden = FALSE)
+  outputOptions(output, "warningarm2isfactor", suspendWhenHidden = FALSE)
   outputOptions(output, "warningstimisfactor", suspendWhenHidden = FALSE)
   outputOptions(output, "armisfactor", suspendWhenHidden = FALSE)
+  outputOptions(output, "arm2isfactor", suspendWhenHidden = FALSE)
   outputOptions(output, "stimisfactor", suspendWhenHidden = FALSE)
   outputOptions(output, "res_error", suspendWhenHidden = FALSE)
   #outputOptions(output, "res_tab", suspendWhenHidden = FALSE)
@@ -90,15 +94,22 @@ app_server <- function(input, output, session) {
                          options = list(placeholder = 'Please select a variable below')
     )
     updateSelectizeInput(session, "selectRefStim",
-                         selected = 'S1'
+                         selected = 'NS',
+                         choices = c(levels(data$df$StimulationPool))
     )
     updateSelectizeInput(session, "selectArm",
                          selected = 'Arm',
                          choices = c('', available_vars_init),
                          options = list(placeholder = 'Please select a variable below')
     )
+    updateSelectizeInput(session, "selectArm2",
+                         selected = '',
+                         choices = c('', available_vars_init),
+                         options = list(placeholder = 'Please select a variable below')
+    )
     updateSelectizeInput(session, "selectRefArm",
-                         selected = 'A3'
+                         selected = 'Placebo',
+                         choices = c(levels(data$df$Arm))
     )
     updateTabsetPanel(session, "inTabset", selected = "dataTab")
   }
@@ -145,6 +156,11 @@ app_server <- function(input, output, session) {
                          choices = c('', available_vars_init),
                          options = list(placeholder = 'Please select a variable below')
     )
+    updateSelectizeInput(session, "selectArm2",
+                         selected = '',
+                         choices = c('', available_vars_init),
+                         options = list(placeholder = 'Please select a variable below')
+    )
     updateSelectizeInput(session, "selectTime",
                          selected = '',
                          choices = c('', available_vars_init),
@@ -154,6 +170,9 @@ app_server <- function(input, output, session) {
                          selected = ''
     )
     updateSelectizeInput(session, "selectRefArm",
+                         selected = ''
+    )
+    updateSelectizeInput(session, "selectRefArm2",
                          selected = ''
     )
     updateSelectizeInput(session, "selectRefStim",
@@ -184,6 +203,10 @@ app_server <- function(input, output, session) {
                          choices = c(input$selectArm, data$available_vars, intToUtf8(160)),
                          options = list(placeholder = 'Please select a variable below')
     )
+    updateSelectizeInput(session, "selectArm2",
+                         choices = c(input$selectArm2, data$available_vars, intToUtf8(160)),
+                         options = list(placeholder = 'Please select a variable below')
+    )
     updateSelectizeInput(session, "selectTime",
                          choices = c(input$selectTime, data$available_vars, intToUtf8(160)),
                          options = list(placeholder = 'Please select a variable below')
@@ -194,11 +217,7 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectSubject, {
     #cat("observe selectSubj", "\n")
     if (input$selectSubject != ''){
-      data$available_vars <-  setdiff(colnames(data$df), union(union(union(union(input$selectSubject,
-                                                                                 input$selectStim),
-                                                                           input$selectResponse),
-                                                                     input$selectArm),
-                                                               input$selectTime))
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
     }
     clean_output(output)
   })
@@ -206,11 +225,7 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectStim, {
     #cat("observe selectStim", "\n")
     if (input$selectStim != ''){
-      data$available_vars <-  setdiff(colnames(data$df), union(union(union(union(input$selectSubject,
-                                                                                 input$selectStim),
-                                                                           input$selectResponse),
-                                                                     input$selectArm),
-                                                               input$selectTime))
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
       if (input$selectStim %in% colnames(data$df)){
         selected_stim_var <- data$df[, input$selectStim]
         if(is.factor(selected_stim_var)){
@@ -255,11 +270,8 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectArm, {
     #cat("observe selectArm", "\n")
     if (input$selectArm != ''){
-      data$available_vars <-  setdiff(colnames(data$df), union(union(union(union(input$selectSubject,
-                                                                                 input$selectStim),
-                                                                           input$selectResponse),
-                                                                     input$selectArm),
-                                                               input$selectTime))
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+
       if (input$selectArm %in% colnames(data$df)){
         selected_arm_var <- data$df[, input$selectArm]
         if(is.factor(selected_arm_var)){
@@ -294,38 +306,84 @@ app_server <- function(input, output, session) {
         output$armisfactor <- reactive(FALSE)
         output$warningarmisfactor <- reactive(NULL)
         data$fact_arm_OK <- FALSE
-        data$available_vars <-  setdiff(colnames(data$df), union(union(union(union(input$selectSubject,
-                                                                                   input$selectStim),
-                                                                             input$selectResponse),
-                                                                       input$selectArm),
-                                                                 input$selectTime))
+        data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
       }
     }else{
-      data$available_vars <-  setdiff(colnames(data$df), union(union(union(union(input$selectSubject,
-                                                                                 input$selectStim),
-                                                                           input$selectResponse),
-                                                                     input$selectArm),
-                                                               input$selectTime))
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
     }
     clean_output(output)
   })
 
+
+  observeEvent(input$selectArm2, {
+    #cat("observe selectArm2", "\n")
+    if (input$selectArm2 != ''){
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+
+      if (input$selectArm2 %in% colnames(data$df)){
+        selected_arm2_var <- data$df[, input$selectArm2]
+        if(is.factor(selected_arm2_var)){
+          output$arm2isfactor <- reactive(TRUE)
+          possible_arm2s <- levels(selected_arm2_var)
+          output$warningarm2isfactor <- reactive(NULL)
+          data$fact_arm2_OK <- TRUE
+          # if(length(possible_arm2s) > 2){
+          #   output$arm2isfactor <- reactive(FALSE)
+          #   output$warningarm2isfactor <- reactive(paste0("Error: '", input$selectArm2, "' has more than 2 levels\n This is not implemented yet"))
+          #   data$fact_arm2_OK <- FALSE
+          # }
+        }else{
+          output$arm2isfactor <- reactive(FALSE)
+          output$warningarm2isfactor <- reactive(paste0("WARNING: '", input$selectArm2,
+                                                        "' is not a factor"))
+          data$fact_arm2_OK <- FALSE
+          possible_arm2s <- paste0("Error: '", input$selectArm2,
+                                   "' is not a factor\nPlease select a different variable")
+        }
+        updateSelectizeInput(session, "selectRefArm2",
+                             choices = c(possible_arm2s[1], possible_arm2s),
+                             selected = ifelse(is.null(input$selectRefArm2) | (length(input$selectRefArm2)>0 && input$selectRefArm2==''),
+                                               possible_arm2s[1], input$selectRefArm2)
+        )
+      }else if(input$selectArm2 != intToUtf8(160)){
+        output$arm2isfactor <- reactive(FALSE)
+        output$warningarm2isfactor <- reactive(paste0("WARNING: '", input$selectArm2,
+                                                      "' is not a column in the input data"))
+        data$fact_arm2_OK <- FALSE
+      }else{
+        output$arm2isfactor <- reactive(FALSE)
+        output$warningarm2isfactor <- reactive(NULL)
+        data$fact_arm2_OK <- FALSE
+        data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      }
+    }else{
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+    }
+    clean_output(output)
+  })
 
   observeEvent(input$selectModel, {
     #cat("observe selectModel", "\n")
     if(!is.null(data$available_vars)){
       updateSelectizeInput(session, "selectArm",
                            choices = union(c('', data$available_vars),
-                                           union(input$selectArm, input$selectTime))
+                                           union(union(input$selectArm, input$selectArm2), input$selectTime))
+      )
+      updateSelectizeInput(session, "selectArm2",
+                           choices = union(c('', data$available_vars),
+                                           union(union(input$selectArm, input$selectArm2), input$selectTime))
       )
       updateSelectizeInput(session, "selectTime",
                            choices = union(c('', data$available_vars),
-                                           union(input$selectArm, input$selectTime))
+                                           union(union(input$selectArm, input$selectArm2), input$selectTime))
       )
       updateSelectizeInput(session, "selectRefTime",
                            selected = ''
       )
       updateSelectizeInput(session, "selectRefArm",
+                           selected = ''
+      )
+      updateSelectizeInput(session, "selectRefArm2",
                            selected = ''
       )
     }
@@ -337,11 +395,7 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectTime, {
     #cat("observe selectTime", "\n")
     if (input$selectTime != ''){
-      data$available_vars <-  setdiff(colnames(data$df), union(union(union(union(input$selectSubject,
-                                                                                 input$selectStim),
-                                                                           input$selectResponse),
-                                                                     input$selectArm),
-                                                               input$selectTime))
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
       if(input$selectTime %in% colnames(data$df)){
         #cat("time set\n")
         data$df[, input$selectTime] <- as.factor(as.character(data$df[, input$selectTime]))
@@ -365,24 +419,16 @@ app_server <- function(input, output, session) {
         output$timeisfactor <- reactive(FALSE)
         output$warnintimeisfactor <- reactive(NULL)
         data$fact_time_OK <- FALSE
-        data$available_vars <-  setdiff(colnames(data$df), union(union(union(union(input$selectSubject,
-                                                                                   input$selectStim),
-                                                                             input$selectResponse),
-                                                                       input$selectArm),
-                                                                 input$selectTime))
+        data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
       }
     }else{
-      data$available_vars <-  setdiff(colnames(data$df), union(union(union(union(input$selectSubject,
-                                                                                 input$selectStim),
-                                                                           input$selectResponse),
-                                                                     input$selectArm),
-                                                               input$selectTime))
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
     }
     clean_output(output)
   })
 
 
-  observeEvent({input$selectRefArm; input$selectRefStim; input$selectRefTime}, {
+  observeEvent({input$selectRefArm; input$selectRefArm2; input$selectRefStim; input$selectRefTime}, {
     #cat("observe selectRefs", "\n")
     clean_output(output)
   })
@@ -396,6 +442,8 @@ app_server <- function(input, output, session) {
       responses_res <- list()
       boxplot_print <- list()
       heatmap_data2plot <- list()
+      toomuchdata <- FALSE
+
       for(response in input$selectResponse){
         if(!is.null(data$df) & input$selectSubject %in% colnames(data$df) &
            input$selectStim %in% colnames(data$df) & data$fact_stim_OK &
@@ -437,124 +485,136 @@ app_server <- function(input, output, session) {
             }
 
           }else if(input$selectModel == 2){
+
             # data tansformation
             data_df <- data$df[, c(input$selectSubject, response, input$selectStim, input$selectTime)]
             colnames(data_df) <- c("Subject", "response", "stim", "time")
             data_df$stim <- stats::relevel(data_df$stim, ref=input$selectRefStim)
             transformed_data <- data_df
+            if(input$selectArm2 != ''){
+              transformed_data <- transformed_data[data$df[, input$selectArm2] == input$selectRefArm2, ]
+            }
             transformed_data$time <- stats::relevel(transformed_data$time, ref=input$selectRefTime)
-            transformed_data <- tidyr::spread(transformed_data, key = "time", value = "response")
-            for(i in ncol(transformed_data):3){
-              transformed_data[, i] <- (transformed_data[, i] - transformed_data[, 3])
-            }
+            transformed_data <- try(tidyr::spread(transformed_data, key = "time", value = "response"),
+                                    silent = TRUE)
 
-            fit_res <- list()
-            for(t in 4:ncol(transformed_data)){
-              tp <- colnames(transformed_data)[t]
-              transformed_data_temp <- transformed_data[, c(1:2, t), drop=FALSE]
-              colnames(transformed_data_temp)[3] <- "response"
-              transformed_data_temp$bkg <- 0 # intialize bkg ground
-              transformed_data_temp <- transformed_data_temp[order(transformed_data_temp$stim,
-                                                                   transformed_data_temp$Subject), ] # align stimulations so that subject order matches in the following loop
-              for(l in levels(transformed_data_temp$stim)){
-                if(l != input$selectRefStim){
-                  transformed_data_temp[transformed_data_temp$stim == l, "bkg"] <- transformed_data_temp[transformed_data_temp$stim ==
-                                                                                                           input$selectRefStim, "response"]
+            if(inherits(transformed_data, "try-error")){
+              clean_output(output)
+              toomuchdata <- TRUE
+              output$res_error <- reactive(paste0("Too many observation in time point ", input$selectRefTime,
+                                           "... Perhaps the Arm to analyzed was not specified"))
+            }else{
+              for(i in ncol(transformed_data):3){
+                transformed_data[, i] <- (transformed_data[, i] - transformed_data[, 3])
+              }
+
+              fit_res <- list()
+              for(t in 4:ncol(transformed_data)){
+                tp <- colnames(transformed_data)[t]
+                transformed_data_temp <- transformed_data[, c(1:2, t), drop=FALSE]
+                colnames(transformed_data_temp)[3] <- "response"
+                transformed_data_temp$bkg <- 0 # intialize bkg ground
+                transformed_data_temp <- transformed_data_temp[order(transformed_data_temp$stim,
+                                                                     transformed_data_temp$Subject), ] # align stimulations so that subject order matches in the following loop
+                for(l in levels(transformed_data_temp$stim)){
+                  if(l != input$selectRefStim){
+                    transformed_data_temp[transformed_data_temp$stim == l, "bkg"] <- transformed_data_temp[transformed_data_temp$stim ==
+                                                                                                             input$selectRefStim, "response"]
+                  }
                 }
+                transformed_data_temp$stim <- stats::relevel(transformed_data_temp$stim, ref=input$selectRefStim)
+
+                # model fit ----
+                fit_res[[tp]] <- intraarm_fit(transformed_data = transformed_data_temp,
+                                              tested_time = tp, input = input)
               }
-              transformed_data_temp$stim <- stats::relevel(transformed_data_temp$stim, ref=input$selectRefStim)
-
-              # model fit ----
-              fit_res[[tp]] <- intraarm_fit(transformed_data = transformed_data_temp,
-                                            tested_time = tp, input = input)
-            }
-
-            if(!prod(sapply(fit_res, function(x){inherits(x$mgls, "try-error")}))){
-              responses_res[[response]]$res_error <- NULL
-              responses_res[[response]]$postprocess_res <- intraarm_postprocessres(data_df, fit_res)
-              boxplot_print[[response]] <- do.call(cowplot::plot_grid, lapply(responses_res[[response]]$postprocess_res$pval_2plot, function(x){
-                boxplot_VICI(data_df, x,
-                             response_name = response,
-                             input = input,
-                             inter = FALSE,
-                             baseline = input$selectRefTime)
-              })
-              )
-
-              responses_res[[response]]$res_tab <- lapply(fit_res, "[[", "res_tab")
-              heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
-              for(l in length(heatmap_data2plot[[response]])){
-                heatmap_data2plot[[response]][[l]]$response <- response
-                heatmap_data2plot[[response]][[l]]$pvalue <- cut(heatmap_data2plot[[response]][[l]]$pvalue,
-                                                                 breaks = c(0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1),
-                                                                 right = FALSE)
+              if(!prod(sapply(fit_res, function(x){inherits(x$mgls, "try-error")}))){
+                responses_res[[response]]$res_error <- NULL
+                responses_res[[response]]$postprocess_res <- intraarm_postprocessres(data_df, fit_res)
+                #responses_res[[response]]$postprocess_res$pval_2plot <- do.call(rbind, responses_res[[response]]$postprocess_res$pval_2plot)
+                boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+                               response_name = response,
+                               input = input,
+                               inter = FALSE,
+                               baseline = input$selectRefTime)
+                responses_res[[response]]$res_tab <- do.call(rbind, lapply(fit_res, "[[", "res_tab"))
+                heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
+                for(l in 1:length(heatmap_data2plot[[response]])){
+                  heatmap_data2plot[[response]][[l]]$response <- response
+                  heatmap_data2plot[[response]][[l]]$pvalue <- cut(heatmap_data2plot[[response]][[l]]$pvalue,
+                                                                   breaks = c(0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1),
+                                                                   right = FALSE)
+                }
+                heatmap_data2plot[[response]] <- do.call(rbind.data.frame,
+                                                         heatmap_data2plot[[response]])
+                #output$res_tab <- renderTable(fit_res$res_tab, rownames = TRUE, digits=5)
               }
-              heatmap_data2plot[[response]] <- do.call(rbind.data.frame,
-                                                       heatmap_data2plot[[response]])
-              #output$res_tab <- renderTable(fit_res$res_tab, rownames = TRUE, digits=5)
             }
           }
 
         }
         #res_sentence <- renderText("A sentence to be copied and pasted in your analysis report.")
       }
+      if(!toomuchdata){
+        if(length(responses_res)<1){
+          clean_output(output)
+          output$res_error <- reactive("Please select adequate analysis parameters before trying to fit the model...")
+        }else{
+          myTabs <- lapply(input$selectResponse, function(resp) {
+            tabPanel(title = resp, value = resp,
+                     wellPanel(
+                       fluidRow(
+                         renderPlot(boxplot_print[[resp]])),
+                       h6(""),
+                       myDownloadHandlerForPlots(name = "VICIboxplot.png", plot_obj = boxplot_print[[resp]],
+                                                 outputArgs = list(label = "Download boxplot [PNG]", class = "btn-primary")),
+                       h3(""),
+                       h4(paste("Numerical results for", resp)),
+                       renderTable(responses_res[[resp]]$res_tab, rownames = TRUE, digits=5)
+                     )
+            )
+          })
+          output$boxplotsAndTabs <- renderUI({
+            do.call(tabsetPanel, myTabs)
+          })
 
-      if(length(responses_res)<1){
-        clean_output(output)
-        output$res_error <- reactive("Please select adequate analysis parameters before trying to fit the model...")
-      }else{
-        myTabs <- lapply(input$selectResponse, function(resp) {
-          tabPanel(title = resp, value = resp,
-                   wellPanel(
-                     fluidRow(
-                       renderPlot(boxplot_print[[resp]])),
-                     h6(""),
-                     myDownloadHandlerForPlots(name = "VICIboxplot.png", plot_obj = boxplot_print[[resp]],
-                                               outputArgs = list(label = "Download boxplot [PNG]", class = "btn-primary")),
-                     h3(""),
-                     h4(paste("Numerical results for", resp)),
-                     renderTable(responses_res[[resp]]$res_tab, rownames = TRUE, digits=5)
-                   )
-          )
-        })
-        output$boxplotsAndTabs <- renderUI({
-          do.call(tabsetPanel, myTabs)
-        })
+          if(input$selectModel == 1){
+            output$res_nparam <- renderText({paste0("<b>Number of estimated model parameters:</b> ",
+                                                    nrow(responses_res[[1]]$res_tab) + ncol(responses_res[[1]]$postprocess_res$vars))})
+            heatmap_data2plot_noref <- lapply(heatmap_data2plot, function(x){x[-grep("reference", rownames(x)), ]})
+          }else if(input$selectModel == 2){
+            output$res_nparam <- renderText({paste0("<b>Number of estimated model parameters for each time point:</b> ",
+                                                    nrow(responses_res[[1]]$res_tab[[1]]) + ncol(responses_res[[1]]$postprocess_res$vars))})
+            heatmap_data2plot_noref <- lapply(heatmap_data2plot, function(x){x[-grep("reference", x$Stimulation), ]})
+          }
 
-        if(input$selectModel == 1){
-          output$res_nparam <- renderText({paste0("<b>Number of estimated model parameters:</b> ",
-                                                  nrow(responses_res[[1]]$res_tab) + ncol(responses_res[[1]]$postprocess_res$vars))})
-          heatmap_data2plot_noref <- lapply(heatmap_data2plot, function(x){x[-grep("reference", rownames(x)), ]})
-        }else if(input$selectModel == 2){
-          output$res_nparam <- renderText({paste0("<b>Number of estimated model parameters for each time point:</b> ",
-                                                  nrow(responses_res[[1]]$res_tab[[1]]) + ncol(responses_res[[1]]$postprocess_res$vars))})
-          heatmap_data2plot_noref <- lapply(heatmap_data2plot, function(x){x[-grep("reference", x$Stimulation), ]})
+          output$res_error <- reactive(NULL)
+          res_lik_all <- lapply(lapply(responses_res, "[[", "postprocess_res"), "[[", "res_lik")
+          res_lik_all <- do.call(rbind.data.frame, res_lik_all)
+          #colnames(res_lik_all) <- c("AIC", "-2 Res. logLikelihood")
+          output$res_lik <- renderTable(res_lik_all,
+                                        rownames = TRUE, digits = 4)
+          all_vars <- lapply(lapply(responses_res, "[[", "postprocess_res"), "[[", "vars")
+          all_vars <- do.call(rbind.data.frame, all_vars)
+          #colames(all_vars) <- levels(data_df$stim)
+          output$res_var <- renderTable(all_vars, rownames = TRUE, digits=6)
+          #boxplot_dnl <- cowplot::plot_grid(plotlist = boxplot_print)
+          #output$boxplot <- renderPlot(boxplot_dnl)
+          #output$downloadBP <- myDownloadHandlerForPlots(name = "VICIboxplot.png", plot_obj = boxplot_dnl)
+
+          hm_data2plot_all <- do.call(rbind.data.frame, heatmap_data2plot_noref)
+          hm_data2plot_all$response <- factor(hm_data2plot_all$response, ordered = TRUE,
+                                              levels = rev(input$selectResponse))
+          #TODO if model 2: cross response x time points on y-axis
+          if(input$selectModel == 2)
+            heatmap_print <- heatmap_vici(hm_data2plot_all, inter = FALSE,
+                                          baseline = input$selectRefTime)
+          else{
+            heatmap_print <- heatmap_vici(hm_data2plot_all, inter = TRUE)
+          }
+          output$heatmap <- renderPlot(heatmap_print)
+          output$downloadHM <- myDownloadHandlerForPlots(name = "VICIheatmap.png", plot_obj = heatmap_print)
         }
-
-        output$res_error <- reactive(NULL)
-        res_lik_all <- t(sapply(lapply(responses_res, "[[", "postprocess_res"), "[[", "res_lik"))
-        colnames(res_lik_all) <- c("AIC", "-2 Res. logLikelihood")
-        output$res_lik <- renderTable(res_lik_all,
-                                      rownames = TRUE, digits = 4)
-        all_vars <- sapply(lapply(responses_res, "[[", "postprocess_res"), "[[", "vars")
-        rownames(all_vars) <- levels(data_df$stim)
-        output$res_var <- renderTable(all_vars, rownames = TRUE, digits=6)
-        #boxplot_dnl <- cowplot::plot_grid(plotlist = boxplot_print)
-        #output$boxplot <- renderPlot(boxplot_dnl)
-        #output$downloadBP <- myDownloadHandlerForPlots(name = "VICIboxplot.png", plot_obj = boxplot_dnl)
-
-        hm_data2plot_all <- do.call(rbind.data.frame, heatmap_data2plot_noref)
-        hm_data2plot_all$response <- factor(hm_data2plot_all$response, ordered = TRUE,
-                                            levels = rev(input$selectResponse))
-        #TODO if model 2: cross response x time points on y-axis
-        if(input$selectModel == 2)
-          heatmap_print <- heatmap_vici(hm_data2plot_all, inter = FALSE,
-                                        baseline = input$selectRefTime)
-        else{
-          heatmap_print <- heatmap_vici(hm_data2plot_all, inter = TRUE)
-        }
-        output$heatmap <- renderPlot(heatmap_print)
-        output$downloadHM <- myDownloadHandlerForPlots(name = "VICIheatmap.png", plot_obj = heatmap_print)
       }
       updateTabsetPanel(session, "inTabset", selected = "resTab")
     })

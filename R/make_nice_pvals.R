@@ -1,14 +1,14 @@
-make_nice_pvals <- function(res_2plot, data_df){
+make_nice_pvals <- function(res_2plot, data_df, auxvar = "arm"){
   data_df$stim <- as.factor(as.numeric(data_df$stim))
   pval_2plot <- res_2plot
-  narm <- nlevels(data_df$arm)
+  naux <- nlevels(data_df[, auxvar])
   nstim <- nlevels(data_df$stim)
   pval_2plot$y.position <- as.vector(by(data_df$response, INDICES = data_df$stim, FUN = max, na.rm=TRUE)) +
     0.05*max(data_df$response, na.rm = TRUE)
-  pval_2plot$group1 <- 1:nlevels(data_df$stim) - (narm-1)*0.4/narm
+  pval_2plot$group1 <- 1:nlevels(data_df$stim) - (naux-1)*0.4/naux
   pval_2plot$group2 <- pval_2plot$group1
-  for(i in 2:(narm)){
-    pval_2plot$group2[(i-2)*(nstim) +1:nstim] <- pval_2plot$group1[(i-2)*(nstim) +1:nstim] + 2*(i-1)*0.4/narm
+  for(i in 2:(naux)){
+    pval_2plot$group2[(i-2)*(nstim) +1:nstim] <- pval_2plot$group1[(i-2)*(nstim) +1:nstim] + 2*(i-1)*0.4/naux
     if(i>2){
       pval_2plot$y.position[(i-2)*(nstim) +1:nstim] <- pval_2plot$y.position[(i-2)*(nstim) +1:nstim] + (i-2)*0.1*max(data_df$response, na.rm = TRUE)
     }

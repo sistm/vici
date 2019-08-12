@@ -24,8 +24,7 @@ intraarm_postprocessres <- function(data_df, fit_res){
     return(temp)
   })
 
-  #browser()
-  pval_2plot <- lapply(res_2plot, function(x){make_nice_pvals(x, data_df)})
+  pval_2plot <- make_nice_pvals(do.call(rbind.data.frame, res_2plot), data_df, auxvar = "time")
   #maybe TODO compute group2 correctly when more than 2 Timepoints
   #pval_2plot <- do.call(rbind, pval_2plot)
 

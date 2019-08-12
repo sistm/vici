@@ -95,6 +95,23 @@ app_ui <- function() {
                          choices =c(Choose = "", NULL))
         ),
 
+        conditionalPanel(
+          condition = "input.selectModel == 2",
+          selectizeInput("selectArm2", label = "If several arms (optional) please select the column that identifies the observation's arm",
+                         choices = c(Choose = "", NULL),
+                         options = list(placeholder = 'Please select a column name below')
+          )
+        ),
+        conditionalPanel(
+          condition = "input.selectModel == 2 & input.selectArm2 != '' & !output.armisfactor2 & output.warningarm2isfactor != null",
+          verbatimTextOutput("warningarm2isfactor")
+        ),
+        conditionalPanel(
+          condition = "input.selectModel == 2 & input.selectArm2 != '' & output.arm2isfactor",
+          selectizeInput("selectRefArm2", label = "Select the arm to analyze",
+                         choices =c(Choose = "", NULL))
+        ),
+
 
         tags$hr(),
         h3("Run analysis"),

@@ -20,7 +20,7 @@ interarm_postprocessres <- function(data_df, fit_res){
                                 "Stimulation" = metainfo_2plot[, 2],
                                 "pvalue" = res_2plot[, 3])
 
-  pval_2plot <- make_nice_pvals(res_2plot, data_df)
+  pval_2plot <- make_nice_pvals(res_2plot, data_df, auxvar = "arm")
 
 
   return(list(
