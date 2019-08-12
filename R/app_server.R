@@ -579,12 +579,12 @@ app_server <- function(input, output, session) {
           })
 
           if(input$selectModel == 1){
-            output$res_nparam <- renderText({paste0("<b>Number of estimated model parameters:</b> ",
+            output$res_nparam <- renderText({paste0("<b>Number of estimated model parameters for each response:</b> ",
                                                     nrow(responses_res[[1]]$res_tab) + ncol(responses_res[[1]]$postprocess_res$vars))})
             heatmap_data2plot_noref <- lapply(heatmap_data2plot, function(x){x[-grep("reference", rownames(x)), ]})
           }else if(input$selectModel == 2){
-            output$res_nparam <- renderText({paste0("<b>Number of estimated model parameters for each time point:</b> ",
-                                                    nrow(responses_res[[1]]$res_tab[[1]]) + ncol(responses_res[[1]]$postprocess_res$vars))})
+            output$res_nparam <- renderText({paste0("<b>Number of estimated model parameters for each response:</b> ",
+                                                    nrow(responses_res[[1]]$res_tab) + length(responses_res[[1]]$postprocess_res$vars))})
             heatmap_data2plot_noref <- lapply(heatmap_data2plot, function(x){x[-grep("reference", x$Stimulation), ]})
           }
 
