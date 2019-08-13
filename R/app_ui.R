@@ -83,6 +83,19 @@ app_ui <- function() {
         ),
 
         conditionalPanel(
+          condition = "input.selectModel == 1",
+          selectizeInput("selectTime2", label = "If several time-points (optional), please select the column that identifies the observation's time-point",
+                         choices = c(Choose = "", NULL),
+                         options = list(placeholder = 'Please select a column name below')
+          )
+        ),
+        conditionalPanel(
+          condition = "input.selectModel == 1 & input.selectTime2 != '' ",
+          selectizeInput("selectRefTime2", label = "Select the time-point to analyze",
+                         choices =c(Choose = "", NULL))
+        ),
+
+        conditionalPanel(
           condition = "input.selectModel == 2",
           selectizeInput("selectTime", label = "Select the column that identifies the time-points",
                          choices = c(Choose = "", NULL),

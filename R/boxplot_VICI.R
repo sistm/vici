@@ -20,6 +20,7 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
 
   p <- NULL
 
+  browser()
   if(inter){
     data_df$arm <- relevel(data_df$arm, ref=input$selectRefArm)
     p <- ggboxplot(data_df, x="stim", y="response", color="arm", fill="arm", alpha=0.3) +

@@ -22,11 +22,13 @@ app_server <- function(input, output, session) {
   output$armisfactor <- reactive(TRUE)
   output$arm2isfactor <- reactive(TRUE)
   output$timeisfactor <- reactive(TRUE)
+  output$time2isfactor <- reactive(TRUE)
   output$stimisfactor <- reactive(TRUE)
   output$warningarmisfactor <- reactive(NULL)
   output$warningarm2isfactor <- reactive(NULL)
   output$warningstimisfactor <- reactive(NULL)
   output$warningtimeisfactor <- reactive(NULL)
+  output$warningtime2isfactor <- reactive(NULL)
   outputOptions(output, "mod_display", suspendWhenHidden = FALSE)
   outputOptions(output, "warningarmisfactor", suspendWhenHidden = FALSE)
   outputOptions(output, "warningarm2isfactor", suspendWhenHidden = FALSE)
@@ -46,6 +48,7 @@ app_server <- function(input, output, session) {
   data$fact_stim_OK <- TRUE
   data$fact_arm_OK <- TRUE
   data$fact_time_OK <- TRUE
+  data$fact_time2_OK <- TRUE
 
 
   # data import ----
@@ -166,7 +169,15 @@ app_server <- function(input, output, session) {
                          choices = c('', available_vars_init),
                          options = list(placeholder = 'Please select a variable below')
     )
+    updateSelectizeInput(session, "selectTime2",
+                         selected = '',
+                         choices = c('', available_vars_init),
+                         options = list(placeholder = 'Please select a variable below')
+    )
     updateSelectizeInput(session, "selectRefTime",
+                         selected = ''
+    )
+    updateSelectizeInput(session, "selectRefTime2",
                          selected = ''
     )
     updateSelectizeInput(session, "selectRefArm",
@@ -209,6 +220,10 @@ app_server <- function(input, output, session) {
     )
     updateSelectizeInput(session, "selectTime",
                          choices = c(input$selectTime, data$available_vars, intToUtf8(160)),
+                         options = list(placeholder = 'Please select a variable below')
+    )
+    updateSelectizeInput(session, "selectTime2",
+                         choices = c(input$selectTime2, data$available_vars, intToUtf8(160)),
                          options = list(placeholder = 'Please select a variable below')
     )
   }
@@ -256,12 +271,7 @@ app_server <- function(input, output, session) {
     #cat("observe selectResp", "\n")
     if (length(input$selectResponse) >= 1){
       if (input$selectResponse[1] != ''){
-        data$available_vars <-  setdiff(colnames(data$df), union(union(union(union(input$selectSubject,
-                                                                                   input$selectStim),
-                                                                             input$selectResponse),
-                                                                       input$selectArm),
-                                                                 input$selectTime)
-        )
+        data$available_vars <- update_vars(input, possibilities = colnames(data$df))
         clean_output(output)
       }
     }
@@ -270,7 +280,7 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectArm, {
     #cat("observe selectArm", "\n")
     if (input$selectArm != ''){
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      data$available_vars <- update_vars(input, possibilities = colnames(data$df))
 
       if (input$selectArm %in% colnames(data$df)){
         selected_arm_var <- data$df[, input$selectArm]
@@ -377,7 +387,14 @@ app_server <- function(input, output, session) {
                            choices = union(c('', data$available_vars),
                                            union(union(input$selectArm, input$selectArm2), input$selectTime))
       )
+      updateSelectizeInput(session, "selectTime2",
+                           choices = union(c('', data$available_vars),
+                                           union(union(input$selectArm, input$selectArm2), input$selectTime))
+      )
       updateSelectizeInput(session, "selectRefTime",
+                           selected = ''
+      )
+      updateSelectizeInput(session, "selectRefTime2",
                            selected = ''
       )
       updateSelectizeInput(session, "selectRefArm",
@@ -397,7 +414,6 @@ app_server <- function(input, output, session) {
     if (input$selectTime != ''){
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
       if(input$selectTime %in% colnames(data$df)){
-        #cat("time set\n")
         data$df[, input$selectTime] <- as.factor(as.character(data$df[, input$selectTime]))
         selected_time_var <- data$df[, input$selectTime]
         output$timeisfactor <- reactive(TRUE)
@@ -407,8 +423,8 @@ app_server <- function(input, output, session) {
 
         updateSelectizeInput(session, "selectRefTime",
                              choices = c(possible_times[1], possible_times),
-                             selected = ifelse(is.null(input$selectRefTimes) | (length(input$selectRefTimes)>0 && input$selectRefTimes==''),
-                                               possible_times[1], input$selectRefTimes)
+                             selected = ifelse(is.null(input$selectRefTime) | (length(input$selectRefTime)>0 && input$selectRefTime==''),
+                                               possible_times[1], input$selectRefTime)
         )
       }else if(input$selectTime != intToUtf8(160)){
         output$timeisfactor <- reactive(FALSE)
@@ -427,8 +443,43 @@ app_server <- function(input, output, session) {
     clean_output(output)
   })
 
+  # observe time ----
+  observeEvent(input$selectTime2, {
+    #cat("observe selectTime2", "\n")
+    if (input$selectTime2 != ''){
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      if(input$selectTime2 %in% colnames(data$df)){
+        data$df[, input$selectTime2] <- as.factor(as.character(data$df[, input$selectTime2]))
+        selected_time2_var <- data$df[, input$selectTime2]
+        output$time2isfactor <- reactive(TRUE)
+        possible_times2 <- levels(selected_time2_var)
+        output$warnintime2isfactor <- reactive(NULL)
+        data$fact_time2_OK <- TRUE
 
-  observeEvent({input$selectRefArm; input$selectRefArm2; input$selectRefStim; input$selectRefTime}, {
+        updateSelectizeInput(session, "selectRefTime2",
+                             choices = c(possible_times2[1], possible_times2),
+                             selected = ifelse(is.null(input$selectRefTime2) | (length(input$selectRefTime2)>0 && input$selectRefTime2==''),
+                                               possible_times2[1], input$selectRefTime2)
+        )
+      }else if(input$selectTime2 != intToUtf8(160)){
+        output$time2isfactor <- reactive(FALSE)
+        output$warnintime2isfactor <- reactive(paste0("WARNING: '", input$selectTime2,
+                                                     "' is not a column in the input data"))
+        data$fact_time2_OK <- FALSE
+      }else{
+        output$time2isfactor <- reactive(FALSE)
+        output$warnintime2isfactor <- reactive(NULL)
+        data$fact_time2_OK <- FALSE
+        data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      }
+    }else{
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+    }
+    clean_output(output)
+  })
+
+
+  observeEvent({input$selectRefArm; input$selectRefArm2; input$selectRefStim; input$selectRefTime; input$selectRefTime2}, {
     #cat("observe selectRefs", "\n")
     clean_output(output)
   })
@@ -451,8 +502,14 @@ app_server <- function(input, output, session) {
             (input$selectTime %in% colnames(data$df) & data$fact_time_OK))
         ) {
           if(input$selectModel == 1){
+
             # data tansformation
-            data_df <- data$df[, c(input$selectSubject, response, input$selectStim, input$selectArm)]
+            if(input$selectTime2 != ''){
+              data_df <- data$df[data$df[, input$selectTime2] == input$selectRefTime2,
+                                 c(input$selectSubject, response, input$selectStim, input$selectArm)]
+            }else{
+              data_df <- data$df[, c(input$selectSubject, response, input$selectStim, input$selectArm)]
+            }
             colnames(data_df) <- c("Subject", "response", "stim", "arm")
             transformed_data <- data_df
             transformed_data$bkg <- 0 # intialize bkg ground
@@ -487,13 +544,16 @@ app_server <- function(input, output, session) {
           }else if(input$selectModel == 2){
 
             # data tansformation
-            data_df <- data$df[, c(input$selectSubject, response, input$selectStim, input$selectTime)]
+            if(input$selectArm2 != ''){
+              data_df <- data$df[data$df[, input$selectArm2] == input$selectRefArm2,
+                                 c(input$selectSubject, response, input$selectStim, input$selectTime)]
+            }else{
+              data_df <- data$df[, c(input$selectSubject, response, input$selectStim, input$selectTime)]
+            }
             colnames(data_df) <- c("Subject", "response", "stim", "time")
             data_df$stim <- stats::relevel(data_df$stim, ref=input$selectRefStim)
             transformed_data <- data_df
-            if(input$selectArm2 != ''){
-              transformed_data <- transformed_data[data$df[, input$selectArm2] == input$selectRefArm2, ]
-            }
+
             transformed_data$time <- stats::relevel(transformed_data$time, ref=input$selectRefTime)
             transformed_data <- try(tidyr::spread(transformed_data, key = "time", value = "response"),
                                     silent = TRUE)
