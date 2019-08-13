@@ -49,9 +49,7 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
         scale_fill_viridis_d("Time-point: ") +
         scale_color_viridis_d("Time-point: ") +
         stat_pvalue_manual(data = pval_2plot, label = "pvalue_format",
-                           tip.length =  ifelse(max(data_df$response, na.rm = TRUE)<1,
-                                                0.025*max(data_df$response, na.rm = TRUE),
-                                                0.025)) +
+                           tip.length =  0.025) +
         ylab(paste0("Response ", response_name)) +
         xlab("Stimulation") +
         ggtitle(paste0("Intra-arm vaccine effect on ", response_name, " compared to baseline ", baseline),
