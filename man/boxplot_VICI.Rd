@@ -13,6 +13,9 @@ boxplot_VICI(data_df, pval_2plot, response_name, input, inter = TRUE,
 \item{inter}{a logical flag indicating whether we are in the interarm setting or not.
 Default is \code{TRUE}.}
 
+\item{baseline}{baseline value used in title when \code{inter} is \code{FALSE}.
+Default is \code{NULL}.}
+
 \item{res_2plot}{a \code{data.frame}.}
 }
 \value{
