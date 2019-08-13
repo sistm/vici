@@ -9,9 +9,9 @@ interarm_fit <- function(transformed_data, input){
   res_lik <- NULL
   res_error <- NULL
 
-  bkg_inter_mat <- model.matrix(data = transformed_data, ~ -1 + stim:bkg)[, -1, drop=FALSE]
+  bkg_inter_mat <- model.matrix(data = stats::na.omit(transformed_data), ~ -1 + stim:bkg)[, -1, drop=FALSE]
   colnames(bkg_inter_mat) <- gsub(":", "_", colnames(bkg_inter_mat), fixed = TRUE)
-  transformed_data <- cbind.data.frame(transformed_data, bkg_inter_mat)
+  transformed_data <- cbind.data.frame(stats::na.omit(transformed_data), bkg_inter_mat)
   myformul <- as.formula(paste0("response ~ -1 + stim + stim:arm", "+", paste(colnames(bkg_inter_mat), collapse = " + ")))
   mgls <- try(nlme::gls(myformul,
                         data = transformed_data,
