@@ -11,6 +11,7 @@
 #'@usage data(ICS_ex)
 #'
 #'@examples
+#'\dontrun{
 #' set.seed(1382019)
 #' nsubj <- 20
 #' ntp <- 3
@@ -25,5 +26,6 @@
 #' ICS_ex <- cbind.data.frame("Subject" = subj, "StimulationPool" = stim, "TimePoint" = tp, "Arm" = a, "Response1" = y1, "Response2" = y2)
 #' #View(ICS_ex)
 #' write.table(ICS_ex, file="Documents/GitHub/vici/data/ICS_ex.txt", sep="\t", row.names = FALSE, quote = FALSE)
+#' }
 #'
 NULL
