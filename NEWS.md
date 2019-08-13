@@ -1,10 +1,10 @@
 # vici 0.1.0
 
- * Modularizing code
+ * Modularising code
 
 # vici 0.0.5.0
 
- * Debugging multiple repsonses
+ * Debugging multiple responses
 
 # vici 0.0.3.0
 
