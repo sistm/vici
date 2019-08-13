@@ -8,3 +8,4 @@ $run_dev.*
 ^README\.Rmd$
 ^\.travis\.yml$
 ^appveyor\.yml$
+^cran-comments\.md$

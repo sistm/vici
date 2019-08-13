@@ -1,6 +1,10 @@
+# vici 0.5.0
+
+ * First completely operational version of the app
+
 # vici 0.1.0
 
- * Modularising code
+ * Modularizing code
 
 # vici 0.0.5.0
 
