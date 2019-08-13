@@ -105,14 +105,23 @@ app_server <- function(input, output, session) {
                          choices = c('', available_vars_init),
                          options = list(placeholder = 'Please select a variable below')
     )
+    updateSelectizeInput(session, "selectRefArm",
+                         selected = 'Placebo',
+                         choices = c(levels(data$df$Arm))
+    )
     updateSelectizeInput(session, "selectArm2",
                          selected = '',
                          choices = c('', available_vars_init),
                          options = list(placeholder = 'Please select a variable below')
     )
-    updateSelectizeInput(session, "selectRefArm",
-                         selected = 'Placebo',
-                         choices = c(levels(data$df$Arm))
+    updateSelectizeInput(session, "selectTime2",
+                         selected = 'TimePoint',
+                         choices = c('', available_vars_init),
+                         options = list(placeholder = 'Please select a variable below')
+    )
+    updateSelectizeInput(session, "selectRefTime2",
+                         selected = 'D1',
+                         choices = c(levels(data$df$TimePoint))
     )
     updateTabsetPanel(session, "inTabset", selected = "dataTab")
   }

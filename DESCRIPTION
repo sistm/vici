@@ -1,6 +1,6 @@
 Package: vici
 Title: Vaccine Induced Cellular Immunogenicity: Accurate Estimation with Bivariate Modeling
-Version: 0.4.0
+Version: 0.5.0
 Authors@R: person('Boris', 'Hejblum', email = 'boris.hejblum@u-bordeaux.fr', role = c('cre', 'aut'))
 Description: This package includes a shiny app for accurate estimation of vaccine induced immunogenecity with bivariate linear modeling.
 License: GPL-3
