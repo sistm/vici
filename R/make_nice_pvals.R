@@ -29,6 +29,5 @@ make_nice_pvals <- function(res_2plot, data_df, auxvar = "arm"){
   if(length(pval_2plot$pvalue < 0.001) > 0){
     pval_2plot$pvalue_format[pval_2plot$pvalue < 0.001] <- paste0("*", pval_2plot$pvalue_format[pval_2plot$pvalue < 0.001])
   }
-  browser()
   return(pval_2plot)
 }
