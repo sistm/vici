@@ -1,4 +1,4 @@
-# vici 0.5.0
+# vici 0.5.1
 
  * First completely operational version of the app
 

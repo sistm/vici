@@ -19,7 +19,7 @@ You can install the released version of vici from the `.tar.gz` source
 with:
 
 ``` r
-install.packages("vici_0.1.0.tar.gz", type="source", repos=NULL)
+install.packages("vici_0.5.1.tar.gz", type="source", repos=NULL)
 ```
 
 Then you can launch the app with:
