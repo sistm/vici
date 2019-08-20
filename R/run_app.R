@@ -2,10 +2,10 @@
 #'
 #'@param ... additional arguments to be passed to the \link[shiny]{runApp} function.
 #'
-#' @examples
-#' \dontrun{
+#'@examples
+#'if(interactive()){}{
 #' vici::run_app()
-#' }
+#'}
 #'
 #' @export
 #' @importFrom shiny runApp

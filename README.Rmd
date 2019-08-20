@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-# vici - Vaccine Induced Cellular Immunogenicity: Accurate Estimation with Bivariate Modeling
+# vici - Vaccine Induced Cellular Immunogenicity with Bivariate Modeling
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/vici)](https://CRAN.R-project.org/package=vici)

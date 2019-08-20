@@ -11,7 +11,7 @@
 #'@usage data(ICS_ex)
 #'
 #'@examples
-#'\dontrun{
+#'if(interactive()){
 #' set.seed(1382019)
 #' nsubj <- 20
 #' ntp <- 3
@@ -30,6 +30,7 @@
 #' #View(ICS_ex)
 #' write.table(ICS_ex, file="Documents/GitHub/vici/data/ICS_ex.txt", sep="\t",
 #' row.names = FALSE, quote = FALSE)
-#' }
+#'}
+#'
 #'
 NULL
