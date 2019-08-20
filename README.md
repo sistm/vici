@@ -11,6 +11,7 @@ status](https://www.r-pkg.org/badges/version/vici)](https://CRAN.R-project.org/p
 status](https://travis-ci.org/borishejblum/vici.svg?branch=master)](https://travis-ci.org/borishejblum/vici)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/borishejblum/vici?branch=master&svg=true)](https://ci.appveyor.com/project/borishejblum/vici)
+[![Downloads](https://cranlogs.r-pkg.org/badges/vicis?color=blue)](https://www.r-pkg.org/pkg/vici)
 <!-- badges: end -->
 
 `vici` encapsulate a shiny app for accurate estimation of vaccine
