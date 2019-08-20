@@ -3,7 +3,7 @@
 #'@param ... additional arguments to be passed to the \link[shiny]{runApp} function.
 #'
 #'@examples
-#'if(interactive()){}{
+#'if(interactive()){
 #' vici::run_app()
 #'}
 #'

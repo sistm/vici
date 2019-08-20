@@ -13,7 +13,7 @@ run_app(...)
 Launch VICI Shiny App
 }
 \examples{
-\dontrun{
+if(interactive()){
 vici::run_app()
 }
 

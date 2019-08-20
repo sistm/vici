@@ -12,7 +12,7 @@ data(ICS_ex)
 Toy data to upload in the app.
 }
 \examples{
-\dontrun{
+if(interactive()){
 set.seed(1382019)
 nsubj <- 20
 ntp <- 3
@@ -32,6 +32,7 @@ ICS_ex <- cbind.data.frame("Subject" = subj, "StimulationPool" = stim, "TimePoin
 write.table(ICS_ex, file="Documents/GitHub/vici/data/ICS_ex.txt", sep="\\t",
 row.names = FALSE, quote = FALSE)
 }
+
 
 }
 \keyword{data}
