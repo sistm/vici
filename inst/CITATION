@@ -10,6 +10,8 @@ bibentry(
   number   = "",
   pages    = "",
   url      = "",
-  note   = "R package version 0.5.1",
+  note   = "R package version 0.5.2",
   textVersion = paste("Lhomme E, Hejblum BP, Lacabaratz C, Wiedemann A, Lelièvre J-D, Levy Y, Thiébaut R, Richert L (2019). Analyzing cellular immunogenicity in vaccine clinical trials: a new statistical method including non-specific responses for accurate estimation of vaccine efficacy. Submitted.")
 )
+
+citFooter("We have invested a lot of time and efforts in implementing vici, ", "please cite it when using it for data analysis, research or any other purpose.")
