@@ -15,23 +15,31 @@ knitr::opts_chunk$set(
 # vici - Vaccine Induced Cellular Immunogenicity: Accurate Estimation with Bivariate Modeling
 
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/vici)](https://CRAN.R-project.org/package=vici)
 [![Travis build status](https://travis-ci.org/borishejblum/vici.svg?branch=master)](https://travis-ci.org/borishejblum/vici)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/borishejblum/vici?branch=master&svg=true)](https://ci.appveyor.com/project/borishejblum/vici)
 <!-- badges: end -->
 
 
-`vici` encapsulate a shiny app.
+`vici` encapsulate a shiny app for accurate estimation of vaccine induced immunogenicity 
+with bivariate linear modeling.
+
+> Lhomme E, Hejblum BP, Lacabaratz C, Wiedemann A, Lelièvre J-D, Levy Y, Thiébaut R, Richert L (2019). Analyzing cellular immunogenicity in vaccine clinical trials: a new statistical method including non-specific responses for accurate estimation of vaccine efficacy. _submitted_.
 
 ## Installation
 
-You can install the released version of vici from the `.tar.gz` source with:
-
+You can install the released version of vici from the [CRAN](https://cran.r-project.org/) with:
 ``` r
-install.packages("vici_0.5.1.tar.gz", type="source", repos=NULL)
+install.packages("vici")
+```
+or get the development version from [GitHub](https://github.com/borishejblum/vici):
+```{r GitHub-install, eval=FALSE}
+#install.packages("devtools")
+devtools::install_github("borishejblum/vici")
 ```
 
-Then you can launch the app with:
 
+Then you can launch the app with:
 ``` r
 vici::run_app()
 ```
