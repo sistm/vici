@@ -45,3 +45,13 @@ Then you can launch the app with:
 ``` r
 vici::run_app()
 ```
+
+## Deployed VICI
+
+  - Latest **development** version is deployed at
+    <https://shiny-vici.apps.math.cnrs.fr/>
+
+  - Latest **stable** version is deployed at
+    <http://vici.bph.u-bordeaux.fr/vici/>
+
+– Boris Hejblum
