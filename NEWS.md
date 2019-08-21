@@ -1,3 +1,7 @@
+# vici 0.5.3
+
+ * Added source code & CRAN link buttons
+
 # vici 0.5.1
 
  * First completely operational version of the app
