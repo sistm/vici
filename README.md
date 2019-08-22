@@ -52,6 +52,6 @@ vici::run_app()
     <https://shiny-vici.apps.math.cnrs.fr/>
 
   - Latest **stable** version is deployed at
-    <http://vici.bph.u-bordeaux.fr/vici/>
+    <http://vici.bph.u-bordeaux.fr/>
 
 – Boris Hejblum
