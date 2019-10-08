@@ -30,7 +30,7 @@ r_packages:
 - tidyr
 - covr
 - testthat
-- rselenium
+- RSelenium
 
 r_build_args: "--no-manual --no-resave-data"
 r_check_args: "--as-cran --no-build-vignettes --no-manual --timings"
