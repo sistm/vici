@@ -28,6 +28,9 @@ r_packages:
 - nlme
 - shiny
 - tidyr
+- covr
+- testthat
+- rselenium
 
 r_build_args: "--no-manual --no-resave-data"
 r_check_args: "--as-cran --no-build-vignettes --no-manual --timings"
@@ -35,3 +38,7 @@ r_check_args: "--as-cran --no-build-vignettes --no-manual --timings"
 env:
   global:
   - _R_CHECK_TIMINGS_="0"
+
+# only report coverage for the release version
+after_success:
+  - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
