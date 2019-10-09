@@ -124,8 +124,7 @@ app_server <- function(input, output, session) {
                          choices = c(levels(data$df$TimePoint))
     )
     updateTabsetPanel(session, "inTabset", selected = "dataTab")
-  }
-  )
+  })
 
 
   observeEvent({input$datafile; input$header; input$sep}, {
