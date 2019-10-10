@@ -1,0 +1,77 @@
+{
+  "output": {
+    "heatmap": {
+      "src": "[image data sha1: 13261ce52a7df0796fb04648a319bde82cf5fbc7]",
+      "width": 621,
+      "height": 400,
+      "coordmap": {
+        "panels": [
+          {
+            "panel": 1,
+            "row": 1,
+            "col": 1,
+            "panel_vars": {
+              "panelvar1": "A2"
+            },
+            "log": {
+              "x": null,
+              "y": null
+            },
+            "domain": {
+              "left": 0.4,
+              "right": 2.6,
+              "bottom": 0.4,
+              "top": 2.6
+            },
+            "mapping": {
+              "fill": "pvalue",
+              "x": "Stimulation",
+              "y": "response",
+              "panelvar1": "Arm"
+            },
+            "range": {
+              "left": 71.1506734740697,
+              "right": 293.257213050581,
+              "bottom": 350.369775421233,
+              "top": 60.2054644006849
+            }
+          },
+          {
+            "panel": 2,
+            "row": 1,
+            "col": 2,
+            "panel_vars": {
+              "panelvar1": "A3"
+            },
+            "log": {
+              "x": null,
+              "y": null
+            },
+            "domain": {
+              "left": 0.4,
+              "right": 2.6,
+              "bottom": 0.4,
+              "top": 2.6
+            },
+            "mapping": {
+              "fill": "pvalue",
+              "x": "Stimulation",
+              "y": "response",
+              "panelvar1": "Arm"
+            },
+            "range": {
+              "left": 298.736664223016,
+              "right": 520.843203799528,
+              "bottom": 350.369775421233,
+              "top": 60.2054644006849
+            }
+          }
+        ],
+        "dims": {
+          "width": 621,
+          "height": 400
+        }
+      }
+    }
+  }
+}

@@ -62,7 +62,7 @@ app_server <- function(input, output, session) {
 
 
   # example data
-  output$downloadExData <- downloadHandler(
+  output$downloadExData <- downloadHandler(   #Fait appel à une lib externe donc pas besoin de tester
     filename = "exampleICSdata.txt",
     content = function(file) {
       utils::write.table(vici::ICS_ex, file, row.names = FALSE, sep="\t", quote = FALSE)
@@ -75,6 +75,7 @@ app_server <- function(input, output, session) {
     output$table2render <- DT::renderDataTable(data$df,
                                                options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
     )
+    #Ensemble setter
     output$mod <- reactive(NULL)
     output$mod_display <- reactive(FALSE)
     updateRadioButtons(session, inputId = "sep", selected = "\t")
@@ -141,6 +142,8 @@ app_server <- function(input, output, session) {
         },
         error = function(e){ stop(safeError(e)) } # return a safeError if a parsing error occurs
       )
+      
+      #Setters 
       clean_output(output)
       output$mod <- reactive(NULL)
       output$mod_display <- reactive(FALSE)
@@ -240,7 +243,11 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectSubject, {
     #cat("observe selectSubj", "\n")
     if (input$selectSubject != ''){
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      cat("input => : ")
+      cat(str(input),"\n")
+      cat("colnames(data$df) => : ")
+      cat(str(colnames(data$df)),"\n")
+      data$available_vars <-  update_vars(input, possibilities = colnames(data$df)) #A tester
     }
     clean_output(output)
   })
@@ -248,6 +255,10 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectStim, {
     #cat("observe selectStim", "\n")
     if (input$selectStim != ''){
+      cat("input => : ")
+      cat(str(input),"\n")
+      cat("colnames(data$df) => : ")
+      cat(str(colnames(data$df)),"\n")
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
       if (input$selectStim %in% colnames(data$df)){
         selected_stim_var <- data$df[, input$selectStim]
@@ -279,7 +290,13 @@ app_server <- function(input, output, session) {
     #cat("observe selectResp", "\n")
     if (length(input$selectResponse) >= 1){
       if (input$selectResponse[1] != ''){
+        cat("input => : ")
+        cat(str(input),"\n")
+        cat("colnames(data$df) => : ")
+        cat(str(colnames(data$df)),"\n")
         data$available_vars <- update_vars(input, possibilities = colnames(data$df))
+        cat("data$available_vars => : ","\n")
+        cat(as.character(data$available_vars),"\n")
         clean_output(output)
       }
     }
@@ -288,7 +305,13 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectArm, {
     #cat("observe selectArm", "\n")
     if (input$selectArm != ''){
+      cat("input => : ")
+      cat(str(input),"\n")
+      cat("colnames(data$df) => : ")
+      cat(str(colnames(data$df)),"\n")
       data$available_vars <- update_vars(input, possibilities = colnames(data$df))
+      cat("data$available_vars => : ","\n")
+      cat(as.character(data$available_vars),"\n")
 
       if (input$selectArm %in% colnames(data$df)){
         selected_arm_var <- data$df[, input$selectArm]
@@ -324,10 +347,22 @@ app_server <- function(input, output, session) {
         output$armisfactor <- reactive(FALSE)
         output$warningarmisfactor <- reactive(NULL)
         data$fact_arm_OK <- FALSE
-        data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+        cat("input => : ")
+        cat(str(input),"\n")
+        cat("colnames(data$df) => : ")
+        cat(str(colnames(data$df)),"\n")
+        data$available_vars <-  update_vars(input, possibilities = colnames(data$df)) #A tester
+        cat("data$available_vars => : ","\n")
+        cat(as.character(data$available_vars),"\n")
       }
     }else{
+      cat("input => : ")
+      cat(str(input),"\n")
+      cat("colnames(data$df) => : ")
+      cat(str(colnames(data$df)),"\n")
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      cat("data$available_vars => : ","\n")
+      cat(as.character(data$available_vars),"\n")
     }
     clean_output(output)
   })
@@ -336,7 +371,13 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectArm2, {
     #cat("observe selectArm2", "\n")
     if (input$selectArm2 != ''){
+      cat("input => : ")
+      cat(str(input),"\n")
+      cat("colnames(data$df) => : ")
+      cat(str(colnames(data$df)),"\n")
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      cat("data$available_vars => : ","\n")
+      cat(as.character(data$available_vars),"\n")
 
       if (input$selectArm2 %in% colnames(data$df)){
         selected_arm2_var <- data$df[, input$selectArm2]
@@ -352,7 +393,7 @@ app_server <- function(input, output, session) {
           # }
         }else{
           output$arm2isfactor <- reactive(FALSE)
-          output$warningarm2isfactor <- reactive(paste0("WARNING: '", input$selectArm2,
+          output$warningarm2isfactor <- reactive(paste0("WARNING: '", input$selectArm2, #paste concatène chaine caractère 
                                                         "' is not a factor"))
           data$fact_arm2_OK <- FALSE
           possible_arm2s <- paste0("Error: '", input$selectArm2,
@@ -489,7 +530,7 @@ app_server <- function(input, output, session) {
 
   observeEvent({input$selectRefArm; input$selectRefArm2; input$selectRefStim; input$selectRefTime; input$selectRefTime2}, {
     #cat("observe selectRefs", "\n")
-    clean_output(output)
+    clean_output(output) # a tester
   })
 
 
