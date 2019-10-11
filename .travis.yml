@@ -32,6 +32,7 @@ r_packages:
 - covr
 - testthat
 - RSelenium
+- shinytest
 #- packrat/lib
 #- travis_phantomjs
 
