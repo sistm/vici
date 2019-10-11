@@ -65,8 +65,6 @@ app_server <- function(input, output, session) {
     filename = "ResVICI.txt",
     
     content = function(file){
-      cat("res_data => ")
-      cat(as.character(res_data), "\n")
       utils::write.table(res_data,file,row.names = FALSE, sep = "\t", quote = FALSE)
     }
   )
