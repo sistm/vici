@@ -60,7 +60,7 @@ before_install:
   - "phantomjs --version"
 
 script:
-  - R -f run_shinyTest.R
+  - R -f inst/app/tests/run_shinyTest.R
 # only report coverage for the release version
 after_success:
   - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
