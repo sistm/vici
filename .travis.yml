@@ -33,7 +33,7 @@ r_packages:
 - testthat
 - RSelenium
 #- packrat/lib
-- travis_phantomjs
+#- travis_phantomjs
 
 #install:
 #  - R -e 'if (system.file(package="packrat") == "") install.packages("packrat")'
