@@ -163,11 +163,11 @@ app_ui <- function() {
                              #          h3("Model"),
                              #          uiOutput('mod')),
                              # ),
-
                              conditionalPanel(
                                condition = "output.heatmap != null | output.res_error != null",
                                tags$hr(),
                                h3("Analysis results"),
+                               downloadButton("downloadRes", label = "Download Results", class = "btn-primary"),
                                conditionalPanel(
                                  condition = "output.res_error != null",
                                  verbatimTextOutput("res_error")

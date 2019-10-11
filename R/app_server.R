@@ -49,6 +49,8 @@ app_server <- function(input, output, session) {
   data$fact_arm_OK <- TRUE
   data$fact_time_OK <- TRUE
   data$fact_time2_OK <- TRUE
+  
+  res_data <- NULL
 
 
   # data import ----
@@ -59,7 +61,15 @@ app_server <- function(input, output, session) {
   options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
   )
 
-
+  output$downloadRes <- downloadHandler(
+    filename = "ResVICI.txt",
+    
+    content = function(file){
+      cat("res_data => ")
+      cat(as.character(res_data), "\n")
+      utils::write.table(res_data,file,row.names = FALSE, sep = "\t", quote = FALSE)
+    }
+  )
 
   # example data
   output$downloadExData <- downloadHandler(   #Fait appel à une lib externe donc pas besoin de tester
@@ -243,10 +253,6 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectSubject, {
     #cat("observe selectSubj", "\n")
     if (input$selectSubject != ''){
-      cat("input => : ")
-      cat(str(input),"\n")
-      cat("colnames(data$df) => : ")
-      cat(str(colnames(data$df)),"\n")
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df)) #A tester
     }
     clean_output(output)
@@ -255,10 +261,6 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectStim, {
     #cat("observe selectStim", "\n")
     if (input$selectStim != ''){
-      cat("input => : ")
-      cat(str(input),"\n")
-      cat("colnames(data$df) => : ")
-      cat(str(colnames(data$df)),"\n")
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
       if (input$selectStim %in% colnames(data$df)){
         selected_stim_var <- data$df[, input$selectStim]
@@ -290,13 +292,9 @@ app_server <- function(input, output, session) {
     #cat("observe selectResp", "\n")
     if (length(input$selectResponse) >= 1){
       if (input$selectResponse[1] != ''){
-        cat("input => : ")
-        cat(str(input),"\n")
-        cat("colnames(data$df) => : ")
-        cat(str(colnames(data$df)),"\n")
+
         data$available_vars <- update_vars(input, possibilities = colnames(data$df))
-        cat("data$available_vars => : ","\n")
-        cat(as.character(data$available_vars),"\n")
+
         clean_output(output)
       }
     }
@@ -305,13 +303,9 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectArm, {
     #cat("observe selectArm", "\n")
     if (input$selectArm != ''){
-      cat("input => : ")
-      cat(str(input),"\n")
-      cat("colnames(data$df) => : ")
-      cat(str(colnames(data$df)),"\n")
+
       data$available_vars <- update_vars(input, possibilities = colnames(data$df))
-      cat("data$available_vars => : ","\n")
-      cat(as.character(data$available_vars),"\n")
+
 
       if (input$selectArm %in% colnames(data$df)){
         selected_arm_var <- data$df[, input$selectArm]
@@ -347,22 +341,14 @@ app_server <- function(input, output, session) {
         output$armisfactor <- reactive(FALSE)
         output$warningarmisfactor <- reactive(NULL)
         data$fact_arm_OK <- FALSE
-        cat("input => : ")
-        cat(str(input),"\n")
-        cat("colnames(data$df) => : ")
-        cat(str(colnames(data$df)),"\n")
+
         data$available_vars <-  update_vars(input, possibilities = colnames(data$df)) #A tester
-        cat("data$available_vars => : ","\n")
-        cat(as.character(data$available_vars),"\n")
+
       }
     }else{
-      cat("input => : ")
-      cat(str(input),"\n")
-      cat("colnames(data$df) => : ")
-      cat(str(colnames(data$df)),"\n")
+
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
-      cat("data$available_vars => : ","\n")
-      cat(as.character(data$available_vars),"\n")
+
     }
     clean_output(output)
   })
@@ -371,13 +357,9 @@ app_server <- function(input, output, session) {
   observeEvent(input$selectArm2, {
     #cat("observe selectArm2", "\n")
     if (input$selectArm2 != ''){
-      cat("input => : ")
-      cat(str(input),"\n")
-      cat("colnames(data$df) => : ")
-      cat(str(colnames(data$df)),"\n")
+
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
-      cat("data$available_vars => : ","\n")
-      cat(as.character(data$available_vars),"\n")
+
 
       if (input$selectArm2 %in% colnames(data$df)){
         selected_arm2_var <- data$df[, input$selectArm2]
@@ -578,6 +560,8 @@ app_server <- function(input, output, session) {
             if(!inherits(fit_res$mgls, "try-error")){
               responses_res[[response]]$res_error <- NULL
               responses_res[[response]]$postprocess_res <- interarm_postprocessres(data_df, fit_res)
+              res_data <<- responses_res[[response]]$postprocess_res
+              cat("res_data should update","\n")
               boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                                         response_name = response, input = input)
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
@@ -640,6 +624,8 @@ app_server <- function(input, output, session) {
               if(!prod(sapply(fit_res, function(x){inherits(x$mgls, "try-error")}))){
                 responses_res[[response]]$res_error <- NULL
                 responses_res[[response]]$postprocess_res <- intraarm_postprocessres(data_df, fit_res)
+                res_data <<- responses_res[[response]]$postprocess_res
+                cat("res_data should update","\n")
                 #responses_res[[response]]$postprocess_res$pval_2plot <- do.call(rbind, responses_res[[response]]$postprocess_res$pval_2plot)
                 boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                response_name = response,
