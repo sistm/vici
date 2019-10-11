@@ -32,6 +32,8 @@ r_packages:
 - covr
 - testthat
 - RSelenium
+- packrat/lib
+- travis_phantomjs
 
 r_build_args: "--no-manual --no-resave-data"
 r_check_args: "--as-cran --no-build-vignettes --no-manual --timings"
@@ -40,6 +42,21 @@ env:
   global:
   - _R_CHECK_TIMINGS_="0"
 
+# Install PhantomJS (if not cached)
+before_install:
+  - "export PHANTOMJS_VERSION=2.1.1"
+  - "phantomjs --version"
+  - "export PATH=$PWD/travis_phantomjs/phantomjs-$PHANTOMJS_VERSION-linux-x86_64/bin:$PATH"
+  - "hash -r"
+  - "phantomjs --version"
+  - "if [ $(phantomjs --version) != $PHANTOMJS_VERSION ]; then rm -rf $PWD/travis_phantomjs; mkdir -p $PWD/travis_phantomjs; fi"
+  - "if [ $(phantomjs --version) != $PHANTOMJS_VERSION ]; then wget https://github.com/Medium/phantomjs/releases/download/v$PHANTOMJS_VERSION/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2 -O $PWD/travis_phantomjs/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2; fi"
+  - "if [ $(phantomjs --version) != $PHANTOMJS_VERSION ]; then tar -xvf $PWD/travis_phantomjs/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2 -C $PWD/travis_phantomjs; fi"
+  - "if [ $(phantomjs --version) != $PHANTOMJS_VERSION ]; then hash -r; fi"
+  - "phantomjs --version"
+
+script:
+  - R -f run_shinyTest.R
 # only report coverage for the release version
 after_success:
   - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
