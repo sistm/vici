@@ -3,9 +3,9 @@
     "datafile": null,
     "github_code": 0,
     "header": true,
-    "inTabset": "dataTab",
+    "inTabset": "resTab",
     "loadExample": 1,
-    "modelfit": 0,
+    "modelfit": 1,
     "selectArm": "Arm",
     "selectArm-selectized": "",
     "selectArm2": "",
@@ -600,13 +600,149 @@
   "output": {
     "arm2isfactor": true,
     "armisfactor": true,
+    "boxplotsAndTabs": {
+      "html": "<div class=\"tabbable\">\n  <ul class=\"nav nav-tabs\" data-tabsetid=\"9534\">\n    <li class=\"active\">\n      <a href=\"#tab-9534-1\" data-toggle=\"tab\" data-value=\"Response1\">Response1<\/a>\n    <\/li>\n    <li>\n      <a href=\"#tab-9534-2\" data-toggle=\"tab\" data-value=\"Response2\">Response2<\/a>\n    <\/li>\n  <\/ul>\n  <div class=\"tab-content\" data-tabsetid=\"9534\">\n    <div class=\"tab-pane active\" data-value=\"Response1\" id=\"tab-9534-1\">\n      <div class=\"well\">\n        <div class=\"row\">\n          <div id=\"out93d83a4d1c899ff9\" class=\"shiny-plot-output\" style=\"width: 100% ; height: 400px\"><\/div>\n        <\/div>\n        <h6><\/h6>\n        <a id=\"out6f0d6a7a76167b4d\" class=\"btn btn-default shiny-download-link btn-primary\" href=\"\" target=\"_blank\" download>\n          <i class=\"fa fa-download\"><\/i>\n          Download boxplot [PNG]\n        <\/a>\n        <h3><\/h3>\n        <h4>Numerical results for Response1<\/h4>\n        <div id=\"out458d803c69f269f8\" class=\"shiny-html-output\"><\/div>\n      <\/div>\n    <\/div>\n    <div class=\"tab-pane\" data-value=\"Response2\" id=\"tab-9534-2\">\n      <div class=\"well\">\n        <div class=\"row\">\n          <div id=\"out3e949dc49f3fddd5\" class=\"shiny-plot-output\" style=\"width: 100% ; height: 400px\"><\/div>\n        <\/div>\n        <h6><\/h6>\n        <a id=\"out8f6ba92a687d716c\" class=\"btn btn-default shiny-download-link btn-primary\" href=\"\" target=\"_blank\" download>\n          <i class=\"fa fa-download\"><\/i>\n          Download boxplot [PNG]\n        <\/a>\n        <h3><\/h3>\n        <h4>Numerical results for Response2<\/h4>\n        <div id=\"outc38a1846565edf0f\" class=\"shiny-html-output\"><\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n<\/div>",
+      "deps": [
+        {
+          "name": "font-awesome",
+          "version": "5.3.1",
+          "src": {
+            "href": "font-awesome-5.3.1"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": [
+            "css/all.min.css",
+            "css/v4-shims.min.css"
+          ],
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        }
+      ]
+    },
     "downloadBP": null,
-    "downloadHM": null,
-    "heatmap": null,
+    "heatmap": {
+      "src": "[image data sha1: 13261ce52a7df0796fb04648a319bde82cf5fbc7]",
+      "width": 621,
+      "height": 400,
+      "coordmap": {
+        "panels": [
+          {
+            "panel": 1,
+            "row": 1,
+            "col": 1,
+            "panel_vars": {
+              "panelvar1": "A2"
+            },
+            "log": {
+              "x": null,
+              "y": null
+            },
+            "domain": {
+              "left": 0.4,
+              "right": 2.6,
+              "bottom": 0.4,
+              "top": 2.6
+            },
+            "mapping": {
+              "fill": "pvalue",
+              "x": "Stimulation",
+              "y": "response",
+              "panelvar1": "Arm"
+            },
+            "range": {
+              "left": 71.1506734740697,
+              "right": 293.257213050581,
+              "bottom": 350.369775421233,
+              "top": 60.2054644006849
+            }
+          },
+          {
+            "panel": 2,
+            "row": 1,
+            "col": 2,
+            "panel_vars": {
+              "panelvar1": "A3"
+            },
+            "log": {
+              "x": null,
+              "y": null
+            },
+            "domain": {
+              "left": 0.4,
+              "right": 2.6,
+              "bottom": 0.4,
+              "top": 2.6
+            },
+            "mapping": {
+              "fill": "pvalue",
+              "x": "Stimulation",
+              "y": "response",
+              "panelvar1": "Arm"
+            },
+            "range": {
+              "left": 298.736664223016,
+              "right": 520.843203799528,
+              "bottom": 350.369775421233,
+              "top": 60.2054644006849
+            }
+          }
+        ],
+        "dims": {
+          "width": 621,
+          "height": 400
+        }
+      }
+    },
     "mod_display": true,
+    "out458d803c69f269f8": "<table  class = 'table shiny-table table- spacing-s' style = 'width:auto;'>\n<thead> <tr> <th style='text-align: left;'>  <\/th> <th style='text-align: right;'> Estimate <\/th> <th style='text-align: right;'> Standard error <\/th> <th style='text-align: right;'> p-value <\/th>  <\/tr> <\/thead> <tbody>\n  <tr> <td> Average response in reference stimulation NS in reference arm Placebo <\/td> <td align=\"right\"> 0.04756 <\/td> <td align=\"right\"> 0.00760 <\/td> <td align=\"right\"> 0.00000 <\/td> <\/tr>\n  <tr> <td> Average response in stimulation S1 in reference arm Placebo <\/td> <td align=\"right\"> 0.07824 <\/td> <td align=\"right\"> 0.01291 <\/td> <td align=\"right\"> 0.00000 <\/td> <\/tr>\n  <tr> <td> Average response in stimulation S2 in reference arm Placebo <\/td> <td align=\"right\"> 0.04880 <\/td> <td align=\"right\"> 0.01089 <\/td> <td align=\"right\"> 0.00001 <\/td> <\/tr>\n  <tr> <td> Effect of reference stimulation NS on response in stimulation S1 <\/td> <td align=\"right\"> -0.36404 <\/td> <td align=\"right\"> 0.17332 <\/td> <td align=\"right\"> 0.03718 <\/td> <\/tr>\n  <tr> <td> Effect of reference stimulation NS on response in stimulation S2 <\/td> <td align=\"right\"> 0.26194 <\/td> <td align=\"right\"> 0.14612 <\/td> <td align=\"right\"> 0.07482 <\/td> <\/tr>\n  <tr> <td> Effect of arm A2 on response in reference stimulation NS <\/td> <td align=\"right\"> 0.00956 <\/td> <td align=\"right\"> 0.01074 <\/td> <td align=\"right\"> 0.37479 <\/td> <\/tr>\n  <tr> <td> Effect of arm A2 on response in stimulation S1 <\/td> <td align=\"right\"> 0.00113 <\/td> <td align=\"right\"> 0.01415 <\/td> <td align=\"right\"> 0.93645 <\/td> <\/tr>\n  <tr> <td> Effect of arm A2 on response in stimulation S2 <\/td> <td align=\"right\"> 0.04839 <\/td> <td align=\"right\"> 0.01193 <\/td> <td align=\"right\"> 0.00008 <\/td> <\/tr>\n  <tr> <td> Effect of arm A3 on response in reference stimulation NS <\/td> <td align=\"right\"> -0.01284 <\/td> <td align=\"right\"> 0.01074 <\/td> <td align=\"right\"> 0.23368 <\/td> <\/tr>\n  <tr> <td> Effect of arm A3 on response in stimulation S1 <\/td> <td align=\"right\"> -0.01188 <\/td> <td align=\"right\"> 0.01423 <\/td> <td align=\"right\"> 0.40509 <\/td> <\/tr>\n  <tr> <td> Effect of arm A3 on response in stimulation S2 <\/td> <td align=\"right\"> -0.00424 <\/td> <td align=\"right\"> 0.01200 <\/td> <td align=\"right\"> 0.72415 <\/td> <\/tr>\n   <\/tbody> <\/table>",
+    "out93d83a4d1c899ff9": {
+      "src": "[image data sha1: 49c723e8106d75330f20156f1f17c2d7eb12bda4]",
+      "width": 621,
+      "height": 400,
+      "coordmap": {
+        "panels": [
+          {
+            "panel": 1,
+            "row": 1,
+            "col": 1,
+            "panel_vars": {
+
+            },
+            "log": {
+              "x": null,
+              "y": null
+            },
+            "domain": {
+              "left": 0.4,
+              "right": 3.6,
+              "bottom": -0.0122805,
+              "top": 0.2600905
+            },
+            "mapping": {
+              "colour": "arm",
+              "fill": "arm",
+              "x": "stim",
+              "y": "response"
+            },
+            "range": {
+              "left": 50.3461936361832,
+              "right": 615.022316902798,
+              "bottom": 345.676127777709,
+              "top": 85.1230671376588
+            }
+          }
+        ],
+        "dims": {
+          "width": 621,
+          "height": 400
+        }
+      }
+    },
     "res_error": null,
-    "res_lik": null,
-    "res_var": null,
+    "res_lik": "<table  class = 'table shiny-table table- spacing-s' style = 'width:auto;'>\n<thead> <tr> <th style='text-align: left;'>  <\/th> <th style='text-align: right;'> AIC <\/th> <th style='text-align: right;'> -2 Res. logLikelihood <\/th>  <\/tr> <\/thead> <tbody>\n  <tr> <td> Response1 <\/td> <td align=\"right\"> -572.9563 <\/td> <td align=\"right\"> -600.9563 <\/td> <\/tr>\n  <tr> <td> Response2 <\/td> <td align=\"right\"> -563.3217 <\/td> <td align=\"right\"> -591.3217 <\/td> <\/tr>\n   <\/tbody> <\/table>",
+    "res_var": "<table  class = 'table shiny-table table- spacing-s' style = 'width:auto;'>\n<thead> <tr> <th style='text-align: left;'>  <\/th> <th style='text-align: right;'> NS <\/th> <th style='text-align: right;'> S1 <\/th> <th style='text-align: right;'> S2 <\/th>  <\/tr> <\/thead> <tbody>\n  <tr> <td> Response1 <\/td> <td align=\"right\"> 0.001154 <\/td> <td align=\"right\"> 0.001976 <\/td> <td align=\"right\"> 0.001404 <\/td> <\/tr>\n  <tr> <td> Response2 <\/td> <td align=\"right\"> 0.001927 <\/td> <td align=\"right\"> 0.001400 <\/td> <td align=\"right\"> 0.001372 <\/td> <\/tr>\n   <\/tbody> <\/table>",
     "stimisfactor": true,
     "table2render": {
       "x": {
