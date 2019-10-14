@@ -65,7 +65,7 @@ app_server <- function(input, output, session) {
     filename = "ResVICI.txt",
     
     content = function(file){
-      utils::write.table(res_data,file,row.names = FALSE, sep = "\t", quote = FALSE)
+      utils::write.table(res_data,file,row.names = TRUE, sep = "\t", quote = FALSE)
     }
   )
 
@@ -559,7 +559,7 @@ app_server <- function(input, output, session) {
               responses_res[[response]]$res_error <- NULL
               responses_res[[response]]$postprocess_res <- interarm_postprocessres(data_df, fit_res)
               res_data <<- responses_res[[response]]$postprocess_res
-              cat("res_data should update","\n")
+              #cat("res_data should update","\n")
               boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                                         response_name = response, input = input)
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
@@ -616,9 +616,12 @@ app_server <- function(input, output, session) {
                 transformed_data_temp$stim <- stats::relevel(transformed_data_temp$stim, ref=input$selectRefStim)
 
                 # model fit ----
+                #cat("intraarm_fit","\n")
                 fit_res[[tp]] <- intraarm_fit(transformed_data = transformed_data_temp,
                                               tested_time = tp, input = input)
               }
+              #cat("fit_res => ")
+              #cat(str(fit_res),"\n")
               if(!prod(sapply(fit_res, function(x){inherits(x$mgls, "try-error")}))){
                 responses_res[[response]]$res_error <- NULL
                 responses_res[[response]]$postprocess_res <- intraarm_postprocessres(data_df, fit_res)
@@ -654,6 +657,9 @@ app_server <- function(input, output, session) {
           output$res_error <- reactive("Please select adequate analysis parameters before trying to fit the model...")
         }else{
           myTabs <- lapply(input$selectResponse, function(resp) {
+            cat("responses_res[[resp]]$res_tab => ")
+            cat(as.character(responses_res[[resp]]$res_tab),"\n")
+            res_data <<- responses_res[[resp]]$res_tab
             tabPanel(title = resp, value = resp,
                      wellPanel(
                        fluidRow(
