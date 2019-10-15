@@ -167,7 +167,7 @@ app_ui <- function() {
                                condition = "output.heatmap != null | output.res_error != null",
                                tags$hr(),
                                h3("Analysis results"),
-                               downloadButton("downloadRes", label = "Download Results", class = "btn-primary"),
+                               
                                conditionalPanel(
                                  condition = "output.res_error != null",
                                  verbatimTextOutput("res_error")
@@ -192,7 +192,8 @@ app_ui <- function() {
                                    )
                                  ),
                                  h2(""),
-                                 uiOutput('boxplotsAndTabs')
+                                 uiOutput('boxplotsAndTabs'),
+                                 downloadButton("downloadRes", label = "Download Results", class = "btn-primary")
                                )
                              )
                     ),

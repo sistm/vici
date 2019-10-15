@@ -558,7 +558,11 @@ app_server <- function(input, output, session) {
             if(!inherits(fit_res$mgls, "try-error")){
               responses_res[[response]]$res_error <- NULL
               responses_res[[response]]$postprocess_res <- interarm_postprocessres(data_df, fit_res)
-              res_data <<- responses_res[[response]]$postprocess_res
+             # if(is.null(res_data)){
+            #    res_data <<- responses_res[[response]]$postprocess_res
+              #}else{
+              #  
+              #}
               #cat("res_data should update","\n")
               boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                                         response_name = response, input = input)
@@ -625,7 +629,7 @@ app_server <- function(input, output, session) {
               if(!prod(sapply(fit_res, function(x){inherits(x$mgls, "try-error")}))){
                 responses_res[[response]]$res_error <- NULL
                 responses_res[[response]]$postprocess_res <- intraarm_postprocessres(data_df, fit_res)
-                res_data <<- responses_res[[response]]$postprocess_res
+                #res_data <<- responses_res[[response]]$postprocess_res
                 cat("res_data should update","\n")
                 #responses_res[[response]]$postprocess_res$pval_2plot <- do.call(rbind, responses_res[[response]]$postprocess_res$pval_2plot)
                 boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
@@ -657,9 +661,13 @@ app_server <- function(input, output, session) {
           output$res_error <- reactive("Please select adequate analysis parameters before trying to fit the model...")
         }else{
           myTabs <- lapply(input$selectResponse, function(resp) {
-            cat("responses_res[[resp]]$res_tab => ")
-            cat(as.character(responses_res[[resp]]$res_tab),"\n")
-            res_data <<- responses_res[[resp]]$res_tab
+            cat("res_data => ")
+            cat(as.character(res_data),"\n")
+            if(is.null(res_data)){
+              res_data <<- responses_res[[resp]]$res_tab
+            }else{
+              res_data <<- rbind(res_data,responses_res[[resp]]$res_tab)
+            }
             tabPanel(title = resp, value = resp,
                      wellPanel(
                        fluidRow(
