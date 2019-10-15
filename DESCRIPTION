@@ -25,4 +25,5 @@ Imports:
     testthat,
     RSelenium,
     golem
+    future
 RoxygenNote: 6.1.1
