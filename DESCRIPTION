@@ -24,6 +24,6 @@ Imports:
     covr,
     testthat,
     RSelenium,
-    golem
+    golem,
     future
 RoxygenNote: 6.1.1
