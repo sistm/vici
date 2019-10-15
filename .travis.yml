@@ -57,7 +57,7 @@ after_success:
   - Rscript -e 'library(vici)'
   - Rscript -e 'vici::run_app()'&
   - Rscript -e 'testthat::test_dir("tests")'
-  - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
+  - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'vici::run_app()' && Rscript -e 'covr::codecov()'
   
 #deploy:
 #  provider: pages
