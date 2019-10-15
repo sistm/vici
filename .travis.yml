@@ -50,7 +50,8 @@ addons:
 
 
 script:
-- Rscript vici/R/run_app.R &
+- Rscript -e 'vici::run_app()' &
+- Rscript -e 'testthat::test_dir("tests")'
 #  - R -f inst/app/tests/run_shinyTest.R
 # only report coverage for the release version
 after_success:
