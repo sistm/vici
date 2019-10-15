@@ -50,6 +50,7 @@ addons:
 
 
 script:
+- Rscript -e 'library(vici)'
 - Rscript -e 'vici::run_app()' &
 - Rscript -e 'testthat::test_dir("tests")'
 #  - R -f inst/app/tests/run_shinyTest.R
