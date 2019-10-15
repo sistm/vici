@@ -32,7 +32,7 @@ r_packages:
 - covr
 - testthat
 - RSelenium
-- shinytest
+- future
 #- packrat/lib
 #- travis_phantomjs
 

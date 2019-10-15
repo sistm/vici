@@ -2,7 +2,9 @@ context("Selenium Test")
 
 library(RSelenium)
 library(testthat)
-library(wdman)
+library(future)
+skip_on_cran()
+
 
 #rD <- rsDriver(port = 4455L, browser = c("chrome", "firefox", "phantomjs",
 #                                   "internet explorer"), version = "latest", chromever = "latest",
@@ -23,8 +25,11 @@ rD <- RSelenium::rsDriver(
 remDr <- rD$client#remoteDriver(browserName = "firefox",port=4455L)
 remDr$open(silent = FALSE)
 appURL <- "http://127.0.0.1:8080"
-#vici::run_app()
-test_that("can connect to app", {  
+#app %<-% vici::run_app()
+
+
+test_that("can connect to app", {
+  skip_on_cran()
   remDr$navigate(appURL)
   webElem <- remDr$findElement(using = "xpath", value = "/html/body/div[2]/h2")
   textWebElem <- webElem$getElementText()
