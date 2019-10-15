@@ -68,6 +68,7 @@ before_install:
 #  - R -f inst/app/tests/run_shinyTest.R
 # only report coverage for the release version
 after_success:
+  - Rscript -e 'vici::run_app()' &
   - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
   
 #deploy:
