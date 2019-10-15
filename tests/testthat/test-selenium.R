@@ -3,6 +3,8 @@ context("Selenium Test")
 library(RSelenium)
 library(testthat)
 library(future)
+
+
 skip_on_cran()
 
 
@@ -25,7 +27,7 @@ rD <- RSelenium::rsDriver(
 remDr <- rD$client#remoteDriver(browserName = "firefox",port=4455L)
 remDr$open(silent = FALSE)
 appURL <- "http://127.0.0.1:8080"
-#app %<-% vici::run_app()
+app %<-% vici::run_app()
 
 
 test_that("can connect to app", {
