@@ -18,14 +18,14 @@ rD <- RSelenium::rsDriver(
 )
 
 
-remDr <- rD$client#remoteDriver(browserName = "firefox",port=4455L)
+remDr <- rD$client()#remoteDriver(browserName = "firefox",port=4455L)
 remDr$open(silent = FALSE)
 appURL <- "http://127.0.0.1:8080"
 #app %<-% vici::run_app()
 
 
 test_that("can connect to app", {
-  #skip_on_cran()
+  skip_on_cran()
   remDr$navigate(appURL)
   webElem <- remDr$findElement(using = "xpath", value = "/html/body/div[2]/h2")
   textWebElem <- webElem$getElementText()
