@@ -39,7 +39,7 @@ r_packages:
 
 
 r_build_args: "--no-manual --no-resave-data"
-r_check_args: "--as-cran --no-build-vignettes --no-manual --timings --no-tests"
+r_check_args: "--as-cran --no-build-vignettes --no-manual --timings "
 
 env:
   global:
@@ -62,9 +62,9 @@ before_install:
 #  - R -f inst/app/tests/run_shinyTest.R
 # only report coverage for the release version
 after_success:
-  - Rscript -e 'library(vici)'
-  - Rscript -e 'vici::run_app()'&
-  - Rscript -e 'testthat::test_dir("tests")'
+# - Rscript -e 'library(vici)'
+# - Rscript -e 'vici::run_app()'&
+# - Rscript -e 'testthat::test_dir("tests")'
   - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
 
 jobs:
