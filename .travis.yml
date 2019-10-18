@@ -17,11 +17,11 @@ matrix:
     - os: linux
       r: devel
 
-    - os: osx
-      r: release
+    #- os: osx
+    #  r: release
 
-    - os: osx
-      r: devel
+    #- os: osx
+    #  r: devel
 
 r_packages:
 - cowplot
@@ -57,9 +57,6 @@ before_install:
 #  - docker ps -a
 #  - docker run rocker/tidyverse /bin/sh -c "cd /root/tidyverse; bundle exec rake test"
 
-jobs:
-  include:
-    - stage 
 
 #script:
 #  - R -f inst/app/tests/run_shinyTest.R
@@ -70,10 +67,16 @@ after_success:
   - Rscript -e 'testthat::test_dir("tests")'
   - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
   
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-  keep_history: true
-  on:
-    branch: test_deploy
+jobs:
+  include:
+    - stage :"Test"
+      name : "TestThat"
+      script : Rscript -e 'testthat::test_dir("tests")'
+    - stage : "deploy"
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+        keep_history: true
+        on:
+          branch: test_deploy
