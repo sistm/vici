@@ -36,8 +36,6 @@ r_packages:
 - testthat
 - RSelenium
 - future
-#- packrat/lib
-#- travis_phantomjs
 
 
 r_build_args: "--no-manual --no-resave-data"
@@ -72,10 +70,10 @@ after_success:
   - Rscript -e 'testthat::test_dir("tests")'
   - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
   
-#deploy:
-#  provider: pages
-#  skip_cleanup: true
-#  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-#  keep_history: true
-#  on:
-#    branch: test_deploy
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep_history: true
+  on:
+    branch: test_deploy
