@@ -45,7 +45,7 @@ env:
   global:
   - _R_CHECK_TIMINGS_="0"
   - MOZ_HEADLESS=1
-  
+
 addons:
   firefox: latest
 
@@ -66,10 +66,10 @@ after_success:
   - Rscript -e 'vici::run_app()'&
   - Rscript -e 'testthat::test_dir("tests")'
   - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
-  
+
 jobs:
   include:
-    - stage :"Test"
+    - stage : "Test"
       name : "TestThat"
       script : Rscript -e 'testthat::test_dir("tests")'
     - stage : "deploy"
