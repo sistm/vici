@@ -59,14 +59,17 @@ before_install:
 #  - docker ps -a
 #  - docker run rocker/tidyverse /bin/sh -c "cd /root/tidyverse; bundle exec rake test"
 
+jobs:
+  include:
+    - stage 
 
 #script:
 #  - R -f inst/app/tests/run_shinyTest.R
 # only report coverage for the release version
 after_success:
-#  - Rscript -e 'library(vici)'
-#  - Rscript -e 'vici::run_app()'&
-#  - Rscript -e 'testthat::test_dir("tests")'
+  - Rscript -e 'library(vici)'
+  - Rscript -e 'vici::run_app()'&
+  - Rscript -e 'testthat::test_dir("tests")'
   - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
   
 #deploy:
