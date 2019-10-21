@@ -7,16 +7,16 @@ library(testthat)
 
 #skip_on_cran()
 
-rD <- RSelenium::rsDriver(
-  browser = "firefox",
-  extraCapabilities = list(
-    "moz:firefoxOptions" = list(
-      args = list()#('--headless')
-    )
-  )
-)
+#rD <- RSelenium::rsDriver(
+#  browser = "firefox",
+#  extraCapabilities = list(
+#    "moz:firefoxOptions" = list(
+#      args = list()#('--headless')
+#    )
+#  )
+#)
 
-remDr <- rD$client #remoteDriver(browserName = "firefox",port=4455L)
+remDr <- remoteDriver(browserName = "firefox",port=4455L) #rD$client 
 remDr$open(silent = FALSE)
 remDr$setTimeout(type = "page load", milliseconds = 5000)
 appURL <- "http://google.com"#"http://127.0.0.1:8080"
