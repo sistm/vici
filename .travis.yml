@@ -81,4 +81,4 @@ jobs:
         keep_history: true
         target_branch: test_deploy
         on:
-          branch: autoTest
+          branch: automTest
