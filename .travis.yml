@@ -65,7 +65,6 @@ after_success:
 # - Rscript -e 'vici::run_app()'&
 # - Rscript -e 'testthat::test_dir("tests")'
   - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
-  - docker ps
   - docker stop $(docker ps -a -q)
 
 
@@ -80,5 +79,6 @@ jobs:
         skip_cleanup: true
         github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
         keep_history: true
+        target_branch: test_deploy
         on:
-          branch: test_deploy
+          branch: autoTest
