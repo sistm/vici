@@ -35,7 +35,6 @@ r_packages:
 - covr
 - testthat
 - RSelenium
-- future
 
 
 r_build_args: "--no-manual --no-resave-data"
@@ -66,6 +65,7 @@ after_success:
 # - Rscript -e 'vici::run_app()'&
 # - Rscript -e 'testthat::test_dir("tests")'
   - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
+  - docker ps
   - docker stop selenium/standalone-firefox:2.53.0
 
 
