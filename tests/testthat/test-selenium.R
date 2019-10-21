@@ -9,7 +9,7 @@ library(testthat)
 
 
 
-remDr <- rD$remoteDriver(browserName = "firefox",port=4455L)
+remDr <- remoteDriver(browserName = "firefox",port=4455L)
 remDr$open(silent = FALSE)
 remDr$setTimeout(type = "page load", milliseconds = 5000)
 appURL <- "http://127.0.0.1:8080"
