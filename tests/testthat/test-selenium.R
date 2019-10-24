@@ -32,7 +32,7 @@ test_that("can connect to app", {
 
 test_that("Scénario standard example Data",{
   remDr$navigate(appURL)
-  loadButton <- remDr$findElement(using = "id", value = "loadExample")
+  loadButton <- remDr$findElement(using = "id", value = "settings_pan_ui_1-loadExample")
   loadButton$clickElement()
   
   Arm <- waitFor("xpath","/html/body/div[2]/div/div[2]/div/div/div[2]/div[2]/div/table/tbody/tr[1]/td[5]")#remDr$findElement(using = "xpath", value = "/html/body/div[2]/div/div[2]/div/div/div[2]/div[2]/div/table/tbody/tr[1]/td[5]")
@@ -40,7 +40,7 @@ test_that("Scénario standard example Data",{
   Response1 <- remDr$findElement(using = "xpath", value = "/html/body/div[2]/div/div[2]/div/div/div[2]/div[2]/div/table/tbody/tr[1]/td[6]")
   expect_equal(as.character(Response1$getElementText()), "0.0801")
   
-  fit <- remDr$findElement(using = "id", value = "modelfit")
+  fit <- remDr$findElement(using = "id", value = "modelfit_ui_1-fit")
   fit$clickElement()
   
   fRep <- waitFor("xpath","/html/body/div[2]/div/div[2]/div/div/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div[2]/table/tbody/tr[1]/td[1]")#remDr$findElement(using = "xpath", value = "/html/body/div[2]/div/div[2]/div/div/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div[2]/table/tbody/tr[1]/td[1]")
