@@ -67,71 +67,71 @@ mod_settings_pan_ui <- function(id){
                      options = list(placeholder = 'Please select a column name below')
       ),
       conditionalPanel(
-        condition = "input.selectStim != '' & !output.stimisfactor",
+        condition = sprintf("input['%s']!= '' & !output.stimisfactor",ns("selectStim")),#"input.selectStim != '' & !output.stimisfactor",
         verbatimTextOutput(ns("warningstimisfactor"))
       ),
       conditionalPanel(
-        condition = "input.selectStim != '' & output.stimisfactor",
+        condition = sprintf("input['%s'] != '' & output.stimisfactor",ns("selectStim")),#"input.selectStim != '' & output.stimisfactor",
         selectizeInput(ns("selectRefStim"), label = "Select the value that identifies background samples",
                        choices =c(Choose = "", NULL))
       ),
       
       conditionalPanel(
-        condition = "input.selectModel == 1",
+        condition = sprintf("input['%s'] == 1",ns("selectModel")),#"input.selectModel == 1",
         selectizeInput(ns("selectArm"), label = "Select the column that identifies the arm",
                        choices = c(Choose = "", NULL),
                        options = list(placeholder = 'Please select a column name below')
         )
       ),
       conditionalPanel(
-        condition = "input.selectModel == 1 & input.selectArm != '' & !output.armisfactor & output.warningarmisfactor != null",
+        condition = sprintf("input['%s'] == 1 & input['%s'] != '' & !output.armisfactor & output.warningarmisfactor != null",ns("selectModel"),ns("selectArm")),#"input.selectModel == 1 & input.selectArm != '' & !output.armisfactor & output.warningarmisfactor != null",
         verbatimTextOutput(ns("warningarmisfactor"))
       ),
       conditionalPanel(
-        condition = "input.selectModel == 1 & input.selectArm != '' & output.armisfactor",
+        condition = sprintf("input['%s'] == 1 & input['%s'] != '' & output.armisfactor",ns("selectModel"),ns("selectArm")),#"input.selectModel == 1 & input.selectArm != '' & output.armisfactor",
         selectizeInput(ns("selectRefArm"), label = "Select the value that identifies the reference arm",
                        choices =c(Choose = "", NULL))
       ),
       
       conditionalPanel(
-        condition = "input.selectModel == 1",
+        condition = sprintf("input['%s'] == 1",ns("selectModel")),#"input.selectModel == 1",
         selectizeInput(ns("selectTime2"), label = "If several time-points (optional), please select the column that identifies the observation's time-point",
                        choices = c(Choose = "", NULL),
                        options = list(placeholder = 'Please select a column name below')
         )
       ),
       conditionalPanel(
-        condition = "input.selectModel == 1 & input.selectTime2 != '' ",
+        condition = sprintf("input['%s'] == 1 & input['%s'] != '' ",ns("selectModel"),ns("selectTime2")) ,#"input.selectModel == 1 & input.selectTime2 != '' ",
         selectizeInput(ns("selectRefTime2"), label = "Select the time-point to analyze",
                        choices =c(Choose = "", NULL))
       ),
       
       conditionalPanel(
-        condition = "input.selectModel == 2",
+        condition = sprintf("input['%s'] == 2",ns("selectModel")),#"input.selectModel == 2",
         selectizeInput(ns("selectTime"), label = "Select the column that identifies the time-points",
                        choices = c(Choose = "", NULL),
                        options = list(placeholder = 'Please select a column name below')
         )
       ),
       conditionalPanel(
-        condition = "input.selectModel == 2 & input.selectTime != ''",
+        condition = sprintf("input['%s'] == 2 & input['%s'] != ''",ns("selectModel"),ns("selectTime")),#"input.selectModel == 2 & input.selectTime != ''",
         selectizeInput(ns("selectRefTime"), label = "Select the value that identifies the reference time-point",
                        choices =c(Choose = "", NULL))
       ),
       
       conditionalPanel(
-        condition = "input.selectModel == 2",
+        condition = sprintf("input['%s'] == 2",ns("selectModel")),#"input.selectModel == 2",
         selectizeInput(ns("selectArm2"), label = "If several arms (optional) please select the column that identifies the observation's arm",
                        choices = c(Choose = "", NULL),
                        options = list(placeholder = 'Please select a column name below')
         )
       ),
       conditionalPanel(
-        condition = "input.selectModel == 2 & input.selectArm2 != '' & !output.armisfactor2 & output.warningarm2isfactor != null",
+        condition = sprintf("input['%s'] == 2 & input['%s'] != '' & !output.armisfactor2 & output.warningarm2isfactor != null",ns("selectModel"),ns("selectArm2")) ,#"input.selectModel == 2 & input.selectArm2 != '' & !output.armisfactor2 & output.warningarm2isfactor != null",
         verbatimTextOutput(ns("warningarm2isfactor"))
       ),
       conditionalPanel(
-        condition = "input.selectModel == 2 & input.selectArm2 != '' & output.arm2isfactor",
+        condition = sprintf("input['%s'] == 2 & input['%s'] != '' & output.arm2isfactor",ns("selectModel"),ns("selectArm2")) ,#"input.selectModel == 2 & input.selectArm2 != '' & output.arm2isfactor",
         selectizeInput(ns("selectRefArm2"), label = "Select the arm to analyze",
                        choices =c(Choose = "", NULL))
       ),
@@ -252,14 +252,16 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
           df <- utils::read.csv(input$datafile$datapath,
                                 header = input$header,
                                 sep = input$sep)
+          cat("df => ")
+          cat(as.character(df),"\n")
         },
         error = function(e){ stop(safeError(e)) } # return a safeError if a parsing error occurs
       )
       
       #Setters 
-      clean_output(output)
-      output$mod <- reactive(NULL)
-      output$mod_display <- reactive(FALSE)
+      clean_output(parent$output)
+      parent$output$mod <- reactive(NULL)
+      parent$output$mod_display <- reactive(FALSE)
       df}
     
     available_vars_init <- colnames(data$df)
@@ -313,8 +315,21 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     updateSelectizeInput(session, "selectRefStim",
                          selected = ''
     )
+    cat("Update pannel with upload file","\n")
     updateTabsetPanel(parent, "inTabset", selected = "dataTab")
   })
+  
+  parent$output$table2render <- DT::renderDataTable(
+    {
+      cat("table2render","\n")
+      cat("data$df => ")
+      cat(as.character(data$df),"\n")
+      #browser()
+      req(input$datafile)
+      data$df
+    },
+    options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
+  )
   
   
   # update available variables for selection ----
@@ -513,7 +528,9 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   
   observeEvent(input$selectModel, {
     #browser()
-    #cat("observe selectModel", "\n")
+    cat("observe selectModel", "\n")
+    cat("selectModel => ")
+    cat(input$selectModel,"\n")
     if(!is.null(data$available_vars)){
       updateSelectizeInput(session, "selectArm",
                            choices = union(c('', data$available_vars),

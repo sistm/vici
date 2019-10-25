@@ -35,7 +35,7 @@ mod_modelfit_ui <- function(id){
     
 mod_modelfit_server <- function(input, output, session, data,parent,origin){
   ns <- session$ns
-  res_data <- NULL  
+  #res_data <- NULL  
 
 
   cat("mod_modelfit_server","\n")
@@ -209,12 +209,14 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
         origin$output$res_error <- reactive("Please select adequate analysis parameters before trying to fit the model...")
       }else{
         myTabs <- lapply(parent$selectResponse, function(resp) {
+          cat("res_data is null => ")
+          cat(is.null(session$userData$res_data),"\n")
           cat("res_data => ")
-          cat(as.character(res_data),"\n")
-          if(is.null(res_data)){
-            res_data <<- responses_res[[resp]]$res_tab
+          cat(as.character(session$userData$res_data),"\n")
+          if(is.null(session$userData$res_data)){
+            session$userData$res_data<<- responses_res[[resp]]$res_tab
           }else{
-            res_data <<- rbind(res_data,responses_res[[resp]]$res_tab)
+            session$userData$res_data<<- rbind(session$userData$res_data,responses_res[[resp]]$res_tab)
           }
           tabPanel(title = resp, value = resp,
                    wellPanel(

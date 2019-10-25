@@ -52,25 +52,30 @@ app_server <- function(input, output, session) {
   data$fact_time_OK <- TRUE
   data$fact_time2_OK <- TRUE
   
-  res_data <- NULL
+  session$userData$res_data <- NULL
 
 
   # data import ----
   #browser()
-  output$table2render <- DT::renderDataTable(
-    {
-      #browser()
-      req(input$datafile)
-      data()$df
-    },
-    options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
-  )
+  # output$table2render <- DT::renderDataTable(
+  #   {
+  #     cat("table2render","\n")
+  #     cat("data$df => ")
+  #     cat(as.character(data$df),"\n")
+  #     #browser()
+  #     req(input$datafile)
+  #     data$df
+  #   },
+  #   options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
+  # )
 
   output$downloadRes <- downloadHandler(
     filename = "ResVICI.txt",
     
     content = function(file){
-      utils::write.table(res_data,file,row.names = TRUE, sep = "\t", quote = FALSE)
+      cat("res_data => ")
+      cat(as.character(session$userData$res_data),"\n")
+      utils::write.table(session$userData$res_data,file,row.names = TRUE, sep = "\t", quote = FALSE)
     }
   )
 
