@@ -162,7 +162,6 @@ mod_settings_pan_ui <- function(id){
     
 mod_settings_pan_server <- function(input, output, session,data,parent){
   ns <- session$ns
-  cat("Enterring module server","\n")
   #callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = parent,parentModule = session)
   #browser()
   # example data
@@ -174,10 +173,8 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   )
   
   observeEvent(input$loadExample,{
-    cat("observe loadExample", "\n")
-    #browser()
-    cat("data is reactive: ")
-    cat(shiny::is.reactive(data),"\n")
+    #cat("observe loadExample", "\n")
+
     data$df <<- vici::ICS_ex
     
     clean_output(output)
@@ -234,26 +231,23 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
                          selected = 'D1',
                          choices = c(levels(data$df$TimePoint))
     )
-    cat("Should update with example data","\n")
     updateTabsetPanel(parent, "inTabset", selected = "dataTab")
   })
   
   
   observeEvent({input$datafile; input$header; input$sep}, {
-    #browser()
     cat("observe datainput", "\n")
     req(input$datafile)
     data$df <- {
       # when reading semicolon separated files,
       # having a comma separator causes `read.csv` to error
-      cat("")
+     
       tryCatch(
         {
           df <- utils::read.csv(input$datafile$datapath,
                                 header = input$header,
                                 sep = input$sep)
-          cat("df => ")
-          cat(as.character(df),"\n")
+
         },
         error = function(e){ stop(safeError(e)) } # return a safeError if a parsing error occurs
       )
@@ -315,16 +309,11 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     updateSelectizeInput(session, "selectRefStim",
                          selected = ''
     )
-    cat("Update pannel with upload file","\n")
     updateTabsetPanel(parent, "inTabset", selected = "dataTab")
   })
   
   parent$output$table2render <- DT::renderDataTable(
     {
-      cat("table2render","\n")
-      cat("data$df => ")
-      cat(as.character(data$df),"\n")
-      #browser()
       req(input$datafile)
       data$df
     },
@@ -335,8 +324,6 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   # update available variables for selection ----
   # observeEvent available_vars ----
   observeEvent(data$available_vars, {
-    #browser()
-    #cat("observe available_vars", "\n")
     updateSelectizeInput(session, "selectSubject",
                          choices = c(input$selectSubject, data$available_vars, intToUtf8(160)),
                          options = list(placeholder = 'Please select a variable below')
@@ -369,8 +356,6 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   )
   
   observeEvent(input$selectSubject, {
-    #browser()
-    #cat("observe selectSubj", "\n")
     if (input$selectSubject != ''){
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df)) #A tester
     }
@@ -527,10 +512,6 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   })
   
   observeEvent(input$selectModel, {
-    #browser()
-    cat("observe selectModel", "\n")
-    cat("selectModel => ")
-    cat(input$selectModel,"\n")
     if(!is.null(data$available_vars)){
       updateSelectizeInput(session, "selectArm",
                            choices = union(c('', data$available_vars),
@@ -639,11 +620,10 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   
   
   
-  #observeEvent({input$selectRefArm; input$selectRefArm2; input$selectRefStim; input$selectRefTime; input$selectRefTime2}, {
-  #  browser()
-  #  #cat("observe selectRefs", "\n")
-  #  clean_output(output) # a tester
-  #})
+  observeEvent({input$selectRefArm; input$selectRefArm2; input$selectRefStim; input$selectRefTime; input$selectRefTime2}, {
+    #cat("observe selectRefs", "\n")
+    clean_output(output) # a tester
+  })
   
   #callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = parent,parentModule = session)
   return(input)

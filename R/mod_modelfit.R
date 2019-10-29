@@ -18,8 +18,6 @@
 library(shiny)
 
 mod_modelfit_ui <- function(id){
-  #browser()
-  cat("mod_modelfit_ui","\n")
   ns <- NS(id)
   tagList(
     actionButton(ns("fit"), label = "Fit model",
@@ -35,56 +33,32 @@ mod_modelfit_ui <- function(id){
     
 mod_modelfit_server <- function(input, output, session, data,parent,origin){
   ns <- session$ns
-  #res_data <- NULL  
 
-
-  cat("mod_modelfit_server","\n")
-  #cat("data in modelfit = > ")
-  #cat(as.character(data),"\n")
-  cat("ns = > ")
-  cat(str(ns),"\n")
-  #browser()
   # Run whenever fit button is pressed
   
   
   observeEvent(input$fit, {#crash here
    #browser()
-   cat("observe modelfit", "\n")
     origin$output$res_error <- reactive("Please select adequate analysis parameters...")
     responses_res <- list()
     boxplot_print <- list()
     heatmap_data2plot <- list()
     toomuchdata <- FALSE
 
-    cat("data()$df => ")
-    cat(str(data$df),"\n")
-
-
     for(response in parent$selectResponse){
-      cat("response => ")
-      cat(as.character(response),"\n")
       if(!is.null(data$df) & parent$selectSubject %in% colnames(data$df) &
          parent$selectStim %in% colnames(data$df) & data$fact_stim_OK &
          (parent$selectArm %in% colnames(data$df) & data$fact_arm_OK) |
           (parent$selectTime %in% colnames(data$df) & data$fact_time_OK))
        {
-        cat("oui","\n")
         if(parent$selectModel == 1){
-          cat("parent$selectModel == 1","\n")
           # data tansformation
           if(parent$selectTime2 != ''){
-            #browser()
-            cat("1 \n")
-            cat("var chelou=> ")
-            cat(as.character(data$df[, parent$selectTime2]),"\n")
             data_df <- data$df[data$df[, parent$selectTime2] == parent$selectRefTime2,
                                c(parent$selectSubject, response, parent$selectStim, parent$selectArm)]
           }else{
-            #browser()
-            cat("2 \n")
             data_df <- data$df[, c(parent$selectSubject, response, parent$selectStim, parent$selectArm)]
           }
-          #browser()
           colnames(data_df) <- c("Subject", "response", "stim", "arm")
           transformed_data <- data_df
           transformed_data$bkg <- 0 # intialize bkg ground
@@ -99,18 +73,11 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
           data_df$stim <- relevel(data_df$stim, ref=parent$selectRefStim)
 
           # model fit ----
-          fit_res <- interarm_fit(transformed_data, parent)
-          cat("fit_res => ")
-          cat(str(fit_res),"\n")
+          fit_res <- interarm_fit(transformed_data, parent, response)
           if(!inherits(fit_res$mgls, "try-error")){
             responses_res[[response]]$res_error <- NULL
             responses_res[[response]]$postprocess_res <- interarm_postprocessres(data_df, fit_res)
-            # if(is.null(res_data)){
-            #    res_data <<- responses_res[[response]]$postprocess_res
-            #}else{
-            #
-            #}
-            #cat("res_data should update","\n")
+
             boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                                       response_name = response, input = parent)
             heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
@@ -119,7 +86,6 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
                                                         breaks = c(0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1),
                                                         right = FALSE)
             responses_res[[response]]$res_tab <- fit_res$res_tab
-            #output$res_tab <- renderTable(fit_res$res_tab, rownames = TRUE, digits=5)
 
           }
 
@@ -167,17 +133,14 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
               transformed_data_temp$stim <- stats::relevel(transformed_data_temp$stim, ref=parent$selectRefStim)
 
               # model fit ----
-              #cat("intraarm_fit","\n")
               fit_res[[tp]] <- intraarm_fit(transformed_data = transformed_data_temp,
-                                            tested_time = tp, input = parent)
+                                            tested_time = tp, input = parent, resp = response)
             }
-            cat("fit_res => ")
-            cat(str(fit_res),"\n")
+
             if(!prod(sapply(fit_res, function(x){inherits(x$mgls, "try-error")}))){
               responses_res[[response]]$res_error <- NULL
               responses_res[[response]]$postprocess_res <- intraarm_postprocessres(data_df, fit_res)
               #res_data <<- responses_res[[response]]$postprocess_res
-              cat("res_data should update","\n")
               #responses_res[[response]]$postprocess_res$pval_2plot <- do.call(rbind, responses_res[[response]]$postprocess_res$pval_2plot)
               boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                                         response_name = response,
@@ -201,7 +164,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
 
       }
       #res_sentence <- renderText("A sentence to be copied and pasted in your analysis report.")
-      cat("Out If \n")
+      
     }
     if(!toomuchdata){
       if(length(responses_res)<1){
@@ -209,10 +172,6 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
         origin$output$res_error <- reactive("Please select adequate analysis parameters before trying to fit the model...")
       }else{
         myTabs <- lapply(parent$selectResponse, function(resp) {
-          cat("res_data is null => ")
-          cat(is.null(session$userData$res_data),"\n")
-          cat("res_data => ")
-          cat(as.character(session$userData$res_data),"\n")
           if(is.null(session$userData$res_data)){
             session$userData$res_data<<- responses_res[[resp]]$res_tab
           }else{
@@ -231,7 +190,6 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
                    )
           )
         })
-        cat("renderUI","\n")
         origin$output$boxplotsAndTabs <- renderUI({
           do.call(tabsetPanel, myTabs)
         })
@@ -274,10 +232,10 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
         origin$output$downloadHM <- myDownloadHandlerForPlots(name = "VICIheatmap.png", plot_obj = heatmap_print)
       }
     }
-    cat("update TabsetPanel \n")
+    
     updateTabsetPanel(origin, "inTabset", selected = "resTab")
   })
-  cat("Out of mod_modelfit","\n")
+  
 }
     
 ## To be copied in the UI

@@ -7,8 +7,7 @@
 #' @importFrom cowplot plot_grid
 app_server <- function(input, output, session) {
 
-  #browser()
-  cat("start app_server","\n")
+
   # initialize everything ----
   output$mod <- reactive(NULL)
   output$mod_display <- reactive(FALSE)
@@ -55,48 +54,26 @@ app_server <- function(input, output, session) {
   session$userData$res_data <- NULL
 
 
-  # data import ----
-  #browser()
-  # output$table2render <- DT::renderDataTable(
-  #   {
-  #     cat("table2render","\n")
-  #     cat("data$df => ")
-  #     cat(as.character(data$df),"\n")
-  #     #browser()
-  #     req(input$datafile)
-  #     data$df
-  #   },
-  #   options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
-  # )
 
   output$downloadRes <- downloadHandler(
     filename = "ResVICI.txt",
     
     content = function(file){
-      cat("res_data => ")
-      cat(as.character(session$userData$res_data),"\n")
       utils::write.table(session$userData$res_data,file,row.names = TRUE, sep = "\t", quote = FALSE)
     }
   )
 
-  #browser()
   
+  #Module return input so sub module can access it
   inpt <- callModule(module = mod_settings_pan_server, id = "settings_pan_ui_1",data = data,parent = session)
 
-  #browser()
-  cat("Out module","\n")
-
-  #cat("data server side => ")
-  #cat(as.character(data),"\n")
   callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = inpt,origin = session)
-  #browser()
-  cat("fin set modules","\n")
-  #Méthode problématique
+
    observeEvent({input$selectModel;
      input$selectStim; input$selectRefStim;
      input$selectArm; input$selectRefArm;
      input$selectTime; input$selectRefTime}, {
-       cat("observe moddisplay", "\n")#appelé data load
+       #appelé data load
 
        # write LaTeX model ----
 
@@ -165,11 +142,9 @@ app_server <- function(input, output, session) {
            )
          })
        }else{
-         cat("oui","\n")
          output$mod <- reactive(NULL)
          output$mod_display <- reactive(FALSE)
        }
        clean_output(output)
      })
-  cat("fin serv","\n")
 }
