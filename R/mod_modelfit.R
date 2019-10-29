@@ -7,15 +7,16 @@
 #' @param input internal
 #' @param output internal
 #' @param session internal
+#' @param data internal
+#' @param parent internal
+#' @param origin internal
 #'
 #' @rdname mod_modelfit
 #'
 #' @keywords internal
 #' @export 
 #' @importFrom shiny NS tagList 
-#' 
 
-library(shiny)
 
 mod_modelfit_ui <- function(id){
   ns <- NS(id)

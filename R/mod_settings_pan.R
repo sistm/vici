@@ -7,6 +7,8 @@
 #' @param input internal
 #' @param output internal
 #' @param session internal
+#' @param data internal
+#' @param parent
 #'
 #' @rdname mod_settings_pan
 #'
