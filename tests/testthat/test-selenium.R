@@ -2,6 +2,7 @@ context("Selenium Test")
 
 library(RSelenium)
 library(testthat)
+library(processx)
 
 # waitFor <- function(how,id){
 #   webElem <- NULL
