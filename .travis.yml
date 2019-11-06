@@ -35,6 +35,7 @@ r_packages:
 - covr
 - testthat
 - RSelenium
+- devtools
 
 
 r_build_args: "--no-manual --no-resave-data"
