@@ -73,7 +73,7 @@ jobs:
   include:
     - stage : "Test"
       name : "TestThat"
-      script : test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'devtools::install(); library(vici); vici::run_app()'#'covr::codecov()'#Rscript -e 'testthat::test_dir("tests")'
+      script : test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'devtools::install(); covr::codecov()'#Rscript -e 'testthat::test_dir("tests")'
     - stage : "deploy"
       deploy:
         provider: pages
