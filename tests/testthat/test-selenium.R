@@ -4,15 +4,6 @@ library(RSelenium)
 library(testthat)
 library(processx)
 
-# waitFor <- function(how,id){
-#   webElem <- NULL
-#   while(is.null(webElem)){
-#     webElem <- tryCatch({remDr$findElement(using = how, value = id)},
-#                         error = function(e){NULL})
-#     #loop until element with name <value> is found in <webpage url>
-#   }
-#   return(webElem)
-# }
 
 waitFor <- function(how,id){
   #webElem <- NULL
@@ -28,24 +19,28 @@ waitFor <- function(how,id){
       break()
     }
   }
-  cat("stoped","\n")
-  return(webElem)
+  if(!is.null(webElem)){
+    return(webElem)
+  }
+  else{
+    stop(paste0(id," not found \n"))
+  }
 }
 
 wd <- getwd()
 
 #Uncomment this for local test
 
-# rD <- RSelenium::rsDriver(
-#   browser = "firefox",
-#   extraCapabilities = list(
-#     "moz:firefoxOptions" = list(
-#       args = list()#('--headless')
-#     )
-#   )
-# )
+rD <- RSelenium::rsDriver(
+  browser = "firefox",
+  extraCapabilities = list(
+    "moz:firefoxOptions" = list(
+      args = list()#('--headless')
+    )
+  )
+)
 
-remDr <- remoteDriver(browserName = "firefox",port=4455L) #rD$client Use this for local test
+remDr <-  rD$client #Use this for local test => remoteDriver(browserName = "firefox",port=4455L)
 remDr$open(silent = FALSE)
 remDr$setTimeout(type = "page load", milliseconds = 5000)
 appURL <- "http://127.0.0.1:8080"
