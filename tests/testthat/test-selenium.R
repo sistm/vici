@@ -31,16 +31,16 @@ wd <- getwd()
 
 #Uncomment this for local test
 
-rD <- RSelenium::rsDriver(
-  browser = "firefox",
-  extraCapabilities = list(
-    "moz:firefoxOptions" = list(
-      args = list()#('--headless')
-    )
-  )
-)
+# rD <- RSelenium::rsDriver(
+#   browser = "firefox",
+#   extraCapabilities = list(
+#     "moz:firefoxOptions" = list(
+#       args = list()#('--headless')
+#     )
+#   )
+# )
 
-remDr <-  rD$client #Use this for local test => remoteDriver(browserName = "firefox",port=4455L)
+remDr <-  remoteDriver(browserName = "firefox",port=4455L)#Use this for local test =>  rD$client 
 remDr$open(silent = FALSE)
 remDr$setTimeout(type = "page load", milliseconds = 5000)
 appURL <- "http://127.0.0.1:8080"
