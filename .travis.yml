@@ -65,7 +65,7 @@ after_success:
 # - Rscript -e 'library(vici)'
 # - Rscript -e 'vici::run_app()'&
 # - Rscript -e 'covr::codecov()'
-# - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'
+# - test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'testthat::test_dir("tests")'
   - docker stop $(docker ps -a -q)
 
 
@@ -73,7 +73,7 @@ jobs:
   include:
     - stage : "Test"
       name : "TestThat"
-      script : test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'devtools::install(); testthat::test_dir("tests")'
+      script : test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'devtools::install(); covr::codecov()'
     - stage : "deploy"
       deploy:
         provider: pages
