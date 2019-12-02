@@ -51,7 +51,7 @@ addons:
 
 before_install:
   - docker pull selenium/standalone-firefox:2.53.0
-  - docker run -d -p 127.0.0.1:4455:4444 selenium/standalone-firefox:2.53.0
+# - docker run -d -p 127.0.0.1:4455:4444 selenium/standalone-firefox:2.53.0
 #  - docker build -t rocker/tidyverse .
 #  - docker run -d -p 127.0.0.1:80:4567 rocker/tidyverse /bin/sh -c "cd /root/tidyverse; bundle exec foreman start;"
 #  - docker ps -a
@@ -73,7 +73,13 @@ jobs:
   include:
     - stage : "Test"
       name : "TestThat"
-      script : test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'devtools::install(); covr::codecov()'
+      before_script : 
+        - Rscript -e 'devtools::build()'
+        - mv ../vici_0.5.4.tar.gz .
+        - docker build -t shiny_proxy .
+        - docker run -p 3838:3838 --name shiny  shiny_proxy
+        - docker run -d -p 4445:4444 --name selenium --link shiny selenium/standalone-firefox:2.53.0
+      script : test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'#'devtools::install(); covr::codecov()'
     - stage : "deploy"
       deploy:
         provider: pages
