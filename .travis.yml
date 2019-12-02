@@ -25,7 +25,6 @@ r_packages:
 - nlme
 - shiny
 - tidyr
-- golem
 - covr
 - testthat
 - RSelenium
