@@ -48,9 +48,15 @@ mod_settings_pan_ui <- function(id){
       # tags$hr(),
       
       h3("Input parameters"),
+      # selectInput(ns("longit"),label = "Is Longitudinal",
+      #             choices = list("Normal" = 1, "Longitudinal" = 2),
+      #             selected = 1),
       selectInput(ns("selectModel"), label = "Model choice",
                   choices = list("inter-arm" = 1, "intra-arm" = 2),
                   selected = 1),
+      radioButtons(ns("longit"),"Is longitudinal",
+                   choices = c(Normal = "classic",
+                               Longitudinal = "long_mod"),selected = "classic"),
       
       h4("Variable specification"),
       selectizeInput(ns("selectSubject"), label = "Select the column that identifies the subject ID",

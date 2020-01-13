@@ -52,7 +52,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
          (parent$selectArm %in% colnames(data$df) & data$fact_arm_OK) |
           (parent$selectTime %in% colnames(data$df) & data$fact_time_OK))
        {
-        if(parent$selectModel == 1){
+        if(parent$selectModel == 1 && parent$longit == "classic"){
           # data tansformation
           if(parent$selectTime2 != ''){
             data_df <- data$df[data$df[, parent$selectTime2] == parent$selectRefTime2,
@@ -90,7 +90,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
 
           }
 
-        }else if(parent$selectModel == 2){
+        }else if(parent$selectModel == 2 && parent$longit == "classic"){
 
           # data tansformation
           if(parent$selectArm2 != ''){
