@@ -46,6 +46,7 @@ stages:
   - "Build"
   - "Test"
   - "deploy"
+  - "Merge"
 
 jobs:
   include:
