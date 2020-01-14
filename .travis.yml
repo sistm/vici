@@ -71,6 +71,6 @@ jobs:
         target_branch: test_deploy
         on:
           branch: automTest
-    - stage : "Merge"
+     - stage : "Merge"
         - if : tag = deploy
           script : git request-pull master test_deploy
