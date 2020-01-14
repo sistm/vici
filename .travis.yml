@@ -1,77 +1,77 @@
-  # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
-  language: R
-  cache: packages
+language: R
+cache: packages
 
-  sudo: false
-  warnings_are_errors: false
+sudo: false
+warnings_are_errors: false
 
-  services:
-    - docker
+services:
+  - docker
 
-  matrix:
-    include:
-      - os: linux
-        r: release
+matrix:
+  include:
+    - os: linux
+      r: release
 
-      - os: linux
-        r: devel
+    - os: linux
+      r: devel
 
-  r_packages:
-  - cowplot
-  - DT
-  - ggplot2
-  - ggpubr
-  - nlme
-  - shiny
-  - tidyr
-  - covr
-  - testthat
-  - RSelenium
-  - devtools
+r_packages:
+- cowplot
+- DT
+- ggplot2
+- ggpubr
+- nlme
+- shiny
+- tidyr
+- covr
+- testthat
+- RSelenium
+- devtools
 
 
-  r_build_args: "--no-manual --no-resave-data"
-  r_check_args: "--as-cran --no-build-vignettes --no-manual --timings --no-tests"
+r_build_args: "--no-manual --no-resave-data"
+r_check_args: "--as-cran --no-build-vignettes --no-manual --timings --no-tests"
 
-  env:
-    global:
-    - _R_CHECK_TIMINGS_="0"
-    - MOZ_HEADLESS=1
+env:
+  global:
+  - _R_CHECK_TIMINGS_="0"
+  - MOZ_HEADLESS=1
 
-  addons:
-    firefox: latest
+addons:
+  firefox: latest
 
-  stages:
+stages:
   - "Build"
   - "Test"
   - "deploy"
   - "Merge"
 
-    jobs:
-      include:
-        - stage : "Build"
-        - stage : "Test"
-          name : "TestThat"
-          before_script :
-            - docker pull selenium/standalone-firefox:2.53.0
-            - Rscript -e 'devtools::build()'
-            - mv ../vici_0.5.4.tar.gz .
-            - docker build -t shiny_proxy .
-            - docker run -d -p 3838:3838 --name shiny  shiny_proxy R -e 'vici::run_app()'
-            - docker run -d -p 4445:4444 --name selenium --link shiny selenium/standalone-firefox:2.53.0
-          script : test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'#'devtools::install(); covr::codecov()'
-          after_success:
-            - docker stop $(docker ps -a -q)
-        - stage : "deploy"
-          deploy:
-            provider: pages
-            skip_cleanup: true
-            github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-            keep_history: true
-            target_branch: test_deploy
-            on:
-              branch: automTest
-         - stage : "Merge"
-            - if : tag = deploy
-              script : git request-pull master test_deploy
+jobs:
+  include:
+    - stage : "Build"
+    - stage : "Test"
+      name : "TestThat"
+      before_script :
+        - docker pull selenium/standalone-firefox:2.53.0
+        - Rscript -e 'devtools::build()'
+        - mv ../vici_0.5.4.tar.gz .
+        - docker build -t shiny_proxy .
+        - docker run -d -p 3838:3838 --name shiny  shiny_proxy R -e 'vici::run_app()'
+        - docker run -d -p 4445:4444 --name selenium --link shiny selenium/standalone-firefox:2.53.0
+      script : test $TRAVIS_R_VERSION_STRING = 'release' && Rscript -e 'covr::codecov()'#'devtools::install(); covr::codecov()'
+      after_success:
+        - docker stop $(docker ps -a -q)
+    - stage : "deploy"
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+        keep_history: true
+        target_branch: test_deploy
+        on:
+          branch: automTest
+    - stage : "Merge"
+      if : tag = deploy
+      script : git request-pull master test_deploy
