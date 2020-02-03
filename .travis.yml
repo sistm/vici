@@ -72,7 +72,7 @@ jobs:
         target_branch: test_deploy
         on:
           branch: automTest
-    - stage : "Merge"
-      on :
-        tags : true
-      script : git request-pull origin/master origin/test_deploy
+    #- stage : "Merge"
+    #  on :
+    #    tags : true
+    #  script : git request-pull origin/master origin/test_deploy
