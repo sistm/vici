@@ -4,7 +4,9 @@
 \name{ICS_ex}
 \alias{ICS_ex}
 \title{Toy data to upload in the app.}
-\format{A tab-separated .txt file}
+\format{
+A tab-separated .txt file
+}
 \usage{
 data(ICS_ex)
 }
@@ -29,7 +31,7 @@ y2 <- round(abs(rnorm(n=nsubj*nstim*ntp*narm,m = 0.03, sd=0.06)) +
 ICS_ex <- cbind.data.frame("Subject" = subj, "StimulationPool" = stim, "TimePoint" = tp,
                            "Arm" = a, "Response1" = y1, "Response2" = y2)
 #View(ICS_ex)
-write.table(ICS_ex, file="Documents/GitHub/vici/data/ICS_ex.txt", sep="\\t",
+write.table(ICS_ex, file="Documents/GitHub/vici/data/ICS_ex.txt", sep="\t",
 row.names = FALSE, quote = FALSE)
 }
 
