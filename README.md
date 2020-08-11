@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# vici - Vaccine Induced Cellular Immunogenicity with Bivariate Modeling
+# vici - Vaccine Induced Cellular Immunogenicity with Bivariate Modeling <a><img src='man/figures/logo.svg' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
