@@ -1,10 +1,14 @@
 #' @import shiny
 #' @import ggpubr
+#' @import Rlabkey
 #' @importFrom nlme gls varIdent
 #' @importFrom utils read.csv write.table
 #' @importFrom stats coef relevel as.formula model.matrix
 #' @importFrom tidyr spread
 #' @importFrom cowplot plot_grid
+#' 
+
+
 app_server <- function(input, output, session) {
 
 
@@ -62,14 +66,31 @@ app_server <- function(input, output, session) {
       utils::write.table(session$userData$res_data,file,row.names = TRUE, sep = "\t", quote = FALSE)
     }
   )
-
+  library('Rlabkey')
   observe({
     query <- parseQueryString(session$clientData$url_search)
-    if (!is.null(query[['test']])) {
-      #updateSliderInput(session, "bins", value = query[['bins']])
-      cat("test => ")
-      cat(query[['test']],"\n")
+    if (!is.null(query[['key']])) {
       
+      #updateSliderInput(session, "bins", value = query[['bins']])
+      key <<- query[['key']]
+      set <<- paste0("apikey|",key)
+      
+      Rlabkey::labkey.setDefaults(apiKey=set)#"apikey|73ea3ff0973f38d52f5b1bbd8980f62c")
+      Rlabkey::labkey.setDefaults(baseUrl = "https://labkey.bph.u-bordeaux.fr/")#(baseUrl="https://labkey.bph.u-bordeaux.fr:8443/")
+      labkey.data <- labkey.selectRows(
+        baseUrl="https://labkey.bph.u-bordeaux.fr:8443", 
+        folderPath="/EBOVAC/assays/EBL2001/ICS", 
+        schemaName="assay.General.VRI ICS", 
+        queryName="Data", 
+        viewName="", 
+        colSort="", 
+        colFilter=makeFilter(c("Run/RowId", "EQUAL", "140"),c("Antigen", "NOT_EQUAL_OR_MISSING", "Negative control")), 
+        containerFilter=NULL
+      )
+      
+      cat("Result request => ")
+      cat(as.character(labkey.data),"\n")
+      data <<- labkey.data
     }
   })
   
