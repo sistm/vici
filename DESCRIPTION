@@ -28,4 +28,4 @@ Imports:
     future,
     pkgload,
     processx
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.2
