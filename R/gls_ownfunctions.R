@@ -1,12 +1,13 @@
+
 get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger")) {
   ddf <- match.arg(ddf)
-  p <- length(mgls$coefficients)
+  p <- length(model$coefficients)
   if (p < 1){
     tab <- as.matrix(contest1D(model, L = numeric(0L), ddf = ddf))
   }else{
     Lmat <- diag(p)
-    tab <- rbindall(lapply(1:p, function(i) contest1D(model, L = Lmat[i, ], ddf = ddf)))
-    rownames(tab) <- names(mgls$coefficients)
+    tab <- lmerTest:::rbindall(lapply(1:p, function(i) contest1D(model, L = Lmat[i, ], ddf = ddf)))
+    rownames(tab) <- names(model$coefficients)
     as.matrix(tab)
   }
   return(tab)
@@ -55,14 +56,17 @@ contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roge
     }
   }
   var_con <- sum(L * (model$varBeta %*% L))
-  grad_var_con <- vapply(model@Jac_list, function(x) qform(L, x), numeric(1L))
-  satt_denom <- qform(grad_var_con, model@vcov_varpar)
+  #To have objects of compute_jaclist function
+  jaclist <- compute_jaclist(object=model, tol=1e-14)
+  browser()
+  grad_var_con <- vapply(jaclist$jacobian_list, function(x) qform(L, x), numeric(1L))
+  satt_denom <- qform(grad_var_con, jaclist$vcov_varpar)
   ddf <- drop(2 * var_con^2/satt_denom)
   mk_ttable(estimate, sqrt(var_con), ddf)
 }
 
 qform <- function (L, V){
-    sum(L * (V %*% L))
+  sum(L * (V %*% L))
 }
 
 # use glsEstimate and to compute the FULL deviance
@@ -70,7 +74,7 @@ qform <- function (L, V){
 devfun_gls <- function(varpar, gls_obj){
   nvarpar <- length(varpar)
   coef(gls_obj$modelStruct) <- varpar[-nvarpar]
-  gls_obj$sigma <- varpar[nvarpar]
+  attr(gls_obj$modelStruct, "conLin")$sigma <- varpar[nvarpar]
   contr <- gls_obj$call$control
   if(is.null(contr)){
     contr <- list(singular.ok = FALSE)
@@ -81,12 +85,12 @@ devfun_gls <- function(varpar, gls_obj){
 
 # mix above with pbkrtest:::get_covbeta
 varBetafun_gls <- function(varpar, gls_obj){
-  REML <-  mgls$dims$REML
+  REML <-  gls_obj$dims$REML
   nvarpar <- length(varpar)
   coef(gls_obj$modelStruct) <- varpar[-nvarpar]
   N <- gls_obj$dims$N
   p <- gls_obj$dims$p
-  gls_obj$sigma <- varpar[nvarpar]
+  attr(gls_obj$modelStruct, "conLin")$sigma <- varpar[nvarpar]
   contr <- gls_obj$call$control
   if(is.null(contr)){
     contr <- list(singular.ok = FALSE)
@@ -135,6 +139,7 @@ compute_jaclist <- function (object, tol = 1e-06){
   
   jac <- numDeriv::jacobian(func = varBetafun_gls, x = varpar_opt,
                             gls_obj = object)
+  browser()
   
   out$jacobian_list <- lapply(1:ncol(jac), function(i){array(jac[, i], dim = rep(length(coef(object)), 2))})
   return(out)

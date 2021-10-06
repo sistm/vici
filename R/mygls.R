@@ -2,6 +2,7 @@ mygls <- function (model, data = sys.frame(sys.parent()), correlation = NULL,
           weights = NULL, subset, method = c("REML", "ML"), na.action = na.fail, 
           control = list(), verbose = FALSE) 
 {
+  library(nlme)
   Call <- match.call()
   controlvals <- glsControl()
   if (!missing(control)) 

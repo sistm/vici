@@ -15,12 +15,20 @@ intraarm_fit <- function(transformed_data, tested_time, input,resp){
   colnames(bkg_inter_mat) <- gsub(":", "_", colnames(bkg_inter_mat), fixed = TRUE)
   transformed_data <- cbind.data.frame(stats::na.omit(transformed_data), bkg_inter_mat)
   myformul <- as.formula(paste0("response ~ -1 + stim", "+", paste(colnames(bkg_inter_mat), collapse = " + ")))
+  browser()
   mgls <- try(nlme::gls(myformul,
                         data = transformed_data,
                         #correlation =  nlme::corCompSymm(form= ~ 1 | signal),
                         weights = nlme::varIdent(value = c("1" = 1), form = ~ 1 | stim),
                         method="REML", na.action = stats::na.omit
   ), silent = TRUE)
+  mymgls <- mygls(myformul,
+                  data = transformed_data,
+                  #correlation =  nlme::corCompSymm(form= ~ 1 | signal),
+                  weights = nlme::varIdent(value = c("1" = 1), form = ~ 1 | stim),
+                  method="REML", na.action = stats::na.omit
+  )
+  get_coefmat_gls(mymgls, "S")
   # nlme::lme(fixed = response ~ -1 + signal + nosignal + signal:arm + nosignal:arm + bkg,
   #           data = transformed_data,
   #           random = list(Subject = nlme::pdDiag(form = ~ -1 + signal)),
