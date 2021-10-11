@@ -16,6 +16,7 @@ RUN R -e 'remotes::install_cran("tidyr")'
 RUN R -e 'remotes::install_cran("covr")'
 RUN R -e 'remotes::install_cran("testthat")'
 RUN R -e 'remotes::install_cran("RSelenium")'
+RUN R -e 'remotes::install_cran("Rlabkey")'
 #RUN R -e 'remotes::install_cran("golem")'
 RUN R -e 'install.packages("golem")'
 COPY vici_*.tar.gz /app.tar.gz

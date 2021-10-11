@@ -1,5 +1,5 @@
 # Module UI
-  
+
 #' @title   mod_settings_pan_ui and mod_settings_pan_server
 #' @description  A shiny Module.
 #'
@@ -22,7 +22,7 @@ mod_settings_pan_ui <- function(id){
       # Input: Select a file ----
       h3("Data input"),
       fileInput(ns("datafile"), label = "Choose a CSV/TXT file to import",
-                multiple = FALSE,
+                #multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
                            ".csv")),
@@ -155,15 +155,17 @@ mod_settings_pan_ui <- function(id){
     )
   )
 }
-    
+
 # Module Server
-    
+
 #' @rdname mod_settings_pan
 #' @export
 #' @keywords internal
-    
-mod_settings_pan_server <- function(input, output, session,data,parent){
+
+mod_settings_pan_server <- function(input, output, session,datas,parent){
   ns <- session$ns
+  cat("Data in mod_setting_pan_server: ")
+  #cat(str(datas$df))
   #callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = parent,parentModule = session)
   #browser()
   # example data
@@ -176,13 +178,13 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   
   observeEvent(input$loadExample,{
     #cat("observe loadExample", "\n")
-
-    data$df <<- vici::ICS_ex
+    
+    datas$df <<- vici::ICS_ex
     
     clean_output(output)
-
-    parent$output$table2render <- DT::renderDataTable(data$df,
-                                               options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
+    
+    parent$output$table2render <- DT::renderDataTable(datas$df,
+                                                      options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
     )
     #Ensemble setter
     output$mod <- reactive(NULL)
@@ -190,7 +192,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     updateRadioButtons(session, inputId = "sep", selected = "\t")
     updateCheckboxInput(session, inputId = "header", value = TRUE)
     updateSelectInput(session, "selectModel", selected = 1)
-    available_vars_init <- colnames(data$df)
+    available_vars_init <- colnames(datas$df)
     updateSelectizeInput(session, "selectSubject",
                          selected = 'Subject',
                          choices = c('', available_vars_init),
@@ -208,7 +210,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     )
     updateSelectizeInput(session, "selectRefStim",
                          selected = 'NS',
-                         choices = c(levels(data$df$StimulationPool))
+                         choices = c(levels(datas$df$StimulationPool))
     )
     updateSelectizeInput(session, "selectArm",
                          selected = 'Arm',
@@ -217,7 +219,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     )
     updateSelectizeInput(session, "selectRefArm",
                          selected = 'Placebo',
-                         choices = c(levels(data$df$Arm))
+                         choices = c(levels(datas$df$Arm))
     )
     updateSelectizeInput(session, "selectArm2",
                          selected = '',
@@ -231,7 +233,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     )
     updateSelectizeInput(session, "selectRefTime2",
                          selected = 'D1',
-                         choices = c(levels(data$df$TimePoint))
+                         choices = c(levels(datas$df$TimePoint))
     )
     updateTabsetPanel(parent, "inTabset", selected = "dataTab")
   })
@@ -240,16 +242,16 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   observeEvent({input$datafile; input$header; input$sep}, {
     cat("observe datainput", "\n")
     req(input$datafile)
-    data$df <- {
+    datas$df <- {
       # when reading semicolon separated files,
       # having a comma separator causes `read.csv` to error
-     
+      
       tryCatch(
         {
           df <- utils::read.csv(input$datafile$datapath,
                                 header = input$header,
                                 sep = input$sep)
-
+          
         },
         error = function(e){ stop(safeError(e)) } # return a safeError if a parsing error occurs
       )
@@ -260,7 +262,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
       parent$output$mod_display <- reactive(FALSE)
       df}
     
-    available_vars_init <- colnames(data$df)
+    available_vars_init <- colnames(datas$df)
     updateSelectizeInput(session, "selectSubject",
                          selected = '',
                          choices = c('', available_vars_init),
@@ -316,8 +318,8 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   
   parent$output$table2render <- DT::renderDataTable(
     {
-      req(input$datafile)
-      data$df
+      #req(input$datafile)
+      datas$df
     },
     options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
   )
@@ -325,41 +327,41 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   
   # update available variables for selection ----
   # observeEvent available_vars ----
-  observeEvent(data$available_vars, {
+  observeEvent(datas$available_vars, {
     updateSelectizeInput(session, "selectSubject",
-                         choices = c(input$selectSubject, data$available_vars, intToUtf8(160)),
+                         choices = c(input$selectSubject, datas$available_vars, intToUtf8(160)),
                          options = list(placeholder = 'Please select a variable below')
     )
     updateSelectizeInput(session, "selectResponse",
                          selected = input$selectResponse,
-                         choices = as.list(c(input$selectResponse, data$available_vars, intToUtf8(160))),
+                         choices = as.list(c(input$selectResponse, datas$available_vars, intToUtf8(160))),
                          options = list(placeholder = 'Please select a variable below')
     )
     updateSelectizeInput(session, "selectStim",
-                         choices = c(input$selectStim, data$available_vars, intToUtf8(160)),
+                         choices = c(input$selectStim, datas$available_vars, intToUtf8(160)),
                          options = list(placeholder = 'Please select a variable below')
     )
     updateSelectizeInput(session, "selectArm",
-                         choices = c(input$selectArm, data$available_vars, intToUtf8(160)),
+                         choices = c(input$selectArm, datas$available_vars, intToUtf8(160)),
                          options = list(placeholder = 'Please select a variable below')
     )
     updateSelectizeInput(session, "selectArm2",
-                         choices = c(input$selectArm2, data$available_vars, intToUtf8(160)),
+                         choices = c(input$selectArm2, datas$available_vars, intToUtf8(160)),
                          options = list(placeholder = 'Please select a variable below')
     )
     updateSelectizeInput(session, "selectTime",
-                         choices = c(input$selectTime, data$available_vars, intToUtf8(160)),
+                         choices = c(input$selectTime, datas$available_vars, intToUtf8(160)),
                          options = list(placeholder = 'Please select a variable below')
     )
     updateSelectizeInput(session, "selectTime2",
-                         choices = c(input$selectTime2, data$available_vars, intToUtf8(160)),
+                         choices = c(input$selectTime2, datas$available_vars, intToUtf8(160)),
                          options = list(placeholder = 'Please select a variable below')
     )}
   )
   
   observeEvent(input$selectSubject, {
     if (input$selectSubject != ''){
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df)) #A tester
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df)) #A tester
     }
     clean_output(output)
   })
@@ -367,19 +369,24 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   observeEvent(input$selectStim, {
     #browser()
     #cat("observe selectStim", "\n")
+    #cat(input$selectStim)
     if (input$selectStim != ''){
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
-      if (input$selectStim %in% colnames(data$df)){
-        selected_stim_var <- data$df[, input$selectStim]
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
+      #cat("datas$available_vars:")
+      #cat(str(datas$available_vars))
+      if (input$selectStim %in% colnames(datas$df)){
+        selected_stim_var <- factor(datas$df[, input$selectStim])
+        #cat("selected_stim_var:")
+        #cat(str(selected_stim_var))
         if(is.factor(selected_stim_var)){
           output$stimisfactor <- reactive(TRUE)
           possible_stims <- levels(selected_stim_var)
           output$warningstimisfactor <- reactive(NULL)
-          data$fact_stim_OK <- TRUE
+          datas$fact_stim_OK <- TRUE
         }else{
           output$stimisfactor <- reactive(FALSE)
           output$warningstimisfactor <- reactive(paste0("WARNING: '", input$selectStim, "' is not a factor"))
-          data$fact_stim_OK <- FALSE
+          datas$fact_stim_OK <- FALSE
           possible_stims <- paste0("Error: '", input$selectStim, "' is not a factor\nPlease select a different variable")
         }
         updateSelectizeInput(session, "selectRefStim",
@@ -389,7 +396,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
       }else{
         output$stimisfactor <- reactive(FALSE)
         output$warningstimisfactor <- reactive(paste0("WARNING: '", input$selectStim, "' is not a column in the input data"))
-        data$fact_stim_OK <- FALSE
+        datas$fact_stim_OK <- FALSE
       }
     }
     clean_output(output)
@@ -401,7 +408,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     if (length(input$selectResponse) >= 1){
       if (input$selectResponse[1] != ''){
         
-        data$available_vars <- update_vars(input, possibilities = colnames(data$df))
+        datas$available_vars <- update_vars(input, possibilities = colnames(datas$df))
         
         clean_output(output)
       }
@@ -413,16 +420,16 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     #cat("observe selectArm", "\n")
     if (input$selectArm != ''){
       
-      data$available_vars <- update_vars(input, possibilities = colnames(data$df))
+      datas$available_vars <- update_vars(input, possibilities = colnames(datas$df))
       
       
-      if (input$selectArm %in% colnames(data$df)){
-        selected_arm_var <- data$df[, input$selectArm]
+      if (input$selectArm %in% colnames(datas$df)){
+        selected_arm_var <- factor(datas$df[, input$selectArm])
         if(is.factor(selected_arm_var)){
           output$armisfactor <- reactive(TRUE)
           possible_arms <- levels(selected_arm_var)
           output$warningarmisfactor <- reactive(NULL)
-          data$fact_arm_OK <- TRUE
+          datas$fact_arm_OK <- TRUE
           # if(length(possible_arms) > 2){
           #   output$armisfactor <- reactive(FALSE)
           #   output$warningarmisfactor <- reactive(paste0("Error: '", input$selectArm, "' has more than 2 levels\n This is not implemented yet"))
@@ -432,7 +439,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
           output$armisfactor <- reactive(FALSE)
           output$warningarmisfactor <- reactive(paste0("WARNING: '", input$selectArm,
                                                        "' is not a factor"))
-          data$fact_arm_OK <- FALSE
+          datas$fact_arm_OK <- FALSE
           possible_arms <- paste0("Error: '", input$selectArm,
                                   "' is not a factor\nPlease select a different variable")
         }
@@ -445,18 +452,18 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
         output$armisfactor <- reactive(FALSE)
         output$warningarmisfactor <- reactive(paste0("WARNING: '", input$selectArm,
                                                      "' is not a column in the input data"))
-        data$fact_arm_OK <- FALSE
+        datas$fact_arm_OK <- FALSE
       }else{
         output$armisfactor <- reactive(FALSE)
         output$warningarmisfactor <- reactive(NULL)
-        data$fact_arm_OK <- FALSE
+        datas$fact_arm_OK <- FALSE
         
-        data$available_vars <-  update_vars(input, possibilities = colnames(data$df)) #A tester
+        datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df)) #A tester
         
       }
     }else{
       
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
       
     }
     clean_output(output)
@@ -468,16 +475,16 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     #cat("observe selectArm2", "\n")
     if (input$selectArm2 != ''){
       
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
       
       
-      if (input$selectArm2 %in% colnames(data$df)){
-        selected_arm2_var <- data$df[, input$selectArm2]
+      if (input$selectArm2 %in% colnames(datas$df)){
+        selected_arm2_var <- datas$df[, input$selectArm2]
         if(is.factor(selected_arm2_var)){
           output$arm2isfactor <- reactive(TRUE)
           possible_arm2s <- levels(selected_arm2_var)
           output$warningarm2isfactor <- reactive(NULL)
-          data$fact_arm2_OK <- TRUE
+          datas$fact_arm2_OK <- TRUE
           # if(length(possible_arm2s) > 2){
           #   output$arm2isfactor <- reactive(FALSE)
           #   output$warningarm2isfactor <- reactive(paste0("Error: '", input$selectArm2, "' has more than 2 levels\n This is not implemented yet"))
@@ -487,7 +494,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
           output$arm2isfactor <- reactive(FALSE)
           output$warningarm2isfactor <- reactive(paste0("WARNING: '", input$selectArm2, #paste concatène chaine caractère 
                                                         "' is not a factor"))
-          data$fact_arm2_OK <- FALSE
+          datas$fact_arm2_OK <- FALSE
           possible_arm2s <- paste0("Error: '", input$selectArm2,
                                    "' is not a factor\nPlease select a different variable")
         }
@@ -500,35 +507,35 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
         output$arm2isfactor <- reactive(FALSE)
         output$warningarm2isfactor <- reactive(paste0("WARNING: '", input$selectArm2,
                                                       "' is not a column in the input data"))
-        data$fact_arm2_OK <- FALSE
+        datas$fact_arm2_OK <- FALSE
       }else{
         output$arm2isfactor <- reactive(FALSE)
         output$warningarm2isfactor <- reactive(NULL)
-        data$fact_arm2_OK <- FALSE
-        data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+        datas$fact_arm2_OK <- FALSE
+        datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
       }
     }else{
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
     }
     clean_output(output)
   })
   
   observeEvent(input$selectModel, {
-    if(!is.null(data$available_vars)){
+    if(!is.null(datas$available_vars)){
       updateSelectizeInput(session, "selectArm",
-                           choices = union(c('', data$available_vars),
+                           choices = union(c('', datas$available_vars),
                                            union(union(input$selectArm, input$selectArm2), input$selectTime))
       )
       updateSelectizeInput(session, "selectArm2",
-                           choices = union(c('', data$available_vars),
+                           choices = union(c('', datas$available_vars),
                                            union(union(input$selectArm, input$selectArm2), input$selectTime))
       )
       updateSelectizeInput(session, "selectTime",
-                           choices = union(c('', data$available_vars),
+                           choices = union(c('', datas$available_vars),
                                            union(union(input$selectArm, input$selectArm2), input$selectTime))
       )
       updateSelectizeInput(session, "selectTime2",
-                           choices = union(c('', data$available_vars),
+                           choices = union(c('', datas$available_vars),
                                            union(union(input$selectArm, input$selectArm2), input$selectTime))
       )
       updateSelectizeInput(session, "selectRefTime",
@@ -553,14 +560,14 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     #browser()
     #cat("observe selectTime", "\n")
     if (input$selectTime != ''){
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
-      if(input$selectTime %in% colnames(data$df)){
-        data$df[, input$selectTime] <- as.factor(as.character(data$df[, input$selectTime]))
-        selected_time_var <- data$df[, input$selectTime]
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
+      if(input$selectTime %in% colnames(datas$df)){
+        datas$df[, input$selectTime] <- as.factor(as.character(datas$df[, input$selectTime]))
+        selected_time_var <- datas$df[, input$selectTime]
         output$timeisfactor <- reactive(TRUE)
         possible_times <- levels(selected_time_var)
         output$warnintimeisfactor <- reactive(NULL)
-        data$fact_time_OK <- TRUE
+        datas$fact_time_OK <- TRUE
         
         updateSelectizeInput(session, "selectRefTime",
                              choices = c(possible_times[1], possible_times),
@@ -571,15 +578,15 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
         output$timeisfactor <- reactive(FALSE)
         output$warnintimeisfactor <- reactive(paste0("WARNING: '", input$selectTime,
                                                      "' is not a column in the input data"))
-        data$fact_time_OK <- FALSE
+        datas$fact_time_OK <- FALSE
       }else{
         output$timeisfactor <- reactive(FALSE)
         output$warnintimeisfactor <- reactive(NULL)
-        data$fact_time_OK <- FALSE
-        data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+        datas$fact_time_OK <- FALSE
+        datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
       }
     }else{
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
     }
     clean_output(output)
   })
@@ -589,14 +596,14 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     #browser()
     #cat("observe selectTime2", "\n")
     if (input$selectTime2 != ''){
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
-      if(input$selectTime2 %in% colnames(data$df)){
-        data$df[, input$selectTime2] <- as.factor(as.character(data$df[, input$selectTime2]))
-        selected_time2_var <- data$df[, input$selectTime2]
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
+      if(input$selectTime2 %in% colnames(datas$df)){
+        datas$df[, input$selectTime2] <- as.factor(as.character(datas$df[, input$selectTime2]))
+        selected_time2_var <- datas$df[, input$selectTime2]
         output$time2isfactor <- reactive(TRUE)
         possible_times2 <- levels(selected_time2_var)
         output$warnintime2isfactor <- reactive(NULL)
-        data$fact_time2_OK <- TRUE
+        datas$fact_time2_OK <- TRUE
         
         updateSelectizeInput(session, "selectRefTime2",
                              choices = c(possible_times2[1], possible_times2),
@@ -607,15 +614,15 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
         output$time2isfactor <- reactive(FALSE)
         output$warnintime2isfactor <- reactive(paste0("WARNING: '", input$selectTime2,
                                                       "' is not a column in the input data"))
-        data$fact_time2_OK <- FALSE
+        datas$fact_time2_OK <- FALSE
       }else{
         output$time2isfactor <- reactive(FALSE)
         output$warnintime2isfactor <- reactive(NULL)
-        data$fact_time2_OK <- FALSE
-        data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+        datas$fact_time2_OK <- FALSE
+        datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
       }
     }else{
-      data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
     }
     clean_output(output)
   })
@@ -630,10 +637,9 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   #callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = parent,parentModule = session)
   return(input)
 }
-    
+
 ## To be copied in the UI
 # mod_settings_pan_ui("settings_pan_ui_1")
-    
+
 ## To be copied in the server
 # callModule(mod_settings_pan_server, "settings_pan_ui_1")
- 

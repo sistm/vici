@@ -12,7 +12,15 @@ interarm_fit <- function(transformed_data, input,resp){
   bkg_inter_mat <- model.matrix(data = stats::na.omit(transformed_data), ~ -1 + stim:bkg)[, -1, drop=FALSE]
   colnames(bkg_inter_mat) <- gsub(":", "_", colnames(bkg_inter_mat), fixed = TRUE)
   transformed_data <- cbind.data.frame(stats::na.omit(transformed_data), bkg_inter_mat)
+  cat("transformed_data: ")
+  cat(str(transformed_data),"\n")
   myformul <- as.formula(paste0("response ~ -1 + stim + stim:arm", "+", paste(colnames(bkg_inter_mat), collapse = " + ")))
+  #browser()
+  cat("myformul: ")
+  cat(str(myformul),"\n")
+  cat("nlme::varIdent(value = c(\"1\" = 1), form = ~ 1 | stim): ")
+  cat(nlme::varIdent(value = c("1" = 1), form = ~ 1 | stim),"\n")
+  #browser()
   mgls <- try(nlme::gls(myformul,
                         data = transformed_data,
                         #correlation =  nlme::corCompSymm(form= ~ 1 | signal),
@@ -63,6 +71,8 @@ interarm_fit <- function(transformed_data, input,resp){
   }else{
     res_error <- paste0("Model was not able to run with the following error message:\n\n", mgls[1],
                         "\nMake sure analysis parameters are correct")
+    cat("Error Message: ")
+    cat(str(mgls[1]))
   }
 
   return(list("mgls" = mgls,

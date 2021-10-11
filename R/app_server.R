@@ -1,13 +1,18 @@
+
 #' @import shiny
 #' @import ggpubr
+#' @import Rlabkey
 #' @importFrom nlme gls varIdent
 #' @importFrom utils read.csv write.table
 #' @importFrom stats coef relevel as.formula model.matrix
 #' @importFrom tidyr spread
 #' @importFrom cowplot plot_grid
+#' 
+
+
 app_server <- function(input, output, session) {
-
-
+  
+  
   # initialize everything ----
   output$mod <- reactive(NULL)
   output$mod_display <- reactive(FALSE)
@@ -44,7 +49,7 @@ app_server <- function(input, output, session) {
   outputOptions(output, "heatmap", suspendWhenHidden = FALSE)
   outputOptions(output, "downloadHM", suspendWhenHidden = FALSE)
   outputOptions(output, "downloadBP", suspendWhenHidden = FALSE)
-
+  
   data <- reactiveValues()
   data$fact_stim_OK <- TRUE
   data$fact_arm_OK <- TRUE
@@ -52,9 +57,9 @@ app_server <- function(input, output, session) {
   data$fact_time2_OK <- TRUE
   
   session$userData$res_data <- NULL
-
-
-
+  
+  
+  
   output$downloadRes <- downloadHandler(
     filename = "ResVICI.txt",
     
@@ -62,89 +67,116 @@ app_server <- function(input, output, session) {
       utils::write.table(session$userData$res_data,file,row.names = TRUE, sep = "\t", quote = FALSE)
     }
   )
-
+  library('Rlabkey')
+  observe({
+    query <- parseQueryString(session$clientData$url_search)
+    if (!is.null(query[['key']])) {
+      
+      #updateSliderInput(session, "bins", value = query[['bins']])
+      key <<- query[['key']]
+      set <<- paste0("apikey|",key)
+      
+      Rlabkey::labkey.setDefaults(apiKey=set)#"apikey|73ea3ff0973f38d52f5b1bbd8980f62c")
+      Rlabkey::labkey.setDefaults(baseUrl = "https://labkey.bph.u-bordeaux.fr/")#(baseUrl="https://labkey.bph.u-bordeaux.fr:8443/")
+      labkey.data <- labkey.selectRows(
+        baseUrl="https://labkey.bph.u-bordeaux.fr", 
+        #folderPath="/EBOVAC/assays/EBL2001/ICS", 
+        folderPath="/VASI/VICI/SISTM",
+        schemaName="assay.General.Vici_Sistm", 
+        queryName="Data", 
+        viewName="", 
+        colSort="", 
+        #colFilter=makeFilter(c("Run/RowId", "EQUAL", "140"),c("Antigen", "NOT_EQUAL_OR_MISSING", "Negative control")), 
+        containerFilter=NULL
+      )
+      
+      #cat("Result request => ")
+      #cat(as.character(labkey.data),"\n")
+      data$df <<- labkey.data
+    }
+  })
   
   #Module return input so sub module can access it
   inpt <- callModule(module = mod_settings_pan_server, id = "settings_pan_ui_1",data = data,parent = session)
-
+  
   callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = inpt,origin = session)
-
-   observeEvent({input$selectModel;
-     input$selectStim; input$selectRefStim;
-     input$selectArm; input$selectRefArm;
-     input$selectTime; input$selectRefTime}, {
-       #appelé data load
-
-       # write LaTeX model ----
-
-       if(input$selectModel == 1 & input$selectRefStim != '' & input$selectRefArm != '' & input$selectStim !='' &
-          input$selectArm %in% colnames(data$df) & input$selectStim %in% colnames(data$df)){
-         output$mod_display <- reactive(TRUE)
-         arm_coefs <- NULL
-         for(a in levels(data$df[, input$selectArm])){
-           if(a != input$selectRefArm){
-             arm_coefs <- paste0(arm_coefs, '+ \\beta_{', a,'}^{', input$selectRefStim, '}', a,
-                                 '_i')
-           }
-         }
-         statmodel <- paste0('$$y_i^{', input$selectRefStim, '} = \\beta_0^{', input$selectRefStim,
-                             '}', arm_coefs, '+ \\varepsilon_i^{', input$selectRefStim, '}$$')
-         for(s in levels(data$df[, input$selectStim])){
-
-           if(s != input$selectRefStim){
-             arm_coefs <- NULL
-             for(a in levels(data$df[, input$selectArm])){
-               if(a != input$selectRefArm){
-                 arm_coefs <- paste0(arm_coefs, '+ \\beta_{', a,'}^{', s, '}', a,
-                                     '_i')
-               }
-             }
-             statmodel <- paste0(statmodel, '$$y_i^{', s, '} = \\beta_0^{', s, '} ',
-                                 arm_coefs, '+ \\beta_{', input$selectRefStim, '}^{', s, '} y^{',
-                                 input$selectRefStim, '}_i + \\varepsilon_i^{', s, '}$$'
-             )
-           }
-         }
-         output$mod <- renderUI({
-           withMathJax(statmodel)
-         })
-       }else if(input$selectModel == 2 & input$selectRefStim != '' & input$selectRefTime != '' & input$selectStim !='' &
-              input$selectTime %in% colnames(data$df) & input$selectStim %in% colnames(data$df)) {
-         output$mod_display <- reactive(TRUE)
-
-         statmodel <- NULL
-         for(t in levels(data$df[, input$selectTime])){
-           if(t != input$selectRefTime){
-             statmodel <- paste0(statmodel, '$$y_{diff\\,',t ,'\\, _i}^{', input$selectRefStim, '} = \\beta_{0\\,',t ,'}^{', input$selectRefStim,
-                                 '} ', '+ \\varepsilon_{',t ,'\\, _i}^{', input$selectRefStim, '}$$')
-           }
-         }
-         for(s in levels(data$df[, input$selectStim])){
-           if(s != input$selectRefStim){
-             for(t in levels(data$df[, input$selectTime])){
-               if(t != input$selectRefTime){
-                 statmodel <- paste0(statmodel, '$$y_{diff\\,',t ,'\\, _i}^{', s, '} = \\beta_{0\\,',t ,'}^{', s,
-                                     '} + \\beta_{', input$selectRefStim, '\\,',t ,'}^{', s, '} \\,y^{',
-                                     input$selectRefStim, '}_{diff\\,',t ,'\\, _i} + \\varepsilon_{',t ,'\\, _i}^{', s, '}$$'
-                 )
-               }
-             }
-           }
-         }
-         diffdef <- paste0('where \\(y_{diff\\,\\{\\textsf{t}\\}\\, _i}^{\\{\\textsf{s}\\}} = y_i^{\\{\\textsf{s}\\}}(\\{\\textsf{t}\\}) - y_i^{\\{\\textsf{s}\\}}(',
-                           input$selectRefTime, ')\\)'
-         )
-         output$mod <- renderUI({
-           tagList(
-             withMathJax(statmodel),
-             div(""),
-             div(diffdef)
-           )
-         })
-       }else{
-         output$mod <- reactive(NULL)
-         output$mod_display <- reactive(FALSE)
-       }
-       clean_output(output)
-     })
+  
+  observeEvent({input$selectModel;
+    input$selectStim; input$selectRefStim;
+    input$selectArm; input$selectRefArm;
+    input$selectTime; input$selectRefTime}, {
+      #appelé data load
+      
+      # write LaTeX model ----
+      
+      if(input$selectModel == 1 & input$selectRefStim != '' & input$selectRefArm != '' & input$selectStim !='' &
+         input$selectArm %in% colnames(data$df) & input$selectStim %in% colnames(data$df)){
+        output$mod_display <- reactive(TRUE)
+        arm_coefs <- NULL
+        for(a in levels(data$df[, input$selectArm])){
+          if(a != input$selectRefArm){
+            arm_coefs <- paste0(arm_coefs, '+ \\beta_{', a,'}^{', input$selectRefStim, '}', a,
+                                '_i')
+          }
+        }
+        statmodel <- paste0('$$y_i^{', input$selectRefStim, '} = \\beta_0^{', input$selectRefStim,
+                            '}', arm_coefs, '+ \\varepsilon_i^{', input$selectRefStim, '}$$')
+        for(s in levels(data$df[, input$selectStim])){
+          
+          if(s != input$selectRefStim){
+            arm_coefs <- NULL
+            for(a in levels(data$df[, input$selectArm])){
+              if(a != input$selectRefArm){
+                arm_coefs <- paste0(arm_coefs, '+ \\beta_{', a,'}^{', s, '}', a,
+                                    '_i')
+              }
+            }
+            statmodel <- paste0(statmodel, '$$y_i^{', s, '} = \\beta_0^{', s, '} ',
+                                arm_coefs, '+ \\beta_{', input$selectRefStim, '}^{', s, '} y^{',
+                                input$selectRefStim, '}_i + \\varepsilon_i^{', s, '}$$'
+            )
+          }
+        }
+        output$mod <- renderUI({
+          withMathJax(statmodel)
+        })
+      }else if(input$selectModel == 2 & input$selectRefStim != '' & input$selectRefTime != '' & input$selectStim !='' &
+               input$selectTime %in% colnames(data$df) & input$selectStim %in% colnames(data$df)) {
+        output$mod_display <- reactive(TRUE)
+        
+        statmodel <- NULL
+        for(t in levels(data$df[, input$selectTime])){
+          if(t != input$selectRefTime){
+            statmodel <- paste0(statmodel, '$$y_{diff\\,',t ,'\\, _i}^{', input$selectRefStim, '} = \\beta_{0\\,',t ,'}^{', input$selectRefStim,
+                                '} ', '+ \\varepsilon_{',t ,'\\, _i}^{', input$selectRefStim, '}$$')
+          }
+        }
+        for(s in levels(data$df[, input$selectStim])){
+          if(s != input$selectRefStim){
+            for(t in levels(data$df[, input$selectTime])){
+              if(t != input$selectRefTime){
+                statmodel <- paste0(statmodel, '$$y_{diff\\,',t ,'\\, _i}^{', s, '} = \\beta_{0\\,',t ,'}^{', s,
+                                    '} + \\beta_{', input$selectRefStim, '\\,',t ,'}^{', s, '} \\,y^{',
+                                    input$selectRefStim, '}_{diff\\,',t ,'\\, _i} + \\varepsilon_{',t ,'\\, _i}^{', s, '}$$'
+                )
+              }
+            }
+          }
+        }
+        diffdef <- paste0('where \\(y_{diff\\,\\{\\textsf{t}\\}\\, _i}^{\\{\\textsf{s}\\}} = y_i^{\\{\\textsf{s}\\}}(\\{\\textsf{t}\\}) - y_i^{\\{\\textsf{s}\\}}(',
+                          input$selectRefTime, ')\\)'
+        )
+        output$mod <- renderUI({
+          tagList(
+            withMathJax(statmodel),
+            div(""),
+            div(diffdef)
+          )
+        })
+      }else{
+        output$mod <- reactive(NULL)
+        output$mod_display <- reactive(FALSE)
+      }
+      clean_output(output)
+    })
 }

@@ -69,9 +69,15 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
               transformed_data[transformed_data$stim == l, "bkg"] <- transformed_data[transformed_data$stim == parent$selectRefStim, "response"]
             }
           }
-          transformed_data$arm <- stats::relevel(transformed_data$arm, ref=parent$selectRefArm)
-          transformed_data$stim <- stats::relevel(transformed_data$stim, ref=parent$selectRefStim)
-          data_df$stim <- relevel(data_df$stim, ref=parent$selectRefStim)
+          #browser()
+          #cat("transformed_data$arm:")
+          #cat(str(transformed_data$arm))
+          #cat("parent$selectRefArm:")
+          #cat(str(parent$selectRefArm))
+          transformed_data$arm <- stats::relevel(factor(transformed_data$arm), ref=parent$selectRefArm)
+          transformed_data$stim <- stats::relevel(factor(transformed_data$stim), ref=parent$selectRefStim)
+          data_df$stim <- relevel(factor(data_df$stim), ref=parent$selectRefStim)
+          browser()
 
           # model fit ----
           fit_res <- interarm_fit(transformed_data, parent, response)
