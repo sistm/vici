@@ -11,14 +11,13 @@ intraarm_postprocessres <- function(data_df, fit_res){
 
   # model output ----
   res_lik <- cbind("AIC" = aic, "-2 Res. logLikelihood" = m2resloglik)
-
   res_2plot <- lapply(fit_res, function(x){x$res_tab[grep("Vaccine effect", rownames(x$res_tab)), ]})
   res_2plot <- lapply(res_2plot, function(y){
     temp <- cbind.data.frame(do.call(rbind, lapply(strsplit(gsub("on response in stimulation ", "",
                                         sapply(strsplit(rownames(y), "Vaccine effect "), "[", 2)),
                                    " at "),
                           function(x){c(x[1], strsplit(x[2], " compared to baseline ")[[1]][1])})),
-                     "pvalue" = y[, 3])
+                     "pvalue" = y[, "p-value"])
     rownames(temp) <- NULL
     colnames(temp)[1:2] <- c("Stimulation", "Timepoint")
     return(temp)

@@ -138,6 +138,12 @@ mod_settings_pan_ui <- function(id){
                        choices =c(Choose = "", NULL))
       ),
       
+      h3("Denominator degrees of freedom approximations"),
+      radioButtons(ns("ddf"), NULL,
+                   choices = c("Satterthwaite",
+                               "Kenward-Roger",
+                               "Between-Within"),
+                   selected = "Satterthwaite"),
       
       tags$hr(),
       h3("Run analysis"),
@@ -184,56 +190,103 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     parent$output$table2render <- DT::renderDataTable(data$df,
                                                options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
     )
+    
     #Ensemble setter
     output$mod <- reactive(NULL)
     output$mod_display <- reactive(FALSE)
     updateRadioButtons(session, inputId = "sep", selected = "\t")
     updateCheckboxInput(session, inputId = "header", value = TRUE)
-    updateSelectInput(session, "selectModel", selected = 1)
-    available_vars_init <- colnames(data$df)
-    updateSelectizeInput(session, "selectSubject",
-                         selected = 'Subject',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectResponse",
-                         selected = c('Response1', 'Response2'),
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectStim",
-                         selected = 'StimulationPool',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectRefStim",
-                         selected = 'NS',
-                         choices = c(levels(data$df$StimulationPool))
-    )
-    updateSelectizeInput(session, "selectArm",
-                         selected = 'Arm',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectRefArm",
-                         selected = 'Placebo',
-                         choices = c(levels(data$df$Arm))
-    )
-    updateSelectizeInput(session, "selectArm2",
-                         selected = '',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectTime2",
-                         selected = 'TimePoint',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectRefTime2",
-                         selected = 'D1',
-                         choices = c(levels(data$df$TimePoint))
-    )
-    updateTabsetPanel(parent, "inTabset", selected = "dataTab")
+
+    observeEvent(input$selectModel, {
+      if (input$selectModel==1){
+        # updateSelectInput(session, "selectModel", selected = 1)
+        available_vars_init <- colnames(data$df)
+        updateSelectizeInput(session, "selectSubject",
+                             selected = 'Subject',
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectResponse",
+                             selected = c('Response1', 'Response2'),
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectStim",
+                             selected = 'StimulationPool',
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectRefStim",
+                             selected = 'NS',
+                             choices = c(levels(data$df$StimulationPool))
+        )
+        updateSelectizeInput(session, "selectArm",
+                             selected = 'Arm',
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectRefArm",
+                             selected = 'Placebo',
+                             choices = c(levels(data$df$Arm))
+        )
+        updateSelectizeInput(session, "selectArm2",
+                             selected = '',
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectTime2",
+                             selected = 'TimePoint',
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectRefTime2",
+                             selected = 'D1',
+                             choices = c(levels(data$df$TimePoint))
+        )
+        updateTabsetPanel(parent, "inTabset", selected = "dataTab")
+      }else if (input$selectModel==2){
+        # updateSelectInput(session, "selectModel", selected = 2)
+        available_vars_init <- colnames(data$df)
+        updateSelectizeInput(session, "selectSubject",
+                             selected = 'Subject',
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectResponse",
+                             selected = c('Response1', 'Response2'),
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectStim",
+                             selected = 'StimulationPool',
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectRefStim",
+                             selected = 'NS',
+                             choices = c(levels(data$df$StimulationPool))
+        )
+        updateSelectizeInput(session, "selectTime",
+                             selected = 'TimePoint',
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectRefTime",
+                             selected = 'D0',
+                             choices = c(levels(data$df$TimePoint))
+        )
+        updateSelectizeInput(session, "selectArm2",
+                             selected = 'Arm',
+                             choices = c('', available_vars_init),
+                             options = list(placeholder = 'Please select a variable below')
+        )
+        updateSelectizeInput(session, "selectRefArm2",
+                             selected = 'A2',
+                             choices = c(levels(data$df$Arm))
+        )
+        updateTabsetPanel(parent, "inTabset", selected = "dataTab")
+      }
+    })
   })
   
   

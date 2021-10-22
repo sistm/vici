@@ -4,7 +4,7 @@
 #' @keywords internal
 #' @importFrom stats na.omit
 interarm_fit <- function(transformed_data, input,resp){
-  #browser()
+  
   res_tab <- NULL
   res_lik <- NULL
   res_error <- NULL
@@ -13,26 +13,12 @@ interarm_fit <- function(transformed_data, input,resp){
   colnames(bkg_inter_mat) <- gsub(":", "_", colnames(bkg_inter_mat), fixed = TRUE)
   transformed_data <- cbind.data.frame(stats::na.omit(transformed_data), bkg_inter_mat)
   myformul <- as.formula(paste0("response ~ -1 + stim + stim:arm", "+", paste(colnames(bkg_inter_mat), collapse = " + ")))
-  browser()
-  mgls <- #try(nlme::
-                mygls(myformul,
+  
+  mgls <- mygls(myformul,
                         data = transformed_data,
                         #correlation =  nlme::corCompSymm(form= ~ 1 | signal),
                         weights = nlme::varIdent(value = c("1" = 1), form = ~ 1 | stim),
-                        method="REML", na.action = stats::na.omit
-  )#, silent = TRUE)
-   mlme4 <- lmerTest::lmer(response ~ -1 + stim + stim:arm + stimS1_bkg + stimS2_bkg + (1 | stim),
-              data = transformed_data, devFunOnly=TRUE)
-  # mgls$call$model <- myformul
-  # e <- emmeans::ref_grid(mgls, data = transformed_data, mode="satterthwaite")
-  # emmeans::test(e)
-  # nlme::lme(fixed = response ~ -1 + signal + nosignal + signal:arm + nosignal:arm + bkg,
-  #           data = transformed_data,
-  #           random = list(Subject = nlme::pdDiag(form = ~ -1 + signal)),
-  #           #correlation =  nlme::corCompSymm(form= ~ -1 + signal | Subject),
-  #           weights = nlme::varIdent(form = ~ 1 | signal),
-  #           method="REML"
-  # )
+                        method="REML", na.action = stats::na.omit)
 
 
   if(!inherits(mgls, "try-error")){
@@ -40,8 +26,9 @@ interarm_fit <- function(transformed_data, input,resp){
     # getting coef
     s_mgls <- summary(mgls)
     res_lik <- mgls$logLik
-    res_tab <- s_mgls$tTable[, c(1,2,4)]
-    colnames(res_tab) <- c("Estimate", "Standard error", "p-value")
+    res_tab <- get_coefmat_gls(mgls, ddf=input$ddf)[, c(1,2,3,5)]
+    # res_tab <- s_mgls$tTable[, c(1,2,4)]
+    colnames(res_tab) <- c("Estimate", "Standard error", "ddf", "p-value")
     sigmas <- stats::coef(mgls$modelStruct$varStruct, uncons = FALSE, allCoef = TRUE) * mgls$sigma
     res_nparam <- renderText({paste0("<b>Number of estimated model parameters:</b> ", nrow(res_tab) + length(sigmas))})
 

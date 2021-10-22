@@ -39,7 +39,6 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
   
   
   observeEvent(input$fit, {#crash here
-   #browser()
     origin$output$res_error <- reactive("Please select adequate analysis parameters...")
     responses_res <- list()
     boxplot_print <- list()
@@ -87,7 +86,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
                                                         breaks = c(0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1),
                                                         right = FALSE)
             responses_res[[response]]$res_tab <- fit_res$res_tab
-
+            
           }
 
         }else if(parent$selectModel == 2){
@@ -149,6 +148,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
                                                         inter = FALSE,
                                                         baseline = parent$selectRefTime)
               responses_res[[response]]$res_tab <- do.call(rbind, lapply(fit_res, "[[", "res_tab"))
+              
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
               for(l in 1:length(heatmap_data2plot[[response]])){
                 heatmap_data2plot[[response]][[l]]$response <- response
@@ -187,7 +187,17 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
                                                outputArgs = list(label = "Download boxplot [PNG]", class = "btn-primary")),
                      h3(""),
                      h4(paste("Numerical results for", resp)),
-                     renderTable(responses_res[[resp]]$res_tab, rownames = TRUE, digits=5)
+
+                      renderTable(
+                        # responses_res[[resp]]$res_tab, rownames = TRUE, digits=5)
+                      {
+                      responses_res[[resp]]$res_tab[,1] <- formatC(responses_res[[resp]]$res_tab[,1], format="f", digits = 5)
+                      responses_res[[resp]]$res_tab[,2] <- formatC(responses_res[[resp]]$res_tab[,2], format="f", digits = 5)
+                      responses_res[[resp]]$res_tab[,3] <- as.numeric(substr(responses_res[[resp]]$res_tab[,3], 1,4))
+                      responses_res[[resp]]$res_tab[,4] <- formatC(responses_res[[resp]]$res_tab[,4], format="f", digits = 5)
+                      responses_res[[resp]]$res_tab
+                      }, rownames=TRUE
+                     )
                    )
           )
         })
@@ -218,7 +228,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
         #boxplot_dnl <- cowplot::plot_grid(plotlist = boxplot_print)
         #output$boxplot <- renderPlot(boxplot_dnl)
         #output$downloadBP <- myDownloadHandlerForPlots(name = "VICIboxplot.png", plot_obj = boxplot_dnl)
-
+    
         hm_data2plot_all <- do.call(rbind.data.frame, heatmap_data2plot_noref)
         hm_data2plot_all$response <- factor(hm_data2plot_all$response, ordered = TRUE,
                                             levels = rev(parent$selectResponse))
