@@ -193,7 +193,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
                       {
                       responses_res[[resp]]$res_tab[,1] <- formatC(responses_res[[resp]]$res_tab[,1], format="f", digits = 5)
                       responses_res[[resp]]$res_tab[,2] <- formatC(responses_res[[resp]]$res_tab[,2], format="f", digits = 5)
-                      responses_res[[resp]]$res_tab[,3] <- as.numeric(substr(responses_res[[resp]]$res_tab[,3], 1,4))
+                      responses_res[[resp]]$res_tab[,3] <- formatC(as.numeric(substr(responses_res[[resp]]$res_tab[,3], 1,4)), format="f", digits = 1)
                       responses_res[[resp]]$res_tab[,4] <- formatC(responses_res[[resp]]$res_tab[,4], format="f", digits = 5)
                       responses_res[[resp]]$res_tab
                       }, rownames=TRUE

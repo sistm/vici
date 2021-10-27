@@ -171,7 +171,7 @@ mod_settings_pan_ui <- function(id){
 mod_settings_pan_server <- function(input, output, session,data,parent){
   ns <- session$ns
   #callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = parent,parentModule = session)
-  #browser()
+
   # example data
   output$downloadExData <- downloadHandler(   #Fait appel à une lib externe donc pas besoin de tester
     filename = "exampleICSdata.txt",
@@ -198,6 +198,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     updateCheckboxInput(session, inputId = "header", value = TRUE)
 
     observeEvent(input$selectModel, {
+      cat("observe selectModel", "\n")
       if (input$selectModel==1){
         # updateSelectInput(session, "selectModel", selected = 1)
         available_vars_init <- colnames(data$df)
@@ -285,6 +286,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
                              choices = c(levels(data$df$Arm))
         )
         updateTabsetPanel(parent, "inTabset", selected = "dataTab")
+
       }
     })
   })
@@ -418,7 +420,6 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   })
   
   observeEvent(input$selectStim, {
-    #browser()
     #cat("observe selectStim", "\n")
     if (input$selectStim != ''){
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
@@ -449,7 +450,6 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   })
   
   observeEvent(input$selectResponse, {
-    #browser()
     #cat("observe selectResp", "\n")
     if (length(input$selectResponse) >= 1){
       if (input$selectResponse[1] != ''){
@@ -462,7 +462,6 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   })
   
   observeEvent(input$selectArm, {
-    #browser()
     #cat("observe selectArm", "\n")
     if (input$selectArm != ''){
       
@@ -517,7 +516,6 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   
   
   observeEvent(input$selectArm2, {
-    #browser()
     #cat("observe selectArm2", "\n")
     if (input$selectArm2 != ''){
       
@@ -603,7 +601,6 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   
   # observe time ----
   observeEvent(input$selectTime, {
-    #browser()
     #cat("observe selectTime", "\n")
     if (input$selectTime != ''){
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
@@ -639,7 +636,6 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
   
   # observe time ----
   observeEvent(input$selectTime2, {
-    #browser()
     #cat("observe selectTime2", "\n")
     if (input$selectTime2 != ''){
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
@@ -673,6 +669,11 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     clean_output(output)
   })
   
+  
+  observeEvent(input$ddf, {
+
+    clean_output(parent$output)
+  })
   
   
   observeEvent({input$selectRefArm; input$selectRefArm2; input$selectRefStim; input$selectRefTime; input$selectRefTime2}, {
