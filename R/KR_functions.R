@@ -11,7 +11,7 @@
 
 
 
- 
+
 # from lmerTest:::contest1D.lmerModLmerTest
 get_KR1D <- function(model, L) {
   # Compute var(contrast) and ddf using KR-method via the pbkrtest package
@@ -25,11 +25,12 @@ get_KR1D <- function(model, L) {
   ## It may also be related to the Matrix version: an unstated dependency in pbkrtest.
   if(getRversion() < "3.3.2")
     warning("Kenward-Roger may give faulty results with R <= 3.3.2")
+  # browser()
   vcov_beta_adj <- try(vcovAdj(model), silent=TRUE) # Adjusted vcov(beta)
   if(inherits(vcov_beta_adj, "try-error")) return(list(error=TRUE))
   var_con_adj <- qform(L, as.matrix(vcov_beta_adj)) 
   ddf <- try(Lb_ddf(L=L, V0=vcov(model),
-                              Vadj=vcov_beta_adj), silent=TRUE) # vcov_beta_adj need to be dgeMatrix!
+                    Vadj=vcov_beta_adj), silent=TRUE) # vcov_beta_adj need to be dgeMatrix!
   if(inherits(ddf, "try-error")) return(list(error=TRUE))
   list(var_con=var_con_adj, ddf=ddf, error=FALSE)
 }
@@ -169,7 +170,7 @@ getME <- function(object, name, ...){
 
 getME.gls <- function(object, name, ...){
   # adapated from gls source code
-
+  
   groups <- object$groups
   glsSt <- object$modelStruct$corStruct
   # model <- object$modelStruct
@@ -177,7 +178,7 @@ getME.gls <- function(object, name, ...){
     if (exists("myformul", envir = parent.frame(n=i), inherits=FALSE)){
       formul <- get("myformul", envir = parent.frame(n=i),  inherits=FALSE)
       data.obj <- get("transformed_data", envir = parent.frame(n=i),  inherits=FALSE)
-      }
+    }
   }
   # model <- eval(object$call$model, envir=parent.frame(n=4))
   # data.obj <- eval(object$call$data, envir=parent.frame(n=4))
@@ -197,11 +198,13 @@ getME.gls <- function(object, name, ...){
     revOrder <- match(origOrder, row.names(dataMod)) # putting in orig. order
     ugroups <- unique(grps)
   } else {
-    grps <- factor(rep("1", nrow(data.obj)), ordered=TRUE) # data.obj$stim 
+    #browser()
+    # grps <- data.obj$stim:data.obj$arm
+    grps <- factor(rep("1", nrow(data.obj)), ordered=TRUE) # 
     ord <- order(grps)
     ugroups <- unique(grps)
-    }
-
+  }
+  
   X_raw <- model.matrix(formul, data=data.obj)
   
   # browser()
@@ -227,7 +230,7 @@ getME.gls <- function(object, name, ...){
   # }
   if(name=='X_star'){
     # Pinheiro & Bates p 202
-    browser()
+    # browser()
     varCov <- lapply(ugroups, function(i) {
       ind <- grps==i
       vw <- 1/varWeights(object$modelStruct$varStruct)[ind]
@@ -242,8 +245,8 @@ getME.gls <- function(object, name, ...){
       X_star[grps==ugroups[i], ] <- t(invsqrtLambda[[i]]) %*% X_sorted[grps==ugroups[i], ]
     }
     return(Matrix::Matrix(X_star, sparse=TRUE))
-
-
+    
+    
     # # browser()
     # X_sorted <- X_raw[ord,]
     # 
@@ -254,9 +257,9 @@ getME.gls <- function(object, name, ...){
     # invsqrtLambda <- solve(.sqrtMat(varCov/(sigma( object )^2)))
     # 
     # X_star <- t(invsqrtLambda) %*% X_sorted
-
+    
   }
-    # if(name=='Zt_star'){
+  # if(name=='Zt_star'){
   #   # Pinheiro & Bates p 202
   #   # Zt is (n_reff x n_subjects) rows by N cols, e.g. 1940 x 4790
   #   invsqrtLambda <- lapply(ugroups, function(i) solve(.sqrtMat(getVarCov(object)/(sigma( object )^2))))
@@ -462,15 +465,15 @@ ddf_Lb <- function(VVa, Lcoef, VV0=VVa){
 
 
 .sqrtMat <- function (A) {
-    e <- eigen(A)
-    V <- e$vectors
-    if (length(e$values) == 1) {
-      S <- sqrt(e$values)
-    }
-    else {
-      S <- diag(sqrt(e$values))
-    }
-    V %*% S %*% t(V)
+  e <- eigen(A)
+  V <- e$vectors
+  if (length(e$values) == 1) {
+    S <- sqrt(e$values)
+  }
+  else {
+    S <- diag(sqrt(e$values))
+  }
+  V %*% S %*% t(V)
 }
 
 
