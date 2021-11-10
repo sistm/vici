@@ -1,5 +1,11 @@
+#' Functions to obtain coef, ddf, p-value
 
-get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger")) {
+#' @keywords internal
+#' @importFrom stats vcov sigma pt 
+#' @importFrom nlme glsEstimate 
+#' @importFrom numDeriv hessian jacobian
+
+get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger", "Between-Within")) {
   ddf <- match.arg(ddf)
   p <- length(model$coefficients)
   if (p < 1){
@@ -13,14 +19,14 @@ get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger")) {
   return(tab)
 }
 
-
-contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roger"), 
+#from lmerTest:::contest1D.lmerModLmerTest
+contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roger",  "Between-Within"), 
                        confint = FALSE, level = 0.95, ...){
   mk_ttable <- function(estimate, se, ddf) {
     tstat <- (estimate - rhs)/se
     pvalue <- 2 * pt(abs(tstat), df = ddf, lower.tail = FALSE)
     if (confint) {
-      ci <- waldCI(estimate, se, ddf, level = level)
+      ci <- lmerTest:::waldCI(estimate, se, ddf, level = level)
       data.frame(Estimate = estimate, `Std. Error` = se, 
                  df = ddf, `t value` = tstat, lower = unname(ci[, 
                                                                 "lower"]), upper = unname(ci[, "upper"]), `Pr(>|t|)` = pvalue, 
@@ -41,8 +47,14 @@ contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roge
   }
   if (any(is.na(L))) 
     return(mk_ttable(NA_real_, NA_real_, NA_real_))
+  
+  
   estimate <- sum(L * model$coefficients)
+  var_con <- sum(L * (model$varBeta %*% L))
+  
+  
   if (method == "Kenward-Roger") {
+    # browser()
     ans <- get_KR1D(model, L)
     if (!ans$error) {
       return(mk_ttable(estimate = estimate, se = sqrt(ans$var_con), 
@@ -54,20 +66,31 @@ contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roge
       if (!inherits(model, "gls")) 
         stop("'model' not a 'gls'")
     }
+  }  else if(method == "Between-Within"){
+    
+    # browser()
+    return(mk_ttable(estimate = estimate, se = sqrt(var_con), 
+                       ddf = ddf_BW(model, L)))
   }
-  var_con <- sum(L * (model$varBeta %*% L))
+  
+
   #To have objects of compute_jaclist function
   jaclist <- compute_jaclist(object=model, tol=1e-14)
-  browser()
   grad_var_con <- vapply(jaclist$jacobian_list, function(x) qform(L, x), numeric(1L))
   satt_denom <- qform(grad_var_con, jaclist$vcov_varpar)
   ddf <- drop(2 * var_con^2/satt_denom)
-  mk_ttable(estimate, sqrt(var_con), ddf)
+  mk_ttable(estimate = estimate, se = sqrt(var_con), ddf = ddf)
 }
 
 qform <- function (L, V){
   sum(L * (V %*% L))
 }
+
+
+
+
+
+
 
 # use glsEstimate and to compute the FULL deviance
 # adapted from pbkrtest:::devfun_vp
@@ -79,6 +102,7 @@ devfun_gls <- function(varpar, gls_obj){
   if(is.null(contr)){
     contr <- list(singular.ok = FALSE)
   }
+#   
   est <- glsEstimate(object = gls_obj$modelStruct, control = contr)
   return(as.numeric(-2*est$logLik))
 }
@@ -111,7 +135,7 @@ compute_jaclist <- function (object, tol = 1e-06){
   out$vcov_beta <- as.matrix(vcov(object))
   
   varpar_opt <- c(coef(object$modelStruct), "sigma" = sigma(object))
-  h <- numDeriv::hessian(func = devfun_gls, x = varpar_opt,
+  h <- hessian(func = devfun_gls, x = varpar_opt,
                          gls_obj = object)
   
   eig_h <- eigen(h, symmetric = TRUE)
@@ -137,9 +161,8 @@ compute_jaclist <- function (object, tol = 1e-06){
   })
   out$vcov_varpar <- 2 * h_inv
   
-  jac <- numDeriv::jacobian(func = varBetafun_gls, x = varpar_opt,
+  jac <- jacobian(func = varBetafun_gls, x = varpar_opt,
                             gls_obj = object)
-  browser()
   
   out$jacobian_list <- lapply(1:ncol(jac), function(i){array(jac[, i], dim = rep(length(coef(object)), 2))})
   return(out)
