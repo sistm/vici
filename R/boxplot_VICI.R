@@ -23,7 +23,7 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
   p <- NULL
 
   if(inter){
-    data_df$arm <- relevel(data_df$arm, ref=input$selectRefArm)
+    data_df$arm <- relevel(data_df$arm, ref=input$selectRefArmInter)
     suppressWarnings(
       p <-
         ggboxplot(na.omit(data_df), x="stim", y="response", color="arm", fill="arm", alpha=0.3) +
@@ -40,7 +40,7 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
         labs(caption = "made with VICI")
     )
   }else{
-    data_df$time <- relevel(data_df$time, ref=input$selectRefTime)
+    data_df$time <- relevel(data_df$time, ref=input$selectRefTimeIntra)
     suppressWarnings(
       p <-
         ggboxplot(na.omit(data_df), x="stim", y="response", color="time", fill="time", alpha=0.3) +

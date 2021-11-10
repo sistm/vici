@@ -14,9 +14,10 @@ interarm_fit <- function(transformed_data, input,resp){
   transformed_data <- cbind.data.frame(stats::na.omit(transformed_data), bkg_inter_mat)
   myformul <- as.formula(paste0("response ~ -1 + stim + stim:arm", "+", paste(colnames(bkg_inter_mat), collapse = " + ")))
   
+  
   mgls <- mygls(myformul,
                         data = transformed_data,
-                        #correlation =  nlme::corCompSymm(form= ~ 1 | signal),
+                        # correlation =  nlme::corCompSymm(form= ~ 1 | stim),
                         weights = nlme::varIdent(value = c("1" = 1), form = ~ 1 | stim),
                         method="REML", na.action = stats::na.omit)
 
@@ -34,11 +35,11 @@ interarm_fit <- function(transformed_data, input,resp){
 
     # pretty coef names
     rownames(res_tab)[1] <- paste0(as.character(resp), " : Average response in reference stimulation ", input$selectRefStim,
-                                   " in reference arm ", input$selectRefArm)
+                                   " in reference arm ", input$selectRefArmInter)
     nstim <- nlevels(transformed_data$stim)
     for(i in 1:(nstim-1)){
       rownames(res_tab)[1 + i] <- paste0(as.character(resp), " : Average response in stimulation ", levels(transformed_data$stim)[1 + i],
-                                         " in reference arm ", input$selectRefArm)
+                                         " in reference arm ", input$selectRefArmInter)
     }
     for(i in 1:(nstim-1)){
       rownames(res_tab)[nstim + i] <- paste0(as.character(resp), " : Effect of reference stimulation ", input$selectRefStim, " on response in stimulation ",

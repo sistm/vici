@@ -68,21 +68,31 @@ app_server <- function(input, output, session) {
   inpt <- callModule(module = mod_settings_pan_server, id = "settings_pan_ui_1",data = data,parent = session)
 
   callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = inpt,origin = session)
-
-   observeEvent({input$selectModel;
-     input$selectStim; input$selectRefStim;
-     input$selectArm; input$selectRefArm;
-     input$selectTime; input$selectRefTime}, {
+  # cat("before write Latex", "\n")
+   observeEvent({
+     input$selectModel
+     input$selectStim
+     input$selectRefStim
+     input$selectArmInter 
+     input$selectArmIntra
+     input$selectRefArmInter 
+     input$selectRefArmIntra
+     input$selectTimeInter 
+     input$selectTimeIntra
+     input$selectRefTimeInter 
+     input$selectRefTimeIntra
+     }, {
        #appelé data load
 
        # write LaTeX model ----
-
-       if(input$selectModel == 1 & input$selectRefStim != '' & input$selectRefArm != '' & input$selectStim !='' &
-          input$selectArm %in% colnames(data$df) & input$selectStim %in% colnames(data$df)){
+      # cat("can write Latex", "\n")
+       if(input$selectModel == 1 & input$selectRefStim != '' & input$selectRefArmInter != '' & input$selectStim !='' &
+          input$selectArmInter %in% colnames(data$df) & input$selectStim %in% colnames(data$df)){
+         # cat("write Latex Inter", "\n")
          output$mod_display <- reactive(TRUE)
          arm_coefs <- NULL
-         for(a in levels(data$df[, input$selectArm])){
-           if(a != input$selectRefArm){
+         for(a in levels(data$df[, input$selectArmInter])){
+           if(a != input$selectRefArmInter){
              arm_coefs <- paste0(arm_coefs, '+ \\beta_{', a,'}^{', input$selectRefStim, '}', a,
                                  '_i')
            }
@@ -93,8 +103,8 @@ app_server <- function(input, output, session) {
 
            if(s != input$selectRefStim){
              arm_coefs <- NULL
-             for(a in levels(data$df[, input$selectArm])){
-               if(a != input$selectRefArm){
+             for(a in levels(data$df[, input$selectArmInter])){
+               if(a != input$selectRefArmInter){
                  arm_coefs <- paste0(arm_coefs, '+ \\beta_{', a,'}^{', s, '}', a,
                                      '_i')
                }
@@ -108,21 +118,21 @@ app_server <- function(input, output, session) {
          output$mod <- renderUI({
            withMathJax(statmodel)
          })
-       }else if(input$selectModel == 2 & input$selectRefStim != '' & input$selectRefTime != '' & input$selectStim !='' &
-              input$selectTime %in% colnames(data$df) & input$selectStim %in% colnames(data$df)) {
+       }else if(input$selectModel == 2 & input$selectRefStim != '' & input$selectRefTimeIntra != '' & input$selectStim !='' &
+              input$selectTimeIntra %in% colnames(data$df) & input$selectStim %in% colnames(data$df)) {
          output$mod_display <- reactive(TRUE)
 
          statmodel <- NULL
-         for(t in levels(data$df[, input$selectTime])){
-           if(t != input$selectRefTime){
+         for(t in levels(data$df[, input$selectTimeIntra])){
+           if(t != input$selectRefTimeIntra){
              statmodel <- paste0(statmodel, '$$y_{diff\\,',t ,'\\, _i}^{', input$selectRefStim, '} = \\beta_{0\\,',t ,'}^{', input$selectRefStim,
                                  '} ', '+ \\varepsilon_{',t ,'\\, _i}^{', input$selectRefStim, '}$$')
            }
          }
          for(s in levels(data$df[, input$selectStim])){
            if(s != input$selectRefStim){
-             for(t in levels(data$df[, input$selectTime])){
-               if(t != input$selectRefTime){
+             for(t in levels(data$df[, input$selectTimeIntra])){
+               if(t != input$selectRefTimeIntra){
                  statmodel <- paste0(statmodel, '$$y_{diff\\,',t ,'\\, _i}^{', s, '} = \\beta_{0\\,',t ,'}^{', s,
                                      '} + \\beta_{', input$selectRefStim, '\\,',t ,'}^{', s, '} \\,y^{',
                                      input$selectRefStim, '}_{diff\\,',t ,'\\, _i} + \\varepsilon_{',t ,'\\, _i}^{', s, '}$$'
@@ -132,7 +142,7 @@ app_server <- function(input, output, session) {
            }
          }
          diffdef <- paste0('where \\(y_{diff\\,\\{\\textsf{t}\\}\\, _i}^{\\{\\textsf{s}\\}} = y_i^{\\{\\textsf{s}\\}}(\\{\\textsf{t}\\}) - y_i^{\\{\\textsf{s}\\}}(',
-                           input$selectRefTime, ')\\)'
+                           input$selectRefTimeIntra, ')\\)'
          )
          output$mod <- renderUI({
            tagList(
@@ -142,6 +152,7 @@ app_server <- function(input, output, session) {
            )
          })
        }else{
+         # cat("no write Latex", "\n")
          output$mod <- reactive(NULL)
          output$mod_display <- reactive(FALSE)
        }

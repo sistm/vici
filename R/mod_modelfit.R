@@ -48,16 +48,16 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
     for(response in parent$selectResponse){
       if(!is.null(data$df) & parent$selectSubject %in% colnames(data$df) &
          parent$selectStim %in% colnames(data$df) & data$fact_stim_OK &
-         (parent$selectArm %in% colnames(data$df) & data$fact_arm_OK) |
-          (parent$selectTime %in% colnames(data$df) & data$fact_time_OK))
+         (parent$selectArmInter %in% colnames(data$df) & data$fact_arm_OK) |
+          (parent$selectTimeIntra %in% colnames(data$df) & data$fact_time_OK))
        {
         if(parent$selectModel == 1){
           # data tansformation
-          if(parent$selectTime2 != ''){
-            data_df <- data$df[data$df[, parent$selectTime2] == parent$selectRefTime2,
-                               c(parent$selectSubject, response, parent$selectStim, parent$selectArm)]
+          if(parent$selectTimeInter != ''){
+            data_df <- data$df[data$df[, parent$selectTimeInter] == parent$selectRefTimeInter,
+                               c(parent$selectSubject, response, parent$selectStim, parent$selectArmInter)]
           }else{
-            data_df <- data$df[, c(parent$selectSubject, response, parent$selectStim, parent$selectArm)]
+            data_df <- data$df[, c(parent$selectSubject, response, parent$selectStim, parent$selectArmInter)]
           }
           colnames(data_df) <- c("Subject", "response", "stim", "arm")
           transformed_data <- data_df
@@ -68,7 +68,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
               transformed_data[transformed_data$stim == l, "bkg"] <- transformed_data[transformed_data$stim == parent$selectRefStim, "response"]
             }
           }
-          transformed_data$arm <- stats::relevel(transformed_data$arm, ref=parent$selectRefArm)
+          transformed_data$arm <- stats::relevel(transformed_data$arm, ref=parent$selectRefArmInter)
           transformed_data$stim <- stats::relevel(transformed_data$stim, ref=parent$selectRefStim)
           data_df$stim <- relevel(data_df$stim, ref=parent$selectRefStim)
 
@@ -92,24 +92,24 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
         }else if(parent$selectModel == 2){
 
           # data tansformation
-          if(parent$selectArm2 != ''){
-            data_df <- data$df[data$df[, parent$selectArm2] == parent$selectRefArm2,
-                               c(parent$selectSubject, response, parent$selectStim, parent$selectTime)]
+          if(parent$selectArmIntra != ''){
+            data_df <- data$df[data$df[, parent$selectArmIntra] == parent$selectRefArmIntra,
+                               c(parent$selectSubject, response, parent$selectStim, parent$selectTimeIntra)]
           }else{
-            data_df <- data$df[, c(parent$selectSubject, response, parent$selectStim, parent$selectTime)]
+            data_df <- data$df[, c(parent$selectSubject, response, parent$selectStim, parent$selectTimeIntra)]
           }
           colnames(data_df) <- c("Subject", "response", "stim", "time")
           data_df$stim <- stats::relevel(data_df$stim, ref=parent$selectRefStim)
           transformed_data <- data_df
 
-          transformed_data$time <- stats::relevel(transformed_data$time, ref=parent$selectRefTime)
+          transformed_data$time <- stats::relevel(transformed_data$time, ref=parent$selectRefTimeIntra)
           transformed_data <- try(tidyr::spread(transformed_data, key = "time", value = "response"),
                                   silent = TRUE)
 
           if(inherits(transformed_data, "try-error")){
             clean_output(output)
             toomuchdata <- TRUE
-            origin$output$res_error <- reactive(paste0("Too many observation in time point ", parent$selectRefTime,
+            origin$output$res_error <- reactive(paste0("Too many observation in time point ", parent$selectRefTimeIntra,
                                                 "... Perhaps the Arm to analyzed was not specified"))
           }else{
             for(i in ncol(transformed_data):3){
@@ -146,7 +146,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
                                                         response_name = response,
                                                         input = parent,
                                                         inter = FALSE,
-                                                        baseline = parent$selectRefTime)
+                                                        baseline = parent$selectRefTimeIntra)
               responses_res[[response]]$res_tab <- do.call(rbind, lapply(fit_res, "[[", "res_tab"))
               
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
@@ -235,7 +235,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
         #TODO if model 2: cross response x time points on y-axis
         if(parent$selectModel == 2)
           heatmap_print <- heatmap_vici(hm_data2plot_all, inter = FALSE,
-                                        baseline = parent$selectRefTime)
+                                        baseline = parent$selectRefTimeIntra)
         else{
           heatmap_print <- heatmap_vici(hm_data2plot_all, inter = TRUE)
         }

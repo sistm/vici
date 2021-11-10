@@ -2,7 +2,7 @@
 #'
 #'
 #' @keywords internal
-#' @importFrom statsna.omit
+#' @importFrom stats na.omit
 intraarm_fit <- function(transformed_data, tested_time, input,resp){
   
   res_tab <- NULL
@@ -22,12 +22,8 @@ intraarm_fit <- function(transformed_data, tested_time, input,resp){
                   method="REML", na.action = stats::na.omit
   )
   
+  # browser()
   # 
-  # get_coefmat_gls(mymgls, "Kenward-Roger")
-  # 
-  # 
-  # getME.gls(mymgls)
-  # get_coefmat_gls(mgls, "S")
 
   if(!inherits(mgls, "try-error")){
 
@@ -43,14 +39,14 @@ intraarm_fit <- function(transformed_data, tested_time, input,resp){
 
     # pretty coef names
     rownames(res_tab)[1] <- paste0(as.character(resp), " : Vaccine effect on response in reference stimulation ", input$selectRefStim,
-                                   " at ", tested_time, " compared to baseline ", input$selectRefTime)
+                                   " at ", tested_time, " compared to baseline ", input$selectRefTimeIntra)
     nstim <- nlevels(transformed_data$stim)
     for(i in 1:(nstim-1)){
       rownames(res_tab)[1 + i] <- paste0(as.character(resp), " : Vaccine effect on response in stimulation ", levels(transformed_data$stim)[1 + i],
-                                         " at ", tested_time, " compared to baseline ", input$selectRefTime)
+                                         " at ", tested_time, " compared to baseline ", input$selectRefTimeIntra)
       rownames(res_tab)[nstim + i] <- paste0(as.character(resp), " : Effect of reference stimulation ", input$selectRefStim,
                                              " on response in stimulation ", levels(transformed_data$stim)[1 + i],
-                                             "  at ", tested_time, " compared to baseline ", input$selectRefTime)
+                                             "  at ", tested_time, " compared to baseline ", input$selectRefTimeIntra)
     }
 
   }else{
