@@ -6,6 +6,9 @@
 #' @importFrom stats model.frame sigma update vcov
 #' @importFrom nlme getVarCov
 #' @importFrom methods as
+#' @importFrom MASS ginv
+#' @importFrom Matrix forceSymmetric Matrix sparseMatrix
+
 
 
  
@@ -42,15 +45,14 @@ vcovAdj <- function(object, details=0){
   UseMethod("vcovAdj")
 }
 
-#@
-#' rdname kr-vcov
+
 vcovAdj.gls <-function(object, details=0){
   if (!(getME(object, "is_REML"))) {
     object <- update(object, . ~ ., REML = TRUE)
   }
   Phi      <- vcov(object)
-  SigmaG   <- get_SigmaG( object, details ) 
-  X_star        <- getME(object, "X_star")  
+  SigmaG   <- get_SigmaG( object, details)
+  X_star <- getME(object, "X_star")  
   vcovAdj16_internal( Phi, SigmaG, X_star, details=details)
 }
 
@@ -195,12 +197,14 @@ getME.gls <- function(object, name, ...){
     revOrder <- match(origOrder, row.names(dataMod)) # putting in orig. order
     ugroups <- unique(grps)
   } else {
-    grps <- data.obj$stim
-    ord <- rownames(data.obj)
-    ugroups <- unique(data.obj$stim) 
+    grps <- factor(rep("1", nrow(data.obj)), ordered=TRUE) # data.obj$stim 
+    ord <- order(grps)
+    ugroups <- unique(grps)
     }
 
   X_raw <- model.matrix(formul, data=data.obj)
+  
+  # browser()
   
   if(name=='X'){
     return(X_raw)
@@ -223,7 +227,7 @@ getME.gls <- function(object, name, ...){
   # }
   if(name=='X_star'){
     # Pinheiro & Bates p 202
-    X_sorted <- X_raw[ord,]
+    browser()
     varCov <- lapply(ugroups, function(i) {
       ind <- grps==i
       vw <- 1/varWeights(object$modelStruct$varStruct)[ind]
@@ -232,11 +236,25 @@ getME.gls <- function(object, name, ...){
       res
     } )
     invsqrtLambda <- lapply(ugroups, function(i) solve(.sqrtMat(varCov[[i]]/(sigma( object )^2))))
+    X_sorted <- X_raw[ord,]
     X_star   <- matrix(0, nrow=nrow(X_raw), ncol=ncol(X_raw))
     for(i in 1:length(ugroups)){
-      X_star[grps==ugroups[i], ] <- t(invsqrtLambda[[i]]) %*% X_sorted[grps==ugroups[i],]
+      X_star[grps==ugroups[i], ] <- t(invsqrtLambda[[i]]) %*% X_sorted[grps==ugroups[i], ]
     }
     return(Matrix::Matrix(X_star, sparse=TRUE))
+
+
+    # # browser()
+    # X_sorted <- X_raw[ord,]
+    # 
+    # vw <- 1/varWeights(object$modelStruct$varStruct) #[ind]
+    # vars <- (object$sigma * vw)^2
+    # varCov <- diag(vars)
+    # 
+    # invsqrtLambda <- solve(.sqrtMat(varCov/(sigma( object )^2)))
+    # 
+    # X_star <- t(invsqrtLambda) %*% X_sorted
+
   }
     # if(name=='Zt_star'){
   #   # Pinheiro & Bates p 202
