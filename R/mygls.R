@@ -1,3 +1,7 @@
+
+#' @importFrom stats na.fail terms formula asOneSidedFormula contrasts nlminb logLik optim fitted coef
+#' @importFrom nlme glsControl getGroupsFormula glsStruct varFunc asOneFormula getGroups Initialize needUpdate varWeights glsApVar
+
 mygls <- function (model, data = sys.frame(sys.parent()), correlation = NULL, 
           weights = NULL, subset, method = c("REML", "ML"), na.action = na.fail, 
           control = list(), verbose = FALSE) 

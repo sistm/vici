@@ -14,25 +14,22 @@ intraarm_fit <- function(transformed_data, tested_time, input,resp){
   transformed_data <- cbind.data.frame(stats::na.omit(transformed_data), bkg_inter_mat)
   myformul <- as.formula(paste0("response ~ -1 + stim", "+", paste(colnames(bkg_inter_mat), collapse = " + ")))
 
-  
   mgls <- mygls(myformul,
                   data = transformed_data,
                   # correlation =  nlme::corCompSymm(form= ~ 1 | stim),
                   weights = nlme::varIdent(value = c("1" = 1), form = ~ 1 | stim),
                   method="REML", na.action = stats::na.omit
   )
-  
-  # browser()
-  # 
 
   if(!inherits(mgls, "try-error")){
 
     # getting coef
     s_mgls <- summary(mgls)
     res_lik <- mgls$logLik
-    tab <- get_coefmat_gls(mgls, ddf=input$ddf)
-    res_tab <- tab[, c(1,2,3,5)]
-    # res_tab <- s_mgls$tTable[, c(1,2,4)]
+    if(input$ddf == "By default"){
+      df_residual <- mgls$dims$N - mgls$dims$p
+      res_tab <- data.frame(cbind(s_mgls$tTable[, 1:2], rep(df_residual, nrow(s_mgls$tTable)), s_mgls$tTable[, 4]))
+    }else res_tab <- get_coefmat_gls(mgls, ddf=input$ddf)[, c(1,2,3,5)]
     colnames(res_tab) <- c("Estimate", "Standard error", "ddf", "p-value")
     sigmas <- stats::coef(mgls$modelStruct$varStruct, uncons = FALSE, allCoef = TRUE) * mgls$sigma
     res_nparam <- renderText({paste0("<b>Number of estimated model parameters:</b> ", nrow(res_tab) + length(sigmas))})

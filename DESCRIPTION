@@ -27,5 +27,10 @@ Imports:
     golem,
     future,
     pkgload,
-    processx
+    processx, 
+    numDeriv, 
+    methods,
+    stringr,
+    MASS, 
+    Matrix
 RoxygenNote: 7.1.2

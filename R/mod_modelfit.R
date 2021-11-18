@@ -186,18 +186,26 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
                      myDownloadHandlerForPlots(name = "VICIboxplot.png", plot_obj = boxplot_print[[resp]],
                                                outputArgs = list(label = "Download boxplot [PNG]", class = "btn-primary")),
                      h3(""),
-                     h4(paste("Numerical results for", resp)),
-
-                      renderTable(
-                        # responses_res[[resp]]$res_tab, rownames = TRUE, digits=5)
-                      {
-                      responses_res[[resp]]$res_tab[,1] <- formatC(responses_res[[resp]]$res_tab[,1], format="f", digits = 5)
-                      responses_res[[resp]]$res_tab[,2] <- formatC(responses_res[[resp]]$res_tab[,2], format="f", digits = 5)
-                      responses_res[[resp]]$res_tab[,3] <- formatC(as.numeric(substr(responses_res[[resp]]$res_tab[,3], 1,4)), format="f", digits = 1)
-                      responses_res[[resp]]$res_tab[,4] <- formatC(responses_res[[resp]]$res_tab[,4], format="f", digits = 5)
-                      responses_res[[resp]]$res_tab
-                      }, rownames=TRUE
-                     )
+                     
+                     if(parent$ddf=="Kenward-Roger"){
+                       h4(paste("WARNING - Kenward-Roger not implemented, please use SAS to obtain results of this approximation."))
+                     } else{
+                     h4(paste("Numerical results for", resp))
+                       
+                       renderTable(
+                         # responses_res[[resp]]$res_tab, rownames = TRUE, digits=5)
+                         {
+                           # browser()
+                           responses_res[[resp]]$res_tab[,1] <- formatC(responses_res[[resp]]$res_tab[,1], format="f", digits = 5)
+                           responses_res[[resp]]$res_tab[,2] <- formatC(responses_res[[resp]]$res_tab[,2], format="f", digits = 5)
+                           if(parent$ddf=="By default"){
+                             responses_res[[resp]]$res_tab[,3] <- formatC(as.numeric(substr(responses_res[[resp]]$res_tab[,3], 1,5)), format="f", digits = 0)
+                           } else responses_res[[resp]]$res_tab[,3] <- formatC(as.numeric(substr(responses_res[[resp]]$res_tab[,3], 1,4)), format="f", digits = 1)
+                           responses_res[[resp]]$res_tab[,4] <- formatC(responses_res[[resp]]$res_tab[,4], format="f", digits = 5)
+                           responses_res[[resp]]$res_tab
+                         }, rownames=TRUE
+                       )
+                     }
                    )
           )
         })

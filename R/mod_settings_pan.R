@@ -138,12 +138,13 @@ mod_settings_pan_ui <- function(id){
                        choices =c(Choose = "", NULL))
       ),
       
-      h3("Denominator degrees of freedom approximations"),
+      h4("Denominator degrees of freedom approximations"),
       radioButtons(ns("ddf"), NULL,
-                   choices = c("Satterthwaite",
-                               "Kenward-Roger",
-                               "Between-Within"),
-                   selected = "Satterthwaite"),
+                   choices = c("By default",
+                               "Between-Within",
+                               "Satterthwaite",
+                               "Kenward-Roger"),
+                   selected = "Between-Within"),
       
       tags$hr(),
       h3("Run analysis"),
