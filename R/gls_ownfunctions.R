@@ -4,6 +4,7 @@
 #' @importFrom stats vcov sigma pt 
 #' @importFrom nlme glsEstimate 
 #' @importFrom numDeriv hessian jacobian
+#' @import lmerTest
 
 get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger", "Between-Within")) {
   ddf <- match.arg(ddf)
