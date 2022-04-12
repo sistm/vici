@@ -420,7 +420,9 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     if (input$selectStim != ''){
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
       if (input$selectStim %in% colnames(data$df)){
+        #browser()
         selected_stim_var <- data$df[, input$selectStim]
+        selected_stim_var <- as.factor(selected_stim_var)
         if(is.factor(selected_stim_var)){
           output$stimisfactor <- reactive(TRUE)
           possible_stims <- levels(selected_stim_var)
@@ -466,6 +468,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
       
       if (input$selectArmInter %in% colnames(data$df)){
         selected_arm_var <- data$df[, input$selectArmInter]
+        selected_arm_var <- as.factor(selected_arm_var)
         if(is.factor(selected_arm_var)){
           output$armisfactor <- reactive(TRUE)
           possible_arms <- levels(selected_arm_var)
@@ -520,6 +523,7 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
       
       if (input$selectArmIntra %in% colnames(data$df)){
         selected_arm2_var <- data$df[, input$selectArmIntra]
+        selected_arm2_var <- as.factor(selected_arm2_var)
         if(is.factor(selected_arm2_var)){
           output$arm2isfactor <- reactive(TRUE)
           possible_arm2s <- levels(selected_arm2_var)
