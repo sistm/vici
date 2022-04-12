@@ -169,7 +169,7 @@ mod_settings_pan_ui <- function(id){
 #' @export
 #' @keywords internal
     
-mod_settings_pan_server <- function(input, output, session,data,parent){
+mod_settings_pan_server <- function(input, output, session, data, parent){
   ns <- session$ns
   #callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = parent,parentModule = session)
 
@@ -420,7 +420,6 @@ mod_settings_pan_server <- function(input, output, session,data,parent){
     if (input$selectStim != ''){
       data$available_vars <-  update_vars(input, possibilities = colnames(data$df))
       if (input$selectStim %in% colnames(data$df)){
-        #browser()
         selected_stim_var <- data$df[, input$selectStim]
         selected_stim_var <- as.factor(selected_stim_var)
         if(is.factor(selected_stim_var)){

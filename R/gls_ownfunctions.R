@@ -2,7 +2,7 @@
 
 #' @keywords internal
 #' @importFrom stats vcov sigma pt 
-#' @importFrom nlme glsEstimate 
+#' @importFrom nlme glsEstimate coef<-
 #' @importFrom numDeriv hessian jacobian
 #' @import lmerTest
 
@@ -55,7 +55,6 @@ contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roge
   
   
   if (method == "Kenward-Roger") {
-    # browser()
     ans <- get_KR1D(model, L)
     if (!ans$error) {
       return(mk_ttable(estimate = estimate, se = sqrt(ans$var_con), 
@@ -69,13 +68,13 @@ contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roge
     }
   }  else if(method == "Between-Within"){
     
-    # browser()
     return(mk_ttable(estimate = estimate, se = sqrt(var_con), 
                        ddf = ddf_BW(model, L)))
   }
   
 
   #To have objects of compute_jaclist function
+  #For Satterthwaite :
   jaclist <- compute_jaclist(object=model, tol=1e-14)
   grad_var_con <- vapply(jaclist$jacobian_list, function(x) qform(L, x), numeric(1L))
   satt_denom <- qform(grad_var_con, jaclist$vcov_varpar)

@@ -1,4 +1,12 @@
-
+#' Functions to calculate Kenward-Roger approximation of ddf
+#' 
+#' Functions not finished and not used inside package. We don't find the same thing that in SAS. 
+#' The problem may be come of \code{getME.gls} function for the definition of groups to compute
+#' varCov.
+#' 
+#' @importFrom stats coef model.frame update
+#' @importFrom Matrix Matrix sparseMatrix forceSymmetric 
+#' @importFrom MASS ginv 
 
 # from lmerTest:::contest1D.lmerModLmerTest
 
@@ -14,7 +22,6 @@ get_KR1D <- function(model, L) {
   # ## It may also be related to the Matrix version: an unstated dependency in pbkrtest.
   # if(getRversion() < "3.3.2")
   #   warning("Kenward-Roger may give faulty results with R <= 3.3.2")
-  # browser()
   vcov_beta_adj <- try(vcovAdj(model), silent=TRUE) # Adjusted vcov(beta)
   if(inherits(vcov_beta_adj, "try-error")) return(list(error=TRUE))
   var_con_adj <- qform(L, as.matrix(vcov_beta_adj)) # variance of contrast
@@ -39,7 +46,6 @@ vcovAdj.gls <-function(object, details=0){
   if (!(getME(object, "is_REML"))) {
     object <- update(object, . ~ ., REML = TRUE)
   }
-  # browser()
   Phi <- vcov(object)
   SigmaG <- get_SigmaG( object, details )
   X_star <- getME(object, "X_star")
@@ -51,7 +57,6 @@ vcovAdj.gls <-function(object, details=0){
 
 vcovAdj_internal <- function(Phi, SigmaG, X, details=0){
 
-  # browser()
   DB <- details > 0 ## debugging only
   t0 <- proc.time()
   
@@ -186,8 +191,6 @@ getME.gls <- function(object, name, ...){
   X_raw <- model.matrix(formul, data = data.obj)
   X_sorted <- X_raw[ord, ]
 
-  # browser()
-  
   varCov <- lapply(ugroups, function(i) {
     ind <- grps==i
     vw <- 1/varWeights(object$modelStruct$varStruct)[ind]
@@ -217,7 +220,6 @@ getME.gls <- function(object, name, ...){
   # }
   if(name=='X_star'){
     # Pinheiro & Bates p 202
-    # browser()
     invsqrtLambda <- lapply(ugroups, function(i) solve(.sqrtMat(varCov[[i]]/(sigma(object)^2))))
 
     X_star   <- matrix(0, nrow=nrow(X_raw), ncol=ncol(X_raw))

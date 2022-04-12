@@ -3,6 +3,7 @@
 #'
 #' @keywords internal
 #' @importFrom stats na.omit
+#' @importFrom nlme varIdent
 intraarm_fit <- function(transformed_data, tested_time, input,resp){
   
   res_tab <- NULL
@@ -17,7 +18,7 @@ intraarm_fit <- function(transformed_data, tested_time, input,resp){
   mgls <- mygls(myformul,
                   data = transformed_data,
                   # correlation =  nlme::corCompSymm(form= ~ 1 | stim),
-                  weights = nlme::varIdent(value = c("1" = 1), form = ~ 1 | stim),
+                  weights = varIdent(value = c("1" = 1), form = ~ 1 | stim),
                   method="REML", na.action = stats::na.omit
   )
 

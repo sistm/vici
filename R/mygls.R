@@ -1,12 +1,29 @@
-
-#' @importFrom stats na.fail terms formula asOneSidedFormula contrasts nlminb logLik optim fitted coef
-#' @importFrom nlme glsControl getGroupsFormula glsStruct varFunc asOneFormula getGroups Initialize needUpdate varWeights glsApVar
+#'Our gls function
+#'
+#'Internal function to adapt gls model with more details in output.
+#'
+#'@param model a \code{formula}.
+#'@param data  a \code{data.frame} containing variables called in \code{model}, \code{correlation}, \code{weights}, \code{subset}.
+#'@param correlation a \code{corCompSymm} object. Default is \code{NULL}.
+#'@param weights a \code{varIdent} object. Default is \code{NULL}.
+#'@param subset an optional expression indicating which subset of the rows of \code{data} should be used in the fit. By default, all observations are included.
+#'@param method a character string to choose the maximization method. Default is "\code{REML}".
+#'@param na.action a function that indicates what should happen when the data contain NAs. Default is \code{na.fail}.
+#'@param control a list of control values. Default is an empty list.
+#'@param verbose an optional logical value. If TRUE information on the evolution of the iterative algorithm is printed. Default is FALSE.
+#'
+#'@return a \code{gls} object
+#'
+#'@keywords internal
+#'
+#'@importFrom stats na.fail terms formula asOneSidedFormula contrasts nlminb logLik optim fitted coef model.frame update
+#'@importFrom nlme glsControl getGroupsFormula glsStruct varFunc asOneFormula getGroups Initialize needUpdate varWeights glsApVar coef<-
 
 mygls <- function (model, data = sys.frame(sys.parent()), correlation = NULL, 
           weights = NULL, subset, method = c("REML", "ML"), na.action = na.fail, 
           control = list(), verbose = FALSE) 
 {
-  library(nlme)
+  # library(nlme)
   Call <- match.call()
   controlvals <- glsControl()
   if (!missing(control)) 

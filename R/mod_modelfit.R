@@ -36,16 +36,13 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
   ns <- session$ns
   # Run whenever fit button is pressed
   
-  #browser()
   observeEvent(input$fit, {#crash here
-    #browser()
     origin$output$res_error <- reactive("Please select adequate analysis parameters...")
     responses_res <- list()
     boxplot_print <- list()
     heatmap_data2plot <- list()
     toomuchdata <- FALSE
-    #browser()
-    
+
     for(response in parent$selectResponse){
       if(!is.null(datas$df) & parent$selectSubject %in% colnames(datas$df) &
          parent$selectStim %in% colnames(datas$df) & datas$fact_stim_OK &
@@ -55,7 +52,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
         if(parent$selectModel == 1){
           # data tansformation
           if(parent$selectTimeInter != ''){
-            #browser()
             data_df <- datas$df[datas$df[, parent$selectTimeInter] == parent$selectRefTimeInter,
                                 c(parent$selectSubject, response, parent$selectStim, parent$selectArmInter)]
           }else{
@@ -64,20 +60,17 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
           colnames(data_df) <- c("Subject", "response", "stim", "arm")
           transformed_data <- data_df
           transformed_data$bkg <- 0.000 # intialize bkg ground
-          #browser()
           #transformed_data$bkg <- as.double(transformed_data$bkg)
           transformed_data <- transformed_data[order(transformed_data$stim, transformed_data$Subject), ] # align stimulations so that subject order matches in the following loop
           if(!is.factor(transformed_data$stim)){
             transformed_data$stim <- as.factor(transformed_data$stim)
           }
           for(l in levels(transformed_data$stim)){
-            #browser()
             if(l != parent$selectRefStim){
               transformed_data[transformed_data$stim == l, "bkg"] <- transformed_data[transformed_data$stim == parent$selectRefStim, "response"]
             }
             
           }
-          #browser()
           transformed_data$arm <- stats::relevel(factor(transformed_data$arm), ref=parent$selectRefArmInter)
           transformed_data$stim <- stats::relevel(factor(transformed_data$stim), ref=parent$selectRefStim)
           data_df$stim <- relevel(factor(data_df$stim), ref=parent$selectRefStim)
@@ -85,9 +78,7 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             data_df$arm <- as.factor(data_df$arm)
           }
           # model fit ----
-          #browser()
           fit_res <- interarm_fit(transformed_data, parent, response)
-          #browser()
           if(!inherits(fit_res$mgls, "try-error")){
             responses_res[[response]]$res_error <- NULL
             responses_res[[response]]$postprocess_res <- interarm_postprocessres(data_df, fit_res)
@@ -106,7 +97,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
         }else if(parent$selectModel == 2){
           
           # data tansformation
-          # browser()
           if(parent$selectArmIntra != ''){
             data_df <- datas$df[datas$df[, parent$selectArmIntra] == parent$selectRefArmIntra,
                                 c(parent$selectSubject, response, parent$selectStim, parent$selectTimeIntra)]
@@ -114,7 +104,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             data_df <- datas$df[, c(parent$selectSubject, response, parent$selectStim, parent$selectTimeIntra)]
           }
           colnames(data_df) <- c("Subject", "response", "stim", "time")
-          #browser()
           data_df$stim <- stats::relevel(factor(data_df$stim), ref=parent$selectRefStim)
           transformed_data <- data_df
           
@@ -149,7 +138,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
               }
               
               transformed_data_temp$stim <- stats::relevel(factor(transformed_data_temp$stim), ref=parent$selectRefStim)
-              # browser()
               # transformed_data$arm <- stats::relevel(factor(transformed_data$arm),ref=parent$selectRefArmInter)# ref=parent$selectRefArmIntra)#
               # transformed_data$stim <- stats::relevel(factor(transformed_data$stim), ref=parent$selectRefStim)
               # data_df$stim <- relevel(factor(data_df$stim), ref=parent$selectRefStim)
@@ -219,7 +207,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
                        renderTable(
                          # responses_res[[resp]]$res_tab, rownames = TRUE, digits=5)
                          {
-                           # browser()
                            responses_res[[resp]]$res_tab[,1] <- formatC(responses_res[[resp]]$res_tab[,1], format="f", digits = 5)
                            responses_res[[resp]]$res_tab[,2] <- formatC(responses_res[[resp]]$res_tab[,2], format="f", digits = 5)
                            if(parent$ddf=="By default"){

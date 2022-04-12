@@ -1,5 +1,12 @@
 #' Between-Within functions to obtain Denominator degrees of freedom
 #' 
+#' Internal function to calculate Between-Within ddf
+#' 
+#' @param object a \code{gls} model object.
+#' @param L a numeric vector of the same length as the number of fixed effects from \code{object}.
+#' 
+#' @return a \code{number} object
+#' 
 #' @keywords internal
 #' 
 #' @importFrom stringr str_detect
@@ -15,7 +22,6 @@ ddf_BW <- function(object, L){
   
   for (i in 1:length(sys.parents())){
     if (exists("transformed_data", envir = parent.frame(n=i), inherits=FALSE)){
-      # formul <- get("myformul", envir = parent.frame(n=i),  inherits=FALSE)
       data.obj <- get("transformed_data", envir = parent.frame(n=i),  inherits=FALSE)
     }
     if (exists("input", envir = parent.frame(n=i), inherits=FALSE)){
@@ -29,19 +35,19 @@ ddf_BW <- function(object, L){
   armRef <- input.obj$selectRefArmInter
   n_obs_armRef <- nrow(data.obj[which(data.obj$arm==armRef),])
   
-  n_param_interac <-  length(stringr::str_detect(parameters, ":")[stringr::str_detect(parameters, ":")==TRUE])
+  n_param_interac <-  length(str_detect(parameters, ":")[str_detect(parameters, ":")==TRUE])
   
-  n_param_bkg <- length(stringr::str_detect(parameters, "bkg")[stringr::str_detect(parameters, "bkg")==TRUE])
+  n_param_bkg <- length(str_detect(parameters, "bkg")[str_detect(parameters, "bkg")==TRUE])
   
   # for inter-arm
   if(input.obj$selectModel == "1"){
-    if(stringr::str_detect(est_param, "bkg")){
+    if(str_detect(est_param, "bkg")){
       #ddf_between
       ddf <-  n_obs - n_indiv - n_param
-    }  else if(stringr::str_detect(est_param, ":")){
+    }else if(str_detect(est_param, ":")){
       #ddf_within for stim
       ddf <-  n_obs - n_obs_armRef - n_param_interac
-    } else{
+    }else{
       #ddf_within for stim and arm
       ddf <- n_obs_armRef - n_indiv - (n_param - n_param_interac - n_param_bkg)
     }
@@ -50,7 +56,7 @@ ddf_BW <- function(object, L){
     ddf <-  n_obs - n_indiv - n_param
   }
   
-  ddf
+  return(ddf)
   
 }
   
