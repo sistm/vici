@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{qform}
 \alias{qform}
-\title{Utility Functions for VICI Package}
+\title{Compute Quadratic Form}
 \usage{
 qform(L, V)
 }

@@ -1,10 +1,17 @@
 #' Functions to obtain coef, ddf, p-value
-
+#' 
+#' This function allows to calculate the different approximations of degrees of 
+#' freedom and returns the table of results in the app.
+#' 
+#' @param model a \code{gls} model.
+#' @param ddf degrees of freedom approximation.
+#' 
+#' @return a matrix containing coefficient, ddf and p-value 
 #' @keywords internal
+#' 
 #' @importFrom stats vcov sigma pt 
 #' @importFrom nlme glsEstimate coef<-
 #' @importFrom numDeriv hessian jacobian
-#' @import lmerTest
 
 get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger", "Between-Within")) {
   ddf <- match.arg(ddf)
@@ -20,10 +27,9 @@ get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger", "B
   return(tab)
 }
 
-#from lmerTest:::contest1D.lmerModLmerTest
-contest1D <- function
-(model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roger",  "Between-Within"), 
-                       confint = TRUE, level = 0.95, ...){
+#adapted from lmerTest:::contest1D.lmerModLmerTest
+contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roger",  "Between-Within"), 
+                       confint = FALSE, level = 0.95, ...){
   mk_ttable <- function(estimate, se, ddf) {
     tstat <- (estimate - rhs)/se
     pvalue <- 2 * pt(abs(tstat), df = ddf, lower.tail = FALSE)
@@ -39,42 +45,45 @@ contest1D <- function
                     check.names = FALSE)
   }
   method <- match.arg(ddf)
-  if(is.matrix(L)) 
+  if (is.matrix(L)) 
     L <- drop(L)
   stopifnot(is.numeric(L), length(L) == length(model$coefficients), 
             is.numeric(rhs), length(rhs) == 1L)
-  if(length(L) == 0L) {
+  if (length(L) == 0L) {
     o <- numeric(0L)
     return(mk_ttable(o, o, o))
   }
-  if(any(is.na(L))) 
+  if (any(is.na(L))) 
     return(mk_ttable(NA_real_, NA_real_, NA_real_))
+  
   
   estimate <- sum(L * model$coefficients)
   var_con <- sum(L * (model$varBeta %*% L))
   
   
-  if(method == "Kenward-Roger") {
+  if (method == "Kenward-Roger") {
+    # browser()
     ans <- get_KR1D(model, L)
     if (!ans$error) {
       return(mk_ttable(estimate = estimate, se = sqrt(ans$var_con), 
                        ddf = ans$ddf))
-    }else{
+    }
+    else {
       warning("Unable to compute Kenward-Roger t-test: using Satterthwaite instead", 
               call. = FALSE)
-      if(!inherits(model, "gls")) 
+      if (!inherits(model, "gls")) 
         stop("'model' not a 'gls'")
     }
-  }else if(method == "Between-Within"){
+  }  else if(method == "Between-Within"){
     
+    # browser()
     return(mk_ttable(estimate = estimate, se = sqrt(var_con), 
                        ddf = ddf_BW(model, L)))
   }
   
 
   #To have objects of compute_jaclist function
-  #For Satterthwaite :
-  jaclist <- compute_jaclist(object = model, tol = 1e-14)
+  jaclist <- compute_jaclist(object=model, tol=1e-14)
   grad_var_con <- vapply(jaclist$jacobian_list, function(x) qform(L, x), numeric(1L))
   satt_denom <- qform(grad_var_con, jaclist$vcov_varpar)
   ddf <- drop(2 * var_con^2/satt_denom)

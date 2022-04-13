@@ -1,5 +1,5 @@
-#' Utility Functions for VICI Package
-#' 
+# Utility Functions for VICI Package
+# 
 # ----- contained functions : ------
 # qform 
 # devfun_gls 
@@ -7,7 +7,6 @@
 # compute_jaclist 
 # waldCI 
 # rbindall
-
 
 ##############################################
 # ------------------- qform ------------------
@@ -19,6 +18,7 @@
 #' 
 #' @return a numerical scalar.
 #' @keywords internal
+
 
 qform <- function (L, V){
   sum(L * (V %*% L))
@@ -40,6 +40,8 @@ qform <- function (L, V){
 #' pbkrtest package.
 #' 
 
+# use glsEstimate and to compute the FULL deviance
+# adapted from pbkrtest:::devfun_vp
 devfun_gls <- function(varpar, gls_obj){
   nvarpar <- length(varpar)
   coef(gls_obj$modelStruct) <- varpar[-nvarpar]
@@ -48,6 +50,7 @@ devfun_gls <- function(varpar, gls_obj){
   if(is.null(contr)){
     contr <- list(singular.ok = FALSE)
   }
+  #   
   est <- glsEstimate(object = gls_obj$modelStruct, control = contr)
   return(as.numeric(-2*est$logLik))
 }
@@ -68,6 +71,7 @@ devfun_gls <- function(varpar, gls_obj){
 #' pbkrtest package.
 #' 
 
+# mix above with pbkrtest:::get_covbeta
 varBetafun_gls <- function(varpar, gls_obj){
   REML <-  gls_obj$dims$REML
   nvarpar <- length(varpar)
@@ -83,7 +87,6 @@ varBetafun_gls <- function(varpar, gls_obj){
   varBeta <- crossprod(est$sigma * est$varBeta * sqrt((N - REML * p)/(N - p)))
   return(varBeta)
 }
-
 
 ##############################################
 # -------------- compute_jaclist -------------
@@ -104,6 +107,7 @@ varBetafun_gls <- function(varpar, gls_obj){
 #' function of pbkrtest package.
 #' 
 
+#from pbkrtest:::compute_auxillary
 compute_jaclist <- function (object, tol = 1e-06){
   if (!inherits(object, "gls")) 
     stop("'model' not an 'gls'")
@@ -188,5 +192,6 @@ waldCI <- function(estimate, se, df = Inf, level = 0.95) {
 #' @param ... objects to be \code{rbind}'ed - typically matrices or vectors
 #'
 #' @keywords internal
+
 
 rbindall <- function(...) do.call(rbind, ...)

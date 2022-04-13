@@ -19,7 +19,6 @@ Imports:
     grDevices,
     ggpubr,
     golem,
-    lmerTest,
     MASS, 
     Matrix, 
     methods,

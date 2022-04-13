@@ -9,7 +9,16 @@ get_coefmat_gls(
   ddf = c("Satterthwaite", "Kenward-Roger", "Between-Within")
 )
 }
+\arguments{
+\item{model}{a \code{gls} model.}
+
+\item{ddf}{degrees of freedom approximation.}
+}
+\value{
+a matrix containing coefficient, ddf and p-value
+}
 \description{
-Functions to obtain coef, ddf, p-value
+This function allows to calculate the different approximations of degrees of 
+freedom and returns the table of results in the app.
 }
 \keyword{internal}
