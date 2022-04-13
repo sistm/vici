@@ -7,9 +7,10 @@
 #' @importFrom stats coef model.frame update
 #' @importFrom Matrix Matrix sparseMatrix forceSymmetric 
 #' @importFrom MASS ginv 
+#' 
+#' @keywords internal
 
 # from lmerTest:::contest1D.lmerModLmerTest
-
 get_KR1D <- function(model, L) {
   # # Compute var(contrast) and ddf using KR-method via the pbkrtest package
   # if(!getME(model, "is_REML"))
