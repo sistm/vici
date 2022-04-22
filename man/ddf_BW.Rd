@@ -15,6 +15,6 @@ ddf_BW(object, L)
 a \code{number} object
 }
 \description{
-Internal function to calculate Between-Within ddf
+Internal function to calculate Between-Within degrees of freedom
 }
 \keyword{internal}

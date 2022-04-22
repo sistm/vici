@@ -2,7 +2,7 @@
 % Please edit documentation in R/mygls.R
 \name{mygls}
 \alias{mygls}
-\title{Our gls function}
+\title{Our generalized least squares ls function}
 \usage{
 mygls(
   model,
@@ -39,6 +39,6 @@ mygls(
 a \code{gls} object
 }
 \description{
-Internal function to adapt gls model with more details in output.
+Internal function to adapt generalized least squares (\code{gls}) model with more details in output.
 }
 \keyword{internal}

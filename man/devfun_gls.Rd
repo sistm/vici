@@ -18,7 +18,7 @@ the full deviance, a numerical scalar.
 Compute Full Deviance
 }
 \details{
-This code is adapted from code in devfun_vp internal function of 
-pbkrtest package.
+This code is adapted from code in \code{devfun_vp} internal function of 
+\pkg{pbkrtest} package.
 }
 \keyword{internal}

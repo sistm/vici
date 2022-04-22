@@ -1,4 +1,4 @@
-#' Functions to obtain coef, ddf, p-value
+#' Functions to obtain coefficient, degree of freedom, p-value
 #' 
 #' This function allows to calculate the different approximations of degrees of 
 #' freedom and returns the table of results in the app.
@@ -6,7 +6,7 @@
 #' @param model a \code{gls} model.
 #' @param ddf degrees of freedom approximation.
 #' 
-#' @return a matrix containing coefficient, ddf and p-value 
+#' @return a matrix containing coefficient, degrees of freedom and p-value 
 #' @keywords internal
 #' 
 #' @importFrom stats vcov sigma pt 

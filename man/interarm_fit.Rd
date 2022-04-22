@@ -2,11 +2,11 @@
 % Please edit documentation in R/interarm_fit.R
 \name{interarm_fit}
 \alias{interarm_fit}
-\title{Fitting GLS For Inter-Arm Setting}
+\title{Fitting \code{GLS} For Inter-Arm Setting}
 \usage{
 interarm_fit(transformed_data, input, resp)
 }
 \description{
-Fitting GLS For Inter-Arm Setting
+Fitting \code{GLS} For Inter-Arm Setting
 }
 \keyword{internal}

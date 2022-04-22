@@ -23,7 +23,7 @@ a matrix of lower and upper confidence interval.
 Compute Wald Confidence Interval
 }
 \details{
-This code is greatly inspired by code from the lmerTest
+This code is greatly inspired by code from the \pkg{lmerTest}
     package.
 }
 \keyword{internal}

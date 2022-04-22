@@ -1,6 +1,6 @@
-#'Our gls function
+#'Our generalized least squares ls function
 #'
-#'Internal function to adapt gls model with more details in output.
+#'Internal function to adapt generalized least squares (\code{gls}) model with more details in output.
 #'
 #'@param model a \code{formula}.
 #'@param data  a \code{data.frame} containing variables called in \code{model}, \code{correlation}, \code{weights}, \code{subset}.

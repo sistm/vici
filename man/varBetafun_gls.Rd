@@ -19,6 +19,6 @@ Compute cov(Beta) For a GLS Model
 }
 \details{
 This code is adapted from code in get_covbeta internal function of 
-pbkrtest package.
+ \pkg{pbkrtest} package.
 }
 \keyword{internal}

@@ -1,6 +1,6 @@
 #' Between-Within functions to obtain Denominator degrees of freedom
 #' 
-#' Internal function to calculate Between-Within ddf
+#' Internal function to calculate Between-Within degrees of freedom
 #' 
 #' @param object a \code{gls} model object.
 #' @param L a numeric vector of the same length as the number of fixed effects from \code{object}.

@@ -20,7 +20,7 @@ Computes vcov of variance parameters (theta, sigma), jacobian of
 each variance parameter etc.
 }
 \details{
-This code is adapted from code in compute_auxillary internal 
-function of pbkrtest package.
+This code is adapted from code in \code{compute_auxillary} internal 
+function of \pkg{pbkrtest} package.
 }
 \keyword{internal}

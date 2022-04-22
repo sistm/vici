@@ -36,8 +36,8 @@ qform <- function (L, V){
 #' @return the full deviance, a numerical scalar.
 #' @keywords internal
 #' 
-#' @details This code is adapted from code in devfun_vp internal function of 
-#' pbkrtest package.
+#' @details This code is adapted from code in \code{devfun_vp} internal function of 
+#' \pkg{pbkrtest} package.
 #' 
 
 # use glsEstimate and to compute the FULL deviance
@@ -68,7 +68,7 @@ devfun_gls <- function(varpar, gls_obj){
 #' @keywords internal
 #' 
 #' @details This code is adapted from code in get_covbeta internal function of 
-#' pbkrtest package.
+#'  \pkg{pbkrtest} package.
 #' 
 
 # mix above with pbkrtest:::get_covbeta
@@ -103,8 +103,8 @@ varBetafun_gls <- function(varpar, gls_obj){
 #' @return a list.
 #' @keywords internal
 #' 
-#' @details This code is adapted from code in compute_auxillary internal 
-#' function of pbkrtest package.
+#' @details This code is adapted from code in \code{compute_auxillary} internal 
+#' function of \pkg{pbkrtest} package.
 #' 
 
 #from pbkrtest:::compute_auxillary
@@ -167,7 +167,7 @@ compute_jaclist <- function (object, tol = 1e-06){
 #' @keywords internal
 #' @importFrom stats qt
 #' 
-#' @details This code is greatly inspired by code from the lmerTest
+#' @details This code is greatly inspired by code from the \pkg{lmerTest}
 #'     package.
 #' 
 

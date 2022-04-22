@@ -1,4 +1,4 @@
-#'Fitting GLS For Intra-Arm Setting
+#'Fitting \code{GLS} For Intra-Arm Setting
 #'
 #'
 #' @keywords internal

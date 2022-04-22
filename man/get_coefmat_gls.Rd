@@ -2,7 +2,7 @@
 % Please edit documentation in R/gls_ownfunctions.R
 \name{get_coefmat_gls}
 \alias{get_coefmat_gls}
-\title{Functions to obtain coef, ddf, p-value}
+\title{Functions to obtain coefficient, degree of freedom, p-value}
 \usage{
 get_coefmat_gls(
   model,
@@ -15,7 +15,7 @@ get_coefmat_gls(
 \item{ddf}{degrees of freedom approximation.}
 }
 \value{
-a matrix containing coefficient, ddf and p-value
+a matrix containing coefficient, degrees of freedom and p-value
 }
 \description{
 This function allows to calculate the different approximations of degrees of 
