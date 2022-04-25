@@ -9,3 +9,4 @@ $run_dev.*
 ^\.travis\.yml$
 ^appveyor\.yml$
 ^cran-comments\.md$
+^\.github$
