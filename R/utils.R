@@ -59,15 +59,15 @@ devfun_gls <- function(varpar, gls_obj){
 ##############################################
 # -------------- varBetafun_gls --------------
 ##############################################
-#' Compute cov(Beta) For a GLS Model 
+#' Compute covariance of Beta for a Generalized Least Squares (\code{GLS}) Model 
 #' 
 #' @param varpar variance parameters.
 #' @param gls_obj a \code{gls} object.
 #' 
-#' @return cov(Beta), a numerical scalar.
+#' @return covariance of Beta, a numerical scalar.
 #' @keywords internal
 #' 
-#' @details This code is adapted from code in get_covbeta internal function of 
+#' @details This code is adapted from code in \code{get_covbeta} internal function of 
 #'  \pkg{pbkrtest} package.
 #' 
 

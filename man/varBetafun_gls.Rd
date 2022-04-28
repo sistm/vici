@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{varBetafun_gls}
 \alias{varBetafun_gls}
-\title{Compute cov(Beta) For a GLS Model}
+\title{Compute covariance of Beta for a Generalized Least Squares (\code{GLS}) Model}
 \usage{
 varBetafun_gls(varpar, gls_obj)
 }
@@ -12,13 +12,13 @@ varBetafun_gls(varpar, gls_obj)
 \item{gls_obj}{a \code{gls} object.}
 }
 \value{
-cov(Beta), a numerical scalar.
+covariance of Beta, a numerical scalar.
 }
 \description{
-Compute cov(Beta) For a GLS Model
+Compute covariance of Beta for a Generalized Least Squares (\code{GLS}) Model
 }
 \details{
-This code is adapted from code in get_covbeta internal function of 
+This code is adapted from code in \code{get_covbeta} internal function of 
  \pkg{pbkrtest} package.
 }
 \keyword{internal}
