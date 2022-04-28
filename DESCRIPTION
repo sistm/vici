@@ -14,17 +14,12 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
-    covr,
     cowplot,
     DT,
-    future,
     ggplot2,
     grDevices,
     ggpubr,
     golem,
-    MASS, 
-    Matrix, 
-    methods,
     nlme,
     numDeriv, 
     pkgload,
