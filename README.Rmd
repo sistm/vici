@@ -31,10 +31,10 @@ You can install the released version of vici from the [CRAN](https://cran.r-proj
 ``` r
 install.packages("vici")
 ```
-or get the development version from [GitHub](https://github.com/borishejblum/vici):
+or get the development version from [GitHub](https://github.com/sistm/vici):
 ```{r GitHub-install, eval=FALSE}
 #install.packages("devtools")
-devtools::install_github("borishejblum/vici")
+devtools::install_github("sistm/vici")
 ```
 
 

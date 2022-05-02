@@ -9,7 +9,7 @@ Authors@R: c(person('Boris', 'Hejblum', email = 'boris.hejblum@u-bordeaux.fr', r
 Description: A shiny app for accurate estimation of vaccine induced immunogenicity 
     with bivariate linear modeling. Method is detailed in: Lhomme, Hejblum, Lacabaratz, 
     Wiedemann, Lelievre, Levy, Thiebaut & Richert (2019). Submitted.
-BugReports: https://github.com/borishejblum/vici/issues
+BugReports: https://github.com/sistm/vici/issues
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
