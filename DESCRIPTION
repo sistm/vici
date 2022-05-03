@@ -1,14 +1,15 @@
 Package: vici
 Title: Vaccine Induced Cellular Immunogenicity with Bivariate Modeling
-Version: 0.5.4
-Date: 2019-08-21
+Version: 0.6.0
+Date: 2022-05-02
 Authors@R: c(person('Boris', 'Hejblum', email = 'boris.hejblum@u-bordeaux.fr', role = c('cre', 'aut')),
              person('Melanie', 'Huchon', email = 'melanie.huchon@u-bordeaux.fr', role = c('aut')),
              person('Clement', 'Nerestan', email = 'clement.nerestan@u-bordeaux.fr', role = c('aut'))
            )
 Description: A shiny app for accurate estimation of vaccine induced immunogenicity 
     with bivariate linear modeling. Method is detailed in: Lhomme, Hejblum, Lacabaratz, 
-    Wiedemann, Lelievre, Levy, Thiebaut & Richert (2019). Submitted.
+    Wiedemann, Lelievre, Levy, Thiebaut & Richert. Journal of Immunological Methods, 
+    477:112711, 2020. <doi:10.1016/j.jim.2019.112711>.
 BugReports: https://github.com/sistm/vici/issues
 License: GPL-3
 Encoding: UTF-8
@@ -24,7 +25,8 @@ Imports:
     shiny,
     stats,
     stringr,
-    testthat,
     tidyr,
     utils
+Suggests:
+    testthat
 RoxygenNote: 7.1.2

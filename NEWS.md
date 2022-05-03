@@ -1,3 +1,7 @@
+# vici 0.6.0
+
+ * Added support for additional degree of freedom methods 
+
 # vici 0.5.3
 
  * Added source code & CRAN link buttons

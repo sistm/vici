@@ -2,12 +2,12 @@
 app_ui <- function() {
   fluidPage(
     titlePanel("VICI: accurate estimation of Vaccine Induced Cellular Immunogenicity with bivariate modeling",windowTitle = "VICI"),
-    h6("v0.5.4"),
+    h6("v0.6.0"),
     h5(),
 
     shiny::actionLink(inputId='github_code', label="Source code",
                       icon = icon("github"),
-                      onclick ="window.open('https://github.com/borishejblum/vici', '_blank')"),
+                      onclick ="window.open('https://github.com/sistm/vici', '_blank')"),
     shiny::actionLink(inputId='github_code', label="CRAN package",
                       icon = icon("r-project"),
                       onclick ="window.open('https://CRAN.R-project.org/package=vici', '_blank')",

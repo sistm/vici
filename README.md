@@ -7,22 +7,19 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/vici)](https://CRAN.R-project.org/package=vici)
-[![Travis build
-status](https://travis-ci.org/borishejblum/vici.svg?branch=master)](https://travis-ci.org/borishejblum/vici)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/borishejblum/vici?branch=master&svg=true)](https://ci.appveyor.com/project/borishejblum/vici)
-[![Downloads](https://cranlogs.r-pkg.org/badges/vicis?color=blue)](https://www.r-pkg.org/pkg/vici)
 [![R-CMD-check](https://github.com/sistm/vici/workflows/R-CMD-check/badge.svg)](https://github.com/sistm/vici/actions)
+[![Downloads](https://cranlogs.r-pkg.org/badges/vicis?color=blue)](https://www.r-pkg.org/pkg/vici)
 <!-- badges: end -->
 
 `vici` encapsulate a shiny app for accurate estimation of vaccine
 induced immunogenicity with bivariate linear modeling.
 
-> Lhomme E, Hejblum BP, Lacabaratz C, Wiedemann A, Lelièvre J-D, Levy Y,
-> Thiébaut R, Richert L (2019). Analyzing cellular immunogenicity in
-> vaccine clinical trials: a new statistical method including
-> non-specific responses for accurate estimation of vaccine efficacy.
-> *submitted*.
+> Lhomme E, Hejblum BP, Lacabaratz C, Wiedemann A, Lelièvre JD, Lévy Y,
+> Thiébaut R, Richert L. Analyzing cellular immunogenicity in vaccine
+> clinical trials: a new statistical method including non-specific
+> responses for accurate estimation of vaccine effect. Journal of
+> Immunological Methods, 477:112711, 2020.
+> <doi:10.1016/j.jim.2019.112711>.
 
 ## Installation
 
@@ -34,11 +31,11 @@ install.packages("vici")
 ```
 
 or get the development version from
-[GitHub](https://github.com/borishejblum/vici):
+[GitHub](https://github.com/sistm/vici):
 
 ``` r
 #install.packages("devtools")
-devtools::install_github("borishejblum/vici")
+devtools::install_github("sistm/vici")
 ```
 
 Then you can launch the app with:
