@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 `vici` encapsulate a shiny app for accurate estimation of vaccine induced immunogenicity 
 with bivariate linear modeling.
 
-> Lhomme E, Hejblum BP, Lacabaratz C, Wiedemann A, Lelièvre JD, Lévy Y, Thiébaut R, Richert L. Analyzing cellular immunogenicity in vaccine clinical trials: a new statistical method including non-specific responses for accurate estimation of vaccine effect. Journal of Immunological Methods, 477:112711, 2020. <doi:10.1016/j.jim.2019.112711>.
+> Lhomme E, Hejblum BP, Lacabaratz C, Wiedemann A, Lelièvre JD, Lévy Y, Thiébaut R, Richert L (2020). Analyzing cellular immunogenicity in vaccine clinical trials: a new statistical method including non-specific responses for accurate estimation of vaccine effect. Journal of Immunological Methods, 477:112711. [doi:10.1016/j.jim.2019.112711](https://doi.org/10.1016/j.jim.2019.112711).
 
 ## Installation
 
