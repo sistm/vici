@@ -165,6 +165,7 @@ mod_settings_pan_ui <- function(id){
 mod_settings_pan_server <- function(input, output, session,datas,parent){
   ns <- session$ns
   cat("Data in mod_setting_pan_server: ")
+  #cat("input: ")
   #cat(str(datas$df))
   #callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = parent,parentModule = session)
   #browser()
@@ -240,7 +241,9 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   
   
   observeEvent({input$datafile; input$header; input$sep}, {
+    #browser()
     cat("observe datainput", "\n")
+    cat("input$datafile: ",str(input))
     req(input$datafile)
     datas$df <- {
       # when reading semicolon separated files,

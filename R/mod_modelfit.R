@@ -37,7 +37,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
 
   # Run whenever fit button is pressed
   
-  
+  browser()
   observeEvent(input$fit, {#crash here
    #browser()
     origin$output$res_error <- reactive("Please select adequate analysis parameters...")
@@ -62,6 +62,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
           }
           colnames(data_df) <- c("Subject", "response", "stim", "arm")
           transformed_data <- data_df
+          #decalage déjà présent
           transformed_data$bkg <- 0 # intialize bkg ground
           transformed_data <- transformed_data[order(transformed_data$stim, transformed_data$Subject), ] # align stimulations so that subject order matches in the following loop
           for(l in levels(transformed_data$stim)){
@@ -70,14 +71,14 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
             }
           }
           #browser()
-          #cat("transformed_data$arm:")
-          #cat(str(transformed_data$arm))
-          #cat("parent$selectRefArm:")
-          #cat(str(parent$selectRefArm))
+          cat("transformed_data$arm:")
+          cat(str(transformed_data$arm))
+          cat("parent$selectRefArm:")
+          cat(str(parent$selectRefArm))
           transformed_data$arm <- stats::relevel(factor(transformed_data$arm), ref=parent$selectRefArm)
           transformed_data$stim <- stats::relevel(factor(transformed_data$stim), ref=parent$selectRefStim)
           data_df$stim <- relevel(factor(data_df$stim), ref=parent$selectRefStim)
-          browser()
+          #browser()
 
           # model fit ----
           fit_res <- interarm_fit(transformed_data, parent, response)

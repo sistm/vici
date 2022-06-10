@@ -74,6 +74,8 @@ app_server <- function(input, output, session) {
       
       #updateSliderInput(session, "bins", value = query[['bins']])
       key <<- query[['key']]
+      subF <<- query[['sub']]
+      assay <<- query[['file']]
       set <<- paste0("apikey|",key)
       
       Rlabkey::labkey.setDefaults(apiKey=set)#"apikey|73ea3ff0973f38d52f5b1bbd8980f62c")
@@ -81,8 +83,8 @@ app_server <- function(input, output, session) {
       labkey.data <- labkey.selectRows(
         baseUrl="https://labkey.bph.u-bordeaux.fr", 
         #folderPath="/EBOVAC/assays/EBL2001/ICS", 
-        folderPath="/VASI/VICI/SISTM",
-        schemaName="assay.General.Vici_Sistm", 
+        folderPath=paste0("/VASI/VICI/",subF),  #"/VASI/VICI/SISTM",
+        schemaName=paste0("assay.General.",assay),#"assay.General.Vici_Sistm", 
         queryName="Data", 
         viewName="", 
         colSort="", 
