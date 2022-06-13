@@ -37,7 +37,7 @@ mod_modelfit_server <- function(input, output, session, data,parent,origin){
 
   # Run whenever fit button is pressed
   
-  browser()
+  #browser()
   observeEvent(input$fit, {#crash here
    #browser()
     origin$output$res_error <- reactive("Please select adequate analysis parameters...")

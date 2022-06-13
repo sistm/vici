@@ -83,7 +83,7 @@ app_server <- function(input, output, session) {
       labkey.data <- labkey.selectRows(
         baseUrl="https://labkey.bph.u-bordeaux.fr", 
         #folderPath="/EBOVAC/assays/EBL2001/ICS", 
-        folderPath=paste0("/VASI/VICI/",subF),  #"/VASI/VICI/SISTM",
+        folderPath=subF,  #"/VASI/VICI/SISTM",
         schemaName=paste0("assay.General.",assay),#"assay.General.Vici_Sistm", 
         queryName="Data", 
         viewName="", 
