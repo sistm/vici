@@ -3,6 +3,7 @@ FROM openanalytics/r-base
 RUN apt-get -y update
 RUN apt-get -y install libcurl4-openssl-dev
 RUN apt-get -y install libssl-dev 
+RUN apt-get -y install cmake
 RUN apt-get -y install -y libxml2-dev
 RUN R -e 'install.packages("remotes")'
 RUN R -e 'remotes::install_github("r-lib/remotes", ref = "97bbf81")'
