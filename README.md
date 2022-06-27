@@ -7,7 +7,7 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/vici)](https://CRAN.R-project.org/package=vici)
-[![R-CMD-check](https://github.com/sistm/vici/workflows/R-CMD-check/badge.svg)](https://github.com/sistm/vici/actions)
+[![R-CMD-check](https://github.com/sistm/vici/workflows/R-CMD-check/badge.svg?branch=cran)](https://github.com/sistm/vici/actions/workflows/R-CMD-check.yaml?query=branch%3Acran)
 [![Downloads](https://cranlogs.r-pkg.org/badges/vicis?color=blue)](https://www.r-pkg.org/pkg/vici)
 <!-- badges: end -->
 
@@ -34,8 +34,8 @@ or get the development version from
 [GitHub](https://github.com/sistm/vici):
 
 ``` r
-#install.packages("devtools")
-devtools::install_github("sistm/vici")
+#install.packages("remotes")
+remotes::install_github("sistm/vici", ref = "cran")
 ```
 
 Then you can launch the app with:
