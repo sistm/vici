@@ -27,8 +27,12 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
     data_df$arm <- relevel(data_df$arm, ref=input$selectRefArmInter)
     suppressWarnings(
       p <-
-        ggboxplot(na.omit(data_df), x="stim", y="response", color="arm", fill="arm", alpha=0.3) +
+        ggboxplot(na.omit(data_df), x="stim", y="response", color="arm", 
+                  fill="white",#"arm",
+                  alpha=0.3,
+                  add="jitter") +
         #theme_bw() +
+        theme_grey() + 
         theme(panel.grid.major.x = element_blank()) +
         scale_fill_viridis_d("Arm: ") +
         scale_color_viridis_d("Arm: ") +
@@ -44,8 +48,12 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
     data_df$time <- relevel(data_df$time, ref=input$selectRefTimeIntra)
     suppressWarnings(
       p <-
-        ggboxplot(na.omit(data_df), x="stim", y="response", color="time", fill="time", alpha=0.3) +
+        ggboxplot(na.omit(data_df), x="stim", y="response", color="time",
+                  fill="white",#"time",
+                  alpha=0.3,
+                  add="jitter") +
         #theme_bw() +
+        theme_grey() + 
         theme(panel.grid.major.x = element_blank()) +
         scale_fill_viridis_d("Time-point: ") +
         scale_color_viridis_d("Time-point: ") +
