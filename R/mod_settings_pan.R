@@ -15,7 +15,11 @@
 #' @keywords internal
 #' @export 
 #' @importFrom shiny NS tagList 
+#' @import shinyWidgets
+#' @import scales
 mod_settings_pan_ui <- function(id){
+  library("shinyWidgets")
+  library("scales")
   ns <- NS(id)
   tagList(
     sidebarPanel(
@@ -145,6 +149,28 @@ mod_settings_pan_ui <- function(id){
                                "Satterthwaite",
                                "Kenward-Roger"),
                    selected = "Between-Within"),
+      
+      
+      selectizeInput(ns("color"), label = "Select the color palette for BoxPlot",
+                     choices = list("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu",
+                                    "PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd",
+                                    "BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral",
+                                    "Set3","Set2","Set1","Pastel2","Pastel1","Paired","Dark2","Accent"),
+                     selected = "RdGy"
+      ),
+
+      # spectrumInput(
+      #   ns("color"),
+      #   label = "Pick a color:",
+      #   choices = list(
+      #     #list('black', 'white', 'blanchedalmond', 'steelblue', 'forestgreen'),
+      #     as.list(brewer_pal(palette = "Blues")(9)),
+      #     as.list(brewer_pal(palette = "Greens")(9)),
+      #     as.list(brewer_pal(palette = "Spectral")(11)),
+      #     as.list(brewer_pal(palette = "Dark2")(8))
+      #   ),
+      #   options = list(`toggle-palette-more-text` = "Show more")
+      # ),
       
       tags$hr(),
       h3("Run analysis"),
