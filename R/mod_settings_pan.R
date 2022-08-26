@@ -21,6 +21,10 @@ mod_settings_pan_ui <- function(id){
   library("shinyWidgets")
   library("scales")
   ns <- NS(id)
+  listPal <- list("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu",
+                  "PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd",
+                  "BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral",
+                  "Set3","Set2","Set1","Pastel2","Pastel1","Paired","Dark2","Accent")
   tagList(
     sidebarPanel(
       # Input: Select a file ----
@@ -150,14 +154,61 @@ mod_settings_pan_ui <- function(id){
                                "Kenward-Roger"),
                    selected = "Between-Within"),
       
+
+#      selectizeInput(ns("color"), label = "Select the color palette for BoxPlot",
+#                     choices = listPal,
+#                     selected = "RdGy"
+#      ),
+
+      pickerInput(inputId = ns("color"),
+                  label = "pickerInput Palettes",
+                  choices =       listPal <- list("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu",
+                                                  "PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd",
+                                                  "BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral",
+                                                  "Set3","Set2","Set1","Pastel2","Pastel1","Paired","Dark2","Accent"),#c("pal1","pal2", "pal3", "pal4"),#df$val,
+                  
+                  choicesOpt = list(content = c(sprintf("<img src='./palette/blues.png' width=30px><div class='jhr'>%s</div></img>", "Blues"),
+                                                sprintf("<img src='./palette/BuGn.png' width=30px><div class='jhr'>%s</div></img>", "BuGn"),
+                                                sprintf("<img src='./palette/BuPu.png' width=30px><div class='jhr'>%s</div></img>", "BuPu"),
+                                                sprintf("<img src='./palette/GnBu.png' width=30px><div class='jhr'>%s</div></img>", "GnBu"),
+                                                sprintf("<img src='./palette/Greens.png' width=30px><div class='jhr'>%s</div></img>", "Greens"),
+                                                sprintf("<img src='./palette/Greys.png' width=30px><div class='jhr'>%s</div></img>", "Greys"),
+                                                sprintf("<img src='./palette/Oranges.png' width=30px><div class='jhr'>%s</div></img>", "Oranges"),
+                                                sprintf("<img src='./palette/OrRd.png' width=30px><div class='jhr'>%s</div></img>", "OrRd"),
+                                                sprintf("<img src='./palette/PuBu.png' width=30px><div class='jhr'>%s</div></img>", "PuBu"),
+                                                sprintf("<img src='./palette/PuBuGn.png' width=30px><div class='jhr'>%s</div></img>", "PuBuGn"),
+                                                sprintf("<img src='./palette/PuRd.png' width=30px><div class='jhr'>%s</div></img>", "PuRd"),
+                                                sprintf("<img src='./palette/Purples.png' width=30px><div class='jhr'>%s</div></img>", "Purples"),
+                                                sprintf("<img src='./palette/RdPu.png' width=30px><div class='jhr'>%s</div></img>", "RdPu"),
+                                                sprintf("<img src='./palette/Reds.png' width=30px><div class='jhr'>%s</div></img>", "Reds"),
+                                                sprintf("<img src='./palette/YlGn.png' width=30px><div class='jhr'>%s</div></img>", "YlGn"),
+                                                sprintf("<img src='./palette/YlGnBu.png' width=30px><div class='jhr'>%s</div></img>", "YlGnBu"),
+                                                sprintf("<img src='./palette/YlOrBr.png' width=30px><div class='jhr'>%s</div></img>", "YlOrBr"),
+                                                sprintf("<img src='./palette/YlOrRd.png' width=30px><div class='jhr'>%s</div></img>", "YlOrRd"),
+                                                sprintf("<img src='./palette/BrBG.png' width=30px><div class='jhr'>%s</div></img>", "BrBG"),
+                                                sprintf("<img src='./palette/PiYG.png' width=30px><div class='jhr'>%s</div></img>", "PiYG"),
+                                                sprintf("<img src='./palette/PRGn.png' width=30px><div class='jhr'>%s</div></img>", "PRGn"),
+                                                sprintf("<img src='./palette/PuOr.png' width=30px><div class='jhr'>%s</div></img>", "PuOr"),
+                                                sprintf("<img src='./palette/RdBu.png' width=30px><div class='jhr'>%s</div></img>", "RdBu"),
+                                                sprintf("<img src='./palette/RdGy.png' width=30px><div class='jhr'>%s</div></img>", "RdGy"),
+                                                sprintf("<img src='./palette/RdYlBu.png' width=30px><div class='jhr'>%s</div></img>", "RdYlBu"),
+                                                sprintf("<img src='./palette/RdYlGn.png' width=30px><div class='jhr'>%s</div></img>", "RdYlGn"),
+                                                sprintf("<img src='./palette/Spectral.png' width=30px><div class='jhr'>%s</div></img>", "Spectral"),
+                                                sprintf("<img src='./palette/Set3.png' width=30px><div class='jhr'>%s</div></img>", "Set3"),
+                                                sprintf("<img src='./palette/Set2.png' width=30px><div class='jhr'>%s</div></img>", "Set2"),
+                                                sprintf("<img src='./palette/Set1.png' width=30px><div class='jhr'>%s</div></img>", "Set1"),
+                                                sprintf("<img src='./palette/Pastel2.png' width=30px><div class='jhr'>%s</div></img>", "Pastel2"),
+                                                sprintf("<img src='./palette/Pastel1.png' width=30px><div class='jhr'>%s</div></img>", "Pastel1"),
+                                                sprintf("<img src='./palette/Paired.png' width=30px><div class='jhr'>%s</div></img>", "Paired"),
+                                                sprintf("<img src='./palette/Dark2.png' width=30px><div class='jhr'>%s</div></img>", "Dark2"),
+                                                sprintf("<img src='./palette/Accent.png' width=30px><div class='jhr'>%s</div></img>", "Accent")
+                    #sprintf("<img src='https://d9np3dj86nsu2.cloudfront.net/image/eaf97ff8dcbc7514d1c1cf055f2582ad' width=30px><div class='jhr'>%s</div></img>", "pal1"),
+                                                # sprintf("<img src='https://www.color-hex.com/palettes/33187.png' width=30px><div class='jhr'>%s</div></img>", "pal2"),
+                                                # sprintf("<img src='https://www.color-hex.com/palettes/16042.png' width=30px><div class='jhr'>%s</div></img>", "pal3"),
+                                                # sprintf("<img src='https://www.stlawrencegallery.com/wp-content/uploads/2018/09/unique-navy-blue-color-palette-five-stunning-palettes-for-weddings-dark.jpg' width=30px><div class='jhr'>%s</div></img>", "pal4"))#df$img))
       
-      selectizeInput(ns("color"), label = "Select the color palette for BoxPlot",
-                     choices = list("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu",
-                                    "PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd",
-                                    "BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral",
-                                    "Set3","Set2","Set1","Pastel2","Pastel1","Paired","Dark2","Accent"),
-                     selected = "RdGy"
-      ),
+    ))),
+    
 
       # spectrumInput(
       #   ns("color"),
