@@ -57,8 +57,8 @@ mod_settings_pan_ui <- function(id){
       
       h3("Input parameters"),
       selectInput(ns("selectModel"), label = "Model choice",
-                  choices = list("inter-arm" = 1, "intra-arm" = 2),
-                  selected = 1),
+                  choices = list("inter-arm (ARM Compare)" = 1, "intra-arm (TimePoint Compare)" = 2),
+                  selected = 2),
       
       h4("Variable specification"),
       selectizeInput(ns("selectSubject"), label = "Select the column that identifies the subject ID",
@@ -166,7 +166,7 @@ mod_settings_pan_ui <- function(id){
                                                   "PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd",
                                                   "BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral",
                                                   "Set3","Set2","Set1","Pastel2","Pastel1","Paired","Dark2","Accent"),#c("pal1","pal2", "pal3", "pal4"),#df$val,
-                  
+                  selected = "Set1",
                   choicesOpt = list(content = c(sprintf("<img src='./palette/blues.png' width=30px><div class='jhr'>%s</div></img>", "Blues"),
                                                 sprintf("<img src='./palette/BuGn.png' width=30px><div class='jhr'>%s</div></img>", "BuGn"),
                                                 sprintf("<img src='./palette/BuPu.png' width=30px><div class='jhr'>%s</div></img>", "BuPu"),
