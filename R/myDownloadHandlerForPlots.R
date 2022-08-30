@@ -19,7 +19,7 @@ myDownloadHandlerForPlots <- function(name, plot_obj, outputArgs = list()){
     filename = name,
     content = function(file){
       # png(file, height=5, width=6, res=300, units = "in")
-      png(file)
+      png(file, height = 10,width = 12,res = 300,units = "in")
       
       print(plot_obj)
       dev.off()
