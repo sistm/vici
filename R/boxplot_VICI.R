@@ -49,6 +49,7 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
     )
   }else{
     data_df$time <- relevel(data_df$time, ref=input$selectRefTimeIntra)
+    #browser()
     suppressWarnings(
       p <-
         ggboxplot(na.omit(data_df), x="stim", y="response", color="time",# palette = "RdGy",#c("Red","Blue","Black"),#"RdBu",
