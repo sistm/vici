@@ -93,6 +93,7 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
 
             boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                                       response_name = response, input = parent)
+            #browser()
             heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
             heatmap_data2plot[[response]]$response <- response
             heatmap_data2plot[[response]]$pvalue <- cut(heatmap_data2plot[[response]]$pvalue,
@@ -170,8 +171,8 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
                                                         input = parent,
                                                         inter = FALSE,
                                                         baseline = parent$selectRefTimeIntra)
+              #browser()
               responses_res[[response]]$res_tab <- do.call(rbind, lapply(fit_res, "[[", "res_tab"))
-              
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
               for(l in 1:length(heatmap_data2plot[[response]])){
                 heatmap_data2plot[[response]][[l]]$response <- response

@@ -21,6 +21,7 @@
 
 boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, baseline=NULL){
   
+  
   p <- NULL
 
   if(inter){
@@ -31,7 +32,8 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
         ggboxplot(na.omit(data_df), x="stim", y="response", color= "arm", palette = "RdGy",#c("Red","Blue","Black"),#"RdBu",
                   #fill="white",#"arm",
                   alpha=0.3,
-                  add="jitter") +
+                  add="jitter",
+                  shape = as.numeric(input$jiter)) +
         #theme_bw() +
         theme_grey() + 
         theme(panel.grid.major.x = element_blank()) +
@@ -55,7 +57,8 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
         ggboxplot(na.omit(data_df), x="stim", y="response", color="time",# palette = "RdGy",#c("Red","Blue","Black"),#"RdBu",
                   #fill="white",#"time",
                   alpha=0.3,
-                  add="jitter") +
+                  add="jitter",
+                  shape = as.numeric(input$jiter)) +
         #theme_bw() +
         theme_grey() + 
         theme(panel.grid.major.x = element_blank()) +
