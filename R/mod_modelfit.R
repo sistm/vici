@@ -39,6 +39,8 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
   #browser()
   observeEvent(input$fit, {#crash here
     #browser()
+    # updateTabsetPanel(session = session,"inTabset",
+    #                   selected = "resTab")
     origin$output$res_error <- reactive("Please select adequate analysis parameters...")
     responses_res <- list()
     boxplot_print <- list()
@@ -93,6 +95,15 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
 
             boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                                       response_name = response, input = parent)
+            
+            # if(parent$plot == "boxplot"){
+            # boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+            #                                           response_name = response, input = parent)
+            # }
+            # if(parent$plot == "histogram"){
+            #   boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+            #                                             response_name = response, input = parent)
+            # }
             #browser()
             heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
             heatmap_data2plot[[response]]$response <- response
@@ -171,6 +182,21 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
                                                         input = parent,
                                                         inter = FALSE,
                                                         baseline = parent$selectRefTimeIntra)
+              
+              # if(parent$plot == "boxplot"){
+              #   boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+              #                                             response_name = response,
+              #                                             input = parent,
+              #                                             inter = FALSE,
+              #                                             baseline = parent$selectRefTimeIntra)
+              # }
+              # if(parent$plot == "histogram"){
+              #   boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+              #                                             response_name = response,
+              #                                             input = parent,
+              #                                             inter = FALSE,
+              #                                             baseline = parent$selectRefTimeIntra)
+              # }
               #browser()
               responses_res[[response]]$res_tab <- do.call(rbind, lapply(fit_res, "[[", "res_tab"))
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot

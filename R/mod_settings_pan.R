@@ -28,23 +28,23 @@ mod_settings_pan_ui <- function(id){
   tagList(
     sidebarPanel(
       # Input: Select a file ----
-      # h3("Data input"),
-      # fileInput(ns("datafile"), label = "Choose a CSV/TXT file to import",
-      #           multiple = FALSE,
-      #           accept = c("text/csv",
-      #                      "text/comma-separated-values,text/plain",
-      #                      ".csv")),
-      # 
-      # # Input: Checkbox if file has header ----
-      # checkboxInput(ns("header"), "Header", TRUE),
-      # 
-      # # Input: Select separator ----
-      # radioButtons(ns("sep"), "Separator",
-      #              choices = c(Comma = ",",
-      #                          Semicolon = ";",
-      #                          Tab = "\t"),
-      #              selected = "\t"),
-      
+       # h3("Data input"),
+       # fileInput(ns("datafile"), label = "Choose a CSV/TXT file to import",
+       #           multiple = FALSE,
+       #           accept = c("text/csv",
+       #                      "text/comma-separated-values,text/plain",
+       #                      ".csv")),
+       # 
+       # # Input: Checkbox if file has header ----
+       # checkboxInput(ns("header"), "Header", TRUE),
+       # 
+       # # Input: Select separator ----
+       # radioButtons(ns("sep"), "Separator",
+       #              choices = c(Comma = ",",
+       #                          Semicolon = ";",
+       #                          Tab = "\t"),
+       #              selected = "\t"),
+
       # Input: Select quotes ----
       # radioButtons("quote", "Quote",
       #              choices = c(None = "",
@@ -53,7 +53,7 @@ mod_settings_pan_ui <- function(id){
       #              selected = '"'),
       
       # Horizontal line ----
-      # tags$hr(),
+       tags$hr(),
       
       h3("Input parameters"),
       selectInput(ns("selectModel"), label = "Model choice",
@@ -159,7 +159,11 @@ mod_settings_pan_ui <- function(id){
 #                     choices = listPal,
 #                     selected = "RdGy"
 #      ),
-
+      
+      # radioButtons(ns("plot"), "Choose the type of plot",
+      #              choices = c(Boxplot = "boxplot",
+      #                          Histogram = "histogram"),
+      #              selected = "boxplot"),
       pickerInput(inputId = ns("color"),
                   label = "pickerInput Palettes",
                   choices =       listPal <- list("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu",
@@ -223,9 +227,12 @@ mod_settings_pan_ui <- function(id){
       #   options = list(`toggle-palette-more-text` = "Show more")
       # ),
 
+      
+
       radioButtons(ns("jiter"), "Dot of Boxplot",
                    choices = c(Filed = "19",
-                               Empty = "1"),
+                               Empty = "1",
+                               None = "None"),
                    selected = "19"),
 
       tags$hr(),
