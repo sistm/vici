@@ -1,5 +1,5 @@
-#FROM rocker/tidyverse:3.5.2
-FROM openanalytics/r-base
+FROM rocker/tidyverse:4.2.1
+#FROM openanalytics/r-base
 RUN apt-get -y update
 RUN apt-get -y install libcurl4-openssl-dev
 RUN apt-get -y install libssl-dev 
@@ -10,6 +10,7 @@ RUN R -e 'remotes::install_github("r-lib/remotes", ref = "97bbf81")'
 RUN R -e 'remotes::install_cran("cowplot")'
 RUN R -e 'remotes::install_cran("DT")'
 RUN R -e 'remotes::install_cran("ggplot2")'
+RUN R -e 'install.packages("pbkrtest")'
 RUN R -e 'remotes::install_cran("ggpubr")'
 RUN R -e 'remotes::install_cran("nlme")'
 RUN R -e 'remotes::install_cran("shiny")'
