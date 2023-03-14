@@ -28,29 +28,29 @@ mod_settings_pan_ui <- function(id){
   tagList(
     sidebarPanel(
       # Input: Select a file ----
-       # h3("Data input"),
-       # fileInput(ns("datafile"), label = "Choose a CSV/TXT file to import",
-       #           multiple = FALSE,
-       #           accept = c("text/csv",
-       #                      "text/comma-separated-values,text/plain",
-       #                      ".csv")),
-       # 
-       # # Input: Checkbox if file has header ----
-       # checkboxInput(ns("header"), "Header", TRUE),
-       # 
-       # # Input: Select separator ----
-       # radioButtons(ns("sep"), "Separator",
-       #              choices = c(Comma = ",",
-       #                          Semicolon = ";",
-       #                          Tab = "\t"),
-       #              selected = "\t"),
+        h3("Data input"),
+        fileInput(ns("datafile"), label = "Choose a CSV/TXT file to import",
+                  multiple = FALSE,
+                  accept = c("text/csv",
+                             "text/comma-separated-values,text/plain",
+                             ".csv")),
+        
+       # Input: Checkbox if file has header ----
+        checkboxInput(ns("header"), "Header", TRUE),
+        
+        # Input: Select separator ----
+        radioButtons(ns("sep"), "Separator",
+                     choices = c(Comma = ",",
+                                 Semicolon = ";",
+                                 Tab = "\t"),
+                     selected = "\t"),
 
       # Input: Select quotes ----
-      # radioButtons("quote", "Quote",
-      #              choices = c(None = "",
-      #                          "Double Quote" = '"',
-      #                          "Single Quote" = "'"),
-      #              selected = '"'),
+       radioButtons("quote", "Quote",
+                    choices = c(None = "",
+                                "Double Quote" = '"',
+                                "Single Quote" = "'"),
+                    selected = '"'),
       
       # Horizontal line ----
        tags$hr(),
