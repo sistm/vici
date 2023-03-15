@@ -33,5 +33,8 @@ Imports:
     stringr,
     MASS, 
     Matrix, 
-    lmerTest
-RoxygenNote: 7.1.2
+    lmerTest,
+    RColorBrewer,
+    scales,
+    shinyWidgets
+RoxygenNote: 7.2.3
