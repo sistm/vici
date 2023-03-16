@@ -21,9 +21,6 @@ Imports:
     stats,
     tidyr,
     utils,
-    covr,
-    testthat,
-    RSelenium,
     golem,
     future,
     pkgload,
@@ -37,4 +34,8 @@ Imports:
     RColorBrewer,
     scales,
     shinyWidgets
+Suggests: 
+    testthat,
+    covr,
+    RSelenium,
 RoxygenNote: 7.2.3
