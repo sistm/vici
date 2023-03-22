@@ -23,9 +23,7 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
   
   
   p <- NULL
-  #browser()
   if(inter){
-    #browser()
     data_df$arm <- relevel(data_df$arm, ref=input$selectRefArmInter)
     suppressWarnings(
       if(input$jiter == "None"){
@@ -33,7 +31,8 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
                        #fill="white",#"arm",
                        alpha=0.3,)+
           #theme_bw() +
-          theme_grey() + 
+          # theme_grey() + 
+          theme_classic() +
           theme(panel.grid.major.x = element_blank()) +
           #scale_colour_manual(values = CPCOLS) +
           scale_color_brewer(palette = input$color) +#"RdGy") +
@@ -53,7 +52,8 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
                   add="jitter",
                   shape = as.numeric(input$jiter))+
         #theme_bw() +
-        theme_grey() + 
+        # theme_grey() + 
+        theme_classic() +
         theme(panel.grid.major.x = element_blank()) +
         #scale_colour_manual(values = CPCOLS) +
         scale_color_brewer(palette = input$color) +#"RdGy") +
@@ -85,15 +85,14 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
     )
   }else{
     data_df$time <- relevel(data_df$time, ref=input$selectRefTimeIntra)
-    #browser()
-    #suppressWarnings(
     if(input$jiter == "None"){
       p <- ggboxplot(na.omit(data_df), x="stim", y="response", color= "time", palette = "RdGy",#c("Red","Blue","Black"),#"RdBu",
                      #fill="white",#"arm",
                      alpha=0.3,) + 
         
-        #theme_bw() +
-        theme_grey() + 
+        # theme_bw() +
+        # theme_grey() + 
+        theme_classic() +
         theme(panel.grid.major.x = element_blank()) +
         #scale_colour_manual(values = CPCOLS) +
         scale_color_brewer(palette = input$color)+#"RdGy") +
@@ -113,8 +112,9 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
                      add="jitter",
                      shape = as.numeric(input$jiter))+
         
-        #theme_bw() +
-        theme_grey() + 
+        # theme_bw() +
+        # theme_grey() + 
+        theme_classic() +
         theme(panel.grid.major.x = element_blank()) +
         #scale_colour_manual(values = CPCOLS) +
         scale_color_brewer(palette = input$color)+#"RdGy") +

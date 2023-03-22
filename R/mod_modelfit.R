@@ -36,9 +36,8 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
   ns <- session$ns
   # Run whenever fit button is pressed
   
-  #browser()
   observeEvent(input$fit, {#crash here
-    #browser()
+    
     # updateTabsetPanel(session = session,"inTabset",
     #                   selected = "resTab")
     origin$output$res_error <- reactive("Please select adequate analysis parameters...")
@@ -46,7 +45,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
     boxplot_print <- list()
     heatmap_data2plot <- list()
     toomuchdata <- FALSE
-    #browser()
 
     for(response in parent$selectResponse){
       if(!is.null(datas$df) & parent$selectSubject %in% colnames(datas$df) &
@@ -57,7 +55,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
         if(parent$selectModel == 1){
           # data tansformation
           if(parent$selectTimeInter != ''){
-            #browser()
             data_df <- datas$df[datas$df[, parent$selectTimeInter] == parent$selectRefTimeInter,
                                c(parent$selectSubject, response, parent$selectStim, parent$selectArmInter)]
           }else{
@@ -72,13 +69,11 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             transformed_data$stim <- as.factor(transformed_data$stim)
           }
           for(l in levels(transformed_data$stim)){
-            #browser()
             if(l != parent$selectRefStim){
               transformed_data[transformed_data$stim == l, "bkg"] <- transformed_data[transformed_data$stim == parent$selectRefStim, "response"]
             }
             
           }
-          #browser()
           transformed_data$arm <- stats::relevel(factor(transformed_data$arm), ref=parent$selectRefArmInter)
           transformed_data$stim <- stats::relevel(factor(transformed_data$stim), ref=parent$selectRefStim)
           data_df$stim <- relevel(factor(data_df$stim), ref=parent$selectRefStim)
@@ -86,9 +81,7 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             data_df$arm <- as.factor(data_df$arm)
           }
           # model fit ----
-          #browser()
           fit_res <- interarm_fit(transformed_data, parent, response)
-          #browser()
           if(!inherits(fit_res$mgls, "try-error")){
             responses_res[[response]]$res_error <- NULL
             responses_res[[response]]$postprocess_res <- interarm_postprocessres(data_df, fit_res)
@@ -104,7 +97,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             #   boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
             #                                             response_name = response, input = parent)
             # }
-            #browser()
             heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
             heatmap_data2plot[[response]]$response <- response
             heatmap_data2plot[[response]]$pvalue <- cut(heatmap_data2plot[[response]]$pvalue,
@@ -117,7 +109,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
         }else if(parent$selectModel == 2){
 
           # data tansformation
-         # browser()
           if(parent$selectArmIntra != ''){
             data_df <- datas$df[datas$df[, parent$selectArmIntra] == parent$selectRefArmIntra,
                                c(parent$selectSubject, response, parent$selectStim, parent$selectTimeIntra)]
@@ -125,7 +116,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             data_df <- datas$df[, c(parent$selectSubject, response, parent$selectStim, parent$selectTimeIntra)]
           }
           colnames(data_df) <- c("Subject", "response", "stim", "time")
-          #browser()
           data_df$stim <- stats::relevel(factor(data_df$stim), ref=parent$selectRefStim)
           transformed_data <- data_df
 
@@ -160,7 +150,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
               }
               
               transformed_data_temp$stim <- stats::relevel(factor(transformed_data_temp$stim), ref=parent$selectRefStim)
-              # browser()
               # transformed_data$arm <- stats::relevel(factor(transformed_data$arm),ref=parent$selectRefArmInter)# ref=parent$selectRefArmIntra)#
               # transformed_data$stim <- stats::relevel(factor(transformed_data$stim), ref=parent$selectRefStim)
               # data_df$stim <- relevel(factor(data_df$stim), ref=parent$selectRefStim)
@@ -197,7 +186,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
               #                                             inter = FALSE,
               #                                             baseline = parent$selectRefTimeIntra)
               # }
-              #browser()
               responses_res[[response]]$res_tab <- do.call(rbind, lapply(fit_res, "[[", "res_tab"))
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
               for(l in 1:length(heatmap_data2plot[[response]])){
@@ -222,6 +210,9 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
         clean_output(output)
         origin$output$res_error <- reactive("Please select adequate analysis parameters before trying to fit the model...")
       }else{
+        if(parent$ddf=="Kenward-Roger"){
+          myTabs <- tabPanel(title = "WARNING - Kenward-Roger not implemented, please use SAS to obtain results of this approximation.")
+        }else{
         myTabs <- lapply(parent$selectResponse, function(resp) {
           if(is.null(session$userData$res_data)){
             session$userData$res_data<<- responses_res[[resp]]$res_tab
@@ -237,15 +228,11 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
                                                outputArgs = list(label = "Download boxplot [PNG]", class = "btn-primary")),
                      h3(""),
                      
-                     if(parent$ddf=="Kenward-Roger"){
-                       h4(paste("WARNING - Kenward-Roger not implemented, please use SAS to obtain results of this approximation."))
-                     } else{
-                     h4(paste("Numerical results for", resp))
+                     h4(paste("Numerical results for", resp)), 
                        
-                       renderTable(
+                     renderTable(
                          # responses_res[[resp]]$res_tab, rownames = TRUE, digits=5)
                          {
-                           # browser()
                            responses_res[[resp]]$res_tab[,1] <- formatC(responses_res[[resp]]$res_tab[,1], format="f", digits = 5)
                            responses_res[[resp]]$res_tab[,2] <- formatC(responses_res[[resp]]$res_tab[,2], format="f", digits = 5)
                            if(parent$ddf=="By default"){
@@ -255,10 +242,10 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
                            responses_res[[resp]]$res_tab
                          }, rownames=TRUE
                        )
-                     }
+                     
                    )
           )
-        })
+        })}
         origin$output$boxplotsAndTabs <- renderUI({
           do.call(tabsetPanel, myTabs)
         })

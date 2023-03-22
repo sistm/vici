@@ -98,26 +98,25 @@ app_server <- function(input, output, session) {
   #Module return input so sub module can access it
   inpt <- callModule(module = mod_settings_pan_server, id = "settings_pan_ui_1",data = data,parent = session)
 
-  #browser()
   callModule(module = mod_modelfit_server, id = "modelfit_ui_1",datas = data,parent = inpt,origin = session)
   # cat("before write Latex", "\n")
    observeEvent({
-     input$selectModel
-     input$selectStim
-     input$selectRefStim
-     input$selectArmInter 
-     input$selectArmIntra
-     input$selectRefArmInter 
-     input$selectRefArmIntra
-     input$selectTimeInter 
-     input$selectTimeIntra
-     input$selectRefTimeInter 
-     input$selectRefTimeIntra
-     }, {
+     input$selectModel;
+     input$selectStim;
+     input$selectRefStim;
+     input$selectArmInter; 
+     input$selectArmIntra;
+     input$selectRefArmInter ;
+     input$selectRefArmIntra;
+     input$selectTimeInter ;
+     input$selectTimeIntra;
+     input$selectRefTimeInter ;
+     input$selectRefTimeIntra}, {
        #appelé data load
 
        # write LaTeX model ----
       # cat("can write Latex", "\n")
+       
        if(input$selectModel == 1 & input$selectRefStim != '' & input$selectRefArmInter != '' & input$selectStim !='' &
           input$selectArmInter %in% colnames(data$df) & input$selectStim %in% colnames(data$df)){
          # cat("write Latex Inter", "\n")

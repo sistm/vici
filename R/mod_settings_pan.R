@@ -18,8 +18,6 @@
 #' @import shinyWidgets
 #' @import scales
 mod_settings_pan_ui <- function(id){
-  library("shinyWidgets")
-  library("scales")
   ns <- NS(id)
   listPal <- list("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu",
                   "PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd",
@@ -379,7 +377,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   
   observeEvent({input$datafile; input$header; input$sep}, {
     #cat("observe datainput", "\n")
-    #browser()
     #cat(str(datas))
     req(input$datafile)
     datas$df <- {
@@ -604,7 +601,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   
   observeEvent(input$selectArmIntra, {
     #cat("observe selectArmIntra", "\n")
-    #browser()
     if (input$selectArmIntra != ''){
       
       datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
@@ -770,7 +766,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   })
   
   #callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = parent,parentModule = session)
-  #browser()
   return(input)
 }
     

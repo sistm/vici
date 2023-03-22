@@ -1,10 +1,10 @@
 #'Fitting GLS For Inter-Arm Setting
 #'
-#'
 #' @keywords internal
 #' @importFrom stats na.omit
+#' @importFrom nlme varIdent
+
 interarm_fit <- function(transformed_data, input,resp){
-  #browser()
   #cat("transformed data start: ")
   #cat(str(transformed_data))
   res_tab <- NULL
@@ -12,7 +12,6 @@ interarm_fit <- function(transformed_data, input,resp){
   res_error <- NULL
   
   #transformed_data$bkg <- as.double(transformed_data$bkg)
-  #browser()
   # cat("transformed data start: ")
   # cat(transformed_data)
   bkg_inter_mat <- model.matrix(data = stats::na.omit(transformed_data), ~ -1 + stim:bkg)[, -1, drop=FALSE]
@@ -30,7 +29,7 @@ interarm_fit <- function(transformed_data, input,resp){
   mgls <- mygls(myformul,
                         data = transformed_data,
                         # correlation =  nlme::corCompSymm(form= ~ 1 | stim),
-                        weights = nlme::varIdent(value = c("1" = 1), form = ~ 1 | stim),
+                        weights = varIdent(value = c("1" = 1), form = ~ 1 | stim),
                         method="REML", na.action = stats::na.omit)
   
   if(!inherits(mgls, "try-error")){
