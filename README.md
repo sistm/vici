@@ -9,6 +9,7 @@
 status](https://www.r-pkg.org/badges/version/vici)](https://CRAN.R-project.org/package=vici)
 [![R-CMD-check](https://github.com/sistm/vici/workflows/R-CMD-check/badge.svg?branch=cran)](https://github.com/sistm/vici/actions/workflows/R-CMD-check.yaml?query=branch%3Acran)
 [![Downloads](https://cranlogs.r-pkg.org/badges/vicis?color=blue)](https://www.r-pkg.org/pkg/vici)
+[![R-CMD-check](https://github.com/sistm/vici/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sistm/vici/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `vici` encapsulate a shiny app for accurate estimation of vaccine
