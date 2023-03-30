@@ -5,30 +5,24 @@
 #' @importFrom nlme varIdent
 
 interarm_fit <- function(transformed_data, input,resp){
-  #cat("transformed data start: ")
-  #cat(str(transformed_data))
+
   res_tab <- NULL
   res_lik <- NULL
   res_error <- NULL
   
-  #transformed_data$bkg <- as.double(transformed_data$bkg)
-  # cat("transformed data start: ")
-  # cat(transformed_data)
+
   bkg_inter_mat <- model.matrix(data = stats::na.omit(transformed_data), ~ -1 + stim:bkg)[, -1, drop=FALSE]
-  # cat("bkg_inter_mat: ")
-  # cat(bkg_inter_mat)
+
   colnames(bkg_inter_mat) <- gsub(":", "_", colnames(bkg_inter_mat), fixed = TRUE)
   
   transformed_data <- cbind.data.frame(stats::na.omit(transformed_data), bkg_inter_mat)
-  #cat("transformed data after: ")
-  #cat(str(transformed_data))
+
   
   
   myformul <- as.formula(paste0("response ~ -1 + stim + stim:arm", "+", paste(colnames(bkg_inter_mat), collapse = " + ")))
   
   mgls <- mygls(myformul,
                         data = transformed_data,
-                        # correlation =  nlme::corCompSymm(form= ~ 1 | stim),
                         weights = varIdent(value = c("1" = 1), form = ~ 1 | stim),
                         method="REML", na.action = stats::na.omit)
   

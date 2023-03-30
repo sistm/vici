@@ -158,7 +158,6 @@ mygls <- function (model, data = sys.frame(sys.parent()), correlation = NULL,
   else "Approximate variance-covariance matrix not available"
   dims <- attr(glsSt, "conLin")[["dims"]]
   dims[["p"]] <- p
-  #attr(glsSt, "conLin") <- NULL Let's keep this as we need it !!!
   attr(glsSt, "glsFit") <- NULL
   attr(glsSt, "fixedSigma") <- fixedSigma
   grpDta <- inherits(data, "groupedData")

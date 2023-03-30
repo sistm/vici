@@ -20,12 +20,6 @@ app_ui <- function() {
 
       mainPanel(tabsetPanel(type = "tabs", id="inTabset",
                     tabPanel("Results", value="resTab",
-                             # fluidRow(
-                             #   column(8,
-                             #          withMathJax(),
-                             #          h3("Model"),
-                             #          uiOutput('mod')),
-                             # ),
                              conditionalPanel(
                                condition = "output.heatmap != null | output.res_error != null",
                                tags$hr(),
@@ -37,21 +31,12 @@ app_ui <- function() {
                                ),
                                conditionalPanel(
                                  condition = "output.res_lik != null",
-                                 #wellPanel(textOutput("res_sentence")),
-                                 #h3(""),
                                  wellPanel(
                                    fluidRow(
-                                     #column(6,
                                      plotOutput("heatmap"),
                                      h6(""),
                                      downloadButton("downloadHM", label = "Download heatmap [PNG]",
                                                     class = "btn-primary")
-                                     #),
-                                     # column(6, plotOutput("boxplot"),
-                                     #        h6(""),
-                                     #        downloadButton("downloadBP", label = "Download boxplot [PNG]",
-                                     #                       class = "btn-primary")
-                                     # )
                                    )
                                  ),
                                  h2(""),
@@ -64,9 +49,7 @@ app_ui <- function() {
                     # Output: Data file ----
                     tabPanel("Data view", value="dataTab",
                              conditionalPanel(
-                               #tags$hr(),
                                condition = "output.table2render == null",
-                               #h3("Data view")
                                helpText("Please input some data")
                              ),
                              h5(""),
@@ -78,7 +61,6 @@ app_ui <- function() {
                                withMathJax(),
                                h3("Statistical model fitted for each ICS response:"),
                                uiOutput('mod')
-                               #)
                              ),
                              h2(),
                              tags$hr(),

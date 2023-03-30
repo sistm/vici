@@ -153,15 +153,6 @@ mod_settings_pan_ui <- function(id){
                    selected = "Between-Within"),
       
 
-#      selectizeInput(ns("color"), label = "Select the color palette for BoxPlot",
-#                     choices = listPal,
-#                     selected = "RdGy"
-#      ),
-      
-      # radioButtons(ns("plot"), "Choose the type of plot",
-      #              choices = c(Boxplot = "boxplot",
-      #                          Histogram = "histogram"),
-      #              selected = "boxplot"),
       pickerInput(inputId = ns("color"),
                   label = "pickerInput Palettes",
                   choices =       listPal <- list("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu",
@@ -204,28 +195,7 @@ mod_settings_pan_ui <- function(id){
                                                 sprintf("<img src='./palette/Paired.png' width=30px><div class='jhr'>%s</div></img>", "Paired"),
                                                 sprintf("<img src='./palette/Dark2.png' width=30px><div class='jhr'>%s</div></img>", "Dark2"),
                                                 sprintf("<img src='./palette/Accent.png' width=30px><div class='jhr'>%s</div></img>", "Accent")
-                    #sprintf("<img src='https://d9np3dj86nsu2.cloudfront.net/image/eaf97ff8dcbc7514d1c1cf055f2582ad' width=30px><div class='jhr'>%s</div></img>", "pal1"),
-                                                # sprintf("<img src='https://www.color-hex.com/palettes/33187.png' width=30px><div class='jhr'>%s</div></img>", "pal2"),
-                                                # sprintf("<img src='https://www.color-hex.com/palettes/16042.png' width=30px><div class='jhr'>%s</div></img>", "pal3"),
-                                                # sprintf("<img src='https://www.stlawrencegallery.com/wp-content/uploads/2018/09/unique-navy-blue-color-palette-five-stunning-palettes-for-weddings-dark.jpg' width=30px><div class='jhr'>%s</div></img>", "pal4"))#df$img))
-      
     ))),
-    
-
-      # spectrumInput(
-      #   ns("color"),
-      #   label = "Pick a color:",
-      #   choices = list(
-      #     #list('black', 'white', 'blanchedalmond', 'steelblue', 'forestgreen'),
-      #     as.list(brewer_pal(palette = "Blues")(9)),
-      #     as.list(brewer_pal(palette = "Greens")(9)),
-      #     as.list(brewer_pal(palette = "Spectral")(11)),
-      #     as.list(brewer_pal(palette = "Dark2")(8))
-      #   ),
-      #   options = list(`toggle-palette-more-text` = "Show more")
-      # ),
-
-      
 
       radioButtons(ns("jiter"), "Dot of Boxplot",
                    choices = c(Filed = "19",
@@ -258,7 +228,6 @@ mod_settings_pan_ui <- function(id){
     
 mod_settings_pan_server <- function(input, output, session,datas,parent){
   ns <- session$ns
-  #callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = parent,parentModule = session)
 
   # example data
   output$downloadExData <- downloadHandler(   #Fait appel à une lib externe donc pas besoin de tester
@@ -269,7 +238,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   )
   
   observeEvent(input$loadExample,{
-    #cat("observe loadExample", "\n")
 
     datas$df <<- vici::ICS_ex
     
@@ -278,17 +246,13 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
     parent$output$table2render <- DT::renderDataTable(datas$df,
                                                options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
     )
-    #cat("Setters")
-    #Ensemble setter
     output$mod <- reactive(NULL)
     output$mod_display <- reactive(FALSE)
     updateRadioButtons(session, inputId = "sep", selected = "\t")
     updateCheckboxInput(session, inputId = "header", value = TRUE)
 
     observeEvent(input$selectModel, {
-      #cat("observe selectModel", "\n")
       if (input$selectModel==1){
-        # updateSelectInput(session, "selectModel", selected = 1)
         available_vars_init <- colnames(datas$df)
         updateSelectizeInput(session, "selectSubject",
                              selected = 'Subject',
@@ -329,7 +293,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
         )
         updateTabsetPanel(parent, "inTabset", selected = "dataTab")
       }else if (input$selectModel==2){
-        # updateSelectInput(session, "selectModel", selected = 2)
         available_vars_init <- colnames(datas$df)
         updateSelectizeInput(session, "selectSubject",
                              selected = 'Subject',
@@ -376,8 +339,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   
   
   observeEvent({input$datafile; input$header; input$sep}, {
-    #cat("observe datainput", "\n")
-    #cat(str(datas))
     req(input$datafile)
     datas$df <- {
       # when reading semicolon separated files,
@@ -455,7 +416,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   
   parent$output$table2render <- DT::renderDataTable(
     {
-      #req(input$datafile)
       datas$df
     },
     options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
@@ -498,13 +458,12 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   
   observeEvent(input$selectSubject, {
     if (input$selectSubject != ''){
-      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df)) #A tester
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df)) 
     }
     clean_output(output)
   })
   
   observeEvent(input$selectStim, {
-    #cat("observe selectStim", "\n")
     if (input$selectStim != ''){
       datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
       if (input$selectStim %in% colnames(datas$df)){
@@ -534,7 +493,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   })
   
   observeEvent(input$selectResponse, {
-    #cat("observe selectResp", "\n")
     if (length(input$selectResponse) >= 1){
       if (input$selectResponse[1] != ''){
         
@@ -546,7 +504,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   })
   
   observeEvent(input$selectArmInter, {
-    #cat("observe selectArmInter", "\n")
     if (input$selectArmInter != ''){
       
       datas$available_vars <- update_vars(input, possibilities = colnames(datas$df))
@@ -559,11 +516,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
           possible_arms <- levels(selected_arm_var)
           output$warningarmisfactor <- reactive(NULL)
           datas$fact_arm_OK <- TRUE
-          # if(length(possible_arms) > 2){
-          #   output$armisfactor <- reactive(FALSE)
-          #   output$warningarmisfactor <- reactive(paste0("Error: '", input$selectArmInter, "' has more than 2 levels\n This is not implemented yet"))
-          #   data$fact_arm_OK <- FALSE
-          # }
         }else{
           output$armisfactor <- reactive(FALSE)
           output$warningarmisfactor <- reactive(paste0("WARNING: '", input$selectArmInter,
@@ -600,7 +552,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   
   
   observeEvent(input$selectArmIntra, {
-    #cat("observe selectArmIntra", "\n")
     if (input$selectArmIntra != ''){
       
       datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
@@ -613,14 +564,9 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
           possible_arm2s <- levels(selected_arm2_var)
           output$warningarm2isfactor <- reactive(NULL)
           datas$fact_arm2_OK <- TRUE
-          # if(length(possible_arm2s) > 2){
-          #   output$arm2isfactor <- reactive(FALSE)
-          #   output$warningarm2isfactor <- reactive(paste0("Error: '", input$selectArmIntra, "' has more than 2 levels\n This is not implemented yet"))
-          #   data$fact_arm2_OK <- FALSE
-          # }
         }else{
           output$arm2isfactor <- reactive(FALSE)
-          output$warningarm2isfactor <- reactive(paste0("WARNING: '", input$selectArmIntra, #paste concatène chaine caractère 
+          output$warningarm2isfactor <- reactive(paste0("WARNING: '", input$selectArmIntra, 
                                                         "' is not a factor"))
           datas$fact_arm2_OK <- FALSE
           possible_arm2s <- paste0("Error: '", input$selectArmIntra,
@@ -685,7 +631,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   
   # observe time ----
   observeEvent(input$selectTimeIntra, {
-    #cat("observe selectTimeIntra", "\n")
     if (input$selectTimeIntra != ''){
       datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
       if(input$selectTimeIntra %in% colnames(datas$df)){
@@ -720,7 +665,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   
   # observe time ----
   observeEvent(input$selectTimeInter, {
-    #cat("observe selectTimeInter", "\n")
     if (input$selectTimeInter != ''){
       datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
       if(input$selectTimeInter %in% colnames(datas$df)){
@@ -761,11 +705,9 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   
   
   observeEvent({input$selectRefArmInter; input$selectRefArmIntra; input$selectRefStim; input$selectRefTimeIntra; input$selectRefTimeInter}, {
-    #cat("observe selectRefs", "\n")
-    clean_output(output) # a tester
+    clean_output(output)
   })
   
-  #callModule(module = mod_modelfit_server, id = "modelfit_ui_1",data = data,parent = parent,parentModule = session)
   return(input)
 }
     

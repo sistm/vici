@@ -36,10 +36,7 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
   ns <- session$ns
   # Run whenever fit button is pressed
   
-  observeEvent(input$fit, {#crash here
-    
-    # updateTabsetPanel(session = session,"inTabset",
-    #                   selected = "resTab")
+  observeEvent(input$fit, {
     origin$output$res_error <- reactive("Please select adequate analysis parameters...")
     responses_res <- list()
     boxplot_print <- list()
@@ -62,8 +59,7 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
           }
           colnames(data_df) <- c("Subject", "response", "stim", "arm")
           transformed_data <- data_df
-          #decalage déjà présent
-          transformed_data$bkg <- 0 # intialize bkg ground
+          transformed_data$bkg <- 0 
           transformed_data <- transformed_data[order(transformed_data$stim, transformed_data$Subject), ] # align stimulations so that subject order matches in the following loop
           if(!is.factor(transformed_data$stim)){
             transformed_data$stim <- as.factor(transformed_data$stim)
@@ -89,14 +85,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                                       response_name = response, input = parent)
             
-            # if(parent$plot == "boxplot"){
-            # boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-            #                                           response_name = response, input = parent)
-            # }
-            # if(parent$plot == "histogram"){
-            #   boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-            #                                             response_name = response, input = parent)
-            # }
             heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
             heatmap_data2plot[[response]]$response <- response
             heatmap_data2plot[[response]]$pvalue <- cut(heatmap_data2plot[[response]]$pvalue,
@@ -139,7 +127,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
               transformed_data_temp <- transformed_data[, c(1:2, t), drop=FALSE]
               colnames(transformed_data_temp)[3] <- "response"
               transformed_data_temp$bkg <- 0.000 # intialize bkg ground
-              #transformed_data_temp$bkg <- as.double(transformed_data_temp$bkg)
               transformed_data_temp <- transformed_data_temp[order(transformed_data_temp$stim,
                                                                    transformed_data_temp$Subject), ] # align stimulations so that subject order matches in the following loop
               for(l in levels(transformed_data_temp$stim)){
@@ -150,12 +137,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
               }
               
               transformed_data_temp$stim <- stats::relevel(factor(transformed_data_temp$stim), ref=parent$selectRefStim)
-              # transformed_data$arm <- stats::relevel(factor(transformed_data$arm),ref=parent$selectRefArmInter)# ref=parent$selectRefArmIntra)#
-              # transformed_data$stim <- stats::relevel(factor(transformed_data$stim), ref=parent$selectRefStim)
-              # data_df$stim <- relevel(factor(data_df$stim), ref=parent$selectRefStim)
-              # if(!is.factor(data_df$arm)){
-              #   data_df$arm <- as.factor(data_df$arm)
-              # }
               # model fit ----
               fit_res[[tp]] <- intraarm_fit(transformed_data = transformed_data_temp,
                                             tested_time = tp, input = parent, resp = response)
@@ -164,28 +145,12 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             if(!prod(sapply(fit_res, function(x){inherits(x$mgls, "try-error")}))){
               responses_res[[response]]$res_error <- NULL
               responses_res[[response]]$postprocess_res <- intraarm_postprocessres(data_df, fit_res)
-              #res_data <<- responses_res[[response]]$postprocess_res
-              #responses_res[[response]]$postprocess_res$pval_2plot <- do.call(rbind, responses_res[[response]]$postprocess_res$pval_2plot)
               boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                                         response_name = response,
                                                         input = parent,
                                                         inter = FALSE,
                                                         baseline = parent$selectRefTimeIntra)
-              
-              # if(parent$plot == "boxplot"){
-              #   boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-              #                                             response_name = response,
-              #                                             input = parent,
-              #                                             inter = FALSE,
-              #                                             baseline = parent$selectRefTimeIntra)
-              # }
-              # if(parent$plot == "histogram"){
-              #   boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-              #                                             response_name = response,
-              #                                             input = parent,
-              #                                             inter = FALSE,
-              #                                             baseline = parent$selectRefTimeIntra)
-              # }
+
               responses_res[[response]]$res_tab <- do.call(rbind, lapply(fit_res, "[[", "res_tab"))
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
               for(l in 1:length(heatmap_data2plot[[response]])){
@@ -196,13 +161,11 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
               }
               heatmap_data2plot[[response]] <- do.call(rbind.data.frame,
                                                        heatmap_data2plot[[response]])
-              #output$res_tab <- renderTable(fit_res$res_tab, rownames = TRUE, digits=5)
             }
           }
         }
 
       }
-      #res_sentence <- renderText("A sentence to be copied and pasted in your analysis report.")
       
     }
     if(!toomuchdata){
@@ -231,7 +194,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
                      h4(paste("Numerical results for", resp)), 
                        
                      renderTable(
-                         # responses_res[[resp]]$res_tab, rownames = TRUE, digits=5)
                          {
                            responses_res[[resp]]$res_tab[,1] <- formatC(responses_res[[resp]]$res_tab[,1], format="f", digits = 5)
                            responses_res[[resp]]$res_tab[,2] <- formatC(responses_res[[resp]]$res_tab[,2], format="f", digits = 5)
@@ -263,16 +225,11 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
         origin$output$res_error <- reactive(NULL)
         res_lik_all <- lapply(lapply(responses_res, "[[", "postprocess_res"), "[[", "res_lik")
         res_lik_all <- do.call(rbind.data.frame, res_lik_all)
-        #colnames(res_lik_all) <- c("AIC", "-2 Res. logLikelihood")
         origin$output$res_lik <- renderTable(res_lik_all,
                                       rownames = TRUE, digits = 4)
         all_vars <- lapply(lapply(responses_res, "[[", "postprocess_res"), "[[", "vars")
         all_vars <- do.call(rbind.data.frame, all_vars)
-        #colames(all_vars) <- levels(data_df$stim)
         origin$output$res_var <- renderTable(all_vars, rownames = TRUE, digits=6)
-        #boxplot_dnl <- cowplot::plot_grid(plotlist = boxplot_print)
-        #output$boxplot <- renderPlot(boxplot_dnl)
-        #output$downloadBP <- myDownloadHandlerForPlots(name = "VICIboxplot.png", plot_obj = boxplot_dnl)
     
         hm_data2plot_all <- do.call(rbind.data.frame, heatmap_data2plot_noref)
         hm_data2plot_all$response <- factor(hm_data2plot_all$response, ordered = TRUE,

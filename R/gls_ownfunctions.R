@@ -61,19 +61,6 @@ contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roge
   var_con <- sum(L * (model$varBeta %*% L))
   
   
-  # if (method == "Kenward-Roger") {
-  #   ans <- get_KR1D(model, L)
-  #   if (!ans$error) {
-  #     return(mk_ttable(estimate = estimate, se = sqrt(ans$var_con), 
-  #                      ddf = ans$ddf))
-  #   }
-  #   else {
-  #     warning("Unable to compute Kenward-Roger t-test: using Satterthwaite instead", 
-  #             call. = FALSE)
-  #     if (!inherits(model, "gls")) 
-  #       stop("'model' not a 'gls'")
-  #   }
-  # }  else 
   if(method == "Between-Within"){
     
     return(mk_ttable(estimate = estimate, se = sqrt(var_con), 

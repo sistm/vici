@@ -7,7 +7,6 @@ intraarm_postprocessres <- function(data_df, fit_res){
   sigmas <- sapply(fit_res, function(x){stats::coef(x$mgls$modelStruct$varStruct, uncons = FALSE, allCoef = TRUE) * x$mgls$sigma})
   vars <- t(cbind(sigmas^2))
   colnames(vars) <- levels(data_df$stim)
-  #rownames(vars) <- levels(data_df$time)[-1]
 
   # model output ----
   res_lik <- cbind("AIC" = aic, "-2 Res. logLikelihood" = m2resloglik)
@@ -25,7 +24,6 @@ intraarm_postprocessres <- function(data_df, fit_res){
 
   pval_2plot <- make_nice_pvals(do.call(rbind.data.frame, res_2plot), data_df, auxvar = "time")
   #maybe TODO compute group2 correctly when more than 2 Timepoints
-  #pval_2plot <- do.call(rbind, pval_2plot)
 
 
   return(list(
