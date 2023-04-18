@@ -7,7 +7,7 @@ app_ui <- function() {
 
     shiny::actionLink(inputId='github_code', label="Source code",
                       icon = icon("github"),
-                      onclick ="window.open('https://github.com/borishejblum/vici', '_blank')"),
+                      onclick ="window.open('https://github.com/sistm/vici', '_blank')"),
     shiny::actionLink(inputId='github_code', label="CRAN package",
                       icon = icon("r-project"),
                       onclick ="window.open('https://CRAN.R-project.org/package=vici', '_blank')",
