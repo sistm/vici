@@ -73,7 +73,7 @@ app_server <- function(input, output, session) {
       assay <<- query[['file']]
       set <<- paste0("apikey|",key)
       
-      Rlabkey::labkey.setDefaults(apiKey=set)#"apikey|73ea3ff0973f38d52f5b1bbd8980f62c")
+      Rlabkey::labkey.setDefaults(apiKey=key)#"apikey|73ea3ff0973f38d52f5b1bbd8980f62c")
       Rlabkey::labkey.setDefaults(baseUrl = "https://labk.bph.u-bordeaux.fr/")#(baseUrl="https://labkey.bph.u-bordeaux.fr:8443/")
       labkey.data <- labkey.selectRows(
         baseUrl="https://labk.bph.u-bordeaux.fr", 
