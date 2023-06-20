@@ -1,5 +1,5 @@
 # Module UI
-  
+
 #' @title   mod_settings_pan_ui and mod_settings_pan_server
 #' @description  A shiny Module.
 #'
@@ -13,8 +13,8 @@
 #' @rdname mod_settings_pan
 #'
 #' @keywords internal
-#' @export 
-#' @importFrom shiny NS tagList 
+#' @export
+#' @importFrom shiny NS tagList
 #' @import shinyWidgets
 #' @import scales
 mod_settings_pan_ui <- function(id){
@@ -32,10 +32,10 @@ mod_settings_pan_ui <- function(id){
                   accept = c("text/csv",
                              "text/comma-separated-values,text/plain",
                              ".csv")),
-        
+
        # Input: Checkbox if file has header ----
         checkboxInput(ns("header"), "Header", TRUE),
-        
+
         # Input: Select separator ----
         radioButtons(ns("sep"), "Separator",
                      choices = c(Comma = ",",
@@ -49,27 +49,27 @@ mod_settings_pan_ui <- function(id){
                                 "Double Quote" = '"',
                                 "Single Quote" = "'"),
                     selected = '"'),
-      
+
       # Horizontal line ----
        tags$hr(),
-      
+
       h3("Input parameters"),
       selectInput(ns("selectModel"), label = "Model choice",
                   choices = list("inter-arm (ARM Compare)" = 1, "intra-arm (TimePoint Compare)" = 2),
                   selected = 2),
-      
+
       h4("Variable specification"),
       selectizeInput(ns("selectSubject"), label = "Select the column that identifies the subject ID",
                      choices = c(Choose = "", NULL),
                      options = list(placeholder = 'Please select a column name below')
       ),
-      
+
       selectizeInput(ns("selectResponse"), label = "Select the column(s) that identify ICS response",
                      choices = c(Choose = "", NULL),
                      options = list(placeholder = 'Please select a column name below'),
                      multiple = TRUE
       ),
-      
+
       selectizeInput(ns("selectStim"), label = "Select the column that identifies the stimulation",
                      choices = c(Choose = "", NULL),
                      options = list(placeholder = 'Please select a column name below')
@@ -83,7 +83,7 @@ mod_settings_pan_ui <- function(id){
         selectizeInput(ns("selectRefStim"), label = "Select the value that identifies background samples",
                        choices =c(Choose = "", NULL))
       ),
-      
+
       conditionalPanel(
         condition = sprintf("input['%s'] == 1",ns("selectModel")),#"input.selectModel == 1",
         selectizeInput(ns("selectArmInter"), label = "Select the column that identifies the arm",
@@ -100,7 +100,7 @@ mod_settings_pan_ui <- function(id){
         selectizeInput(ns("selectRefArmInter"), label = "Select the value that identifies the reference arm",
                        choices =c(Choose = "", NULL))
       ),
-      
+
       conditionalPanel(
         condition = sprintf("input['%s'] == 1",ns("selectModel")),#"input.selectModel == 1",
         selectizeInput(ns("selectTimeInter"), label = "If several time-points (optional), please select the column that identifies the observation's time-point",
@@ -113,7 +113,7 @@ mod_settings_pan_ui <- function(id){
         selectizeInput(ns("selectRefTimeInter"), label = "Select the time-point to analyze",
                        choices =c(Choose = "", NULL))
       ),
-      
+
       conditionalPanel(
         condition = sprintf("input['%s'] == 2",ns("selectModel")),#"input.selectModel == 2",
         selectizeInput(ns("selectTimeIntra"), label = "Select the column that identifies the time-points",
@@ -126,7 +126,7 @@ mod_settings_pan_ui <- function(id){
         selectizeInput(ns("selectRefTimeIntra"), label = "Select the value that identifies the reference time-point",
                        choices =c(Choose = "", NULL))
       ),
-      
+
       conditionalPanel(
         condition = sprintf("input['%s'] == 2",ns("selectModel")),#"input.selectModel == 2",
         selectizeInput(ns("selectArmIntra"), label = "If several arms (optional) please select the column that identifies the observation's arm",
@@ -143,7 +143,7 @@ mod_settings_pan_ui <- function(id){
         selectizeInput(ns("selectRefArmIntra"), label = "Select the arm to analyze",
                        choices =c(Choose = "", NULL))
       ),
-      
+
       h4("Denominator degrees of freedom approximations"),
       radioButtons(ns("ddf"), NULL,
                    choices = c("By default",
@@ -151,7 +151,7 @@ mod_settings_pan_ui <- function(id){
                                "Satterthwaite",
                                "Kenward-Roger"),
                    selected = "Between-Within"),
-      
+
 
       pickerInput(inputId = ns("color"),
                   label = "pickerInput Palettes",
@@ -160,41 +160,41 @@ mod_settings_pan_ui <- function(id){
                                                   "BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral",
                                                   "Set3","Set2","Set1","Pastel2","Pastel1","Paired","Dark2","Accent"),#c("pal1","pal2", "pal3", "pal4"),#df$val,
                   selected = "Set1",
-                  choicesOpt = list(content = c(sprintf("<img src='./palette/blues.png' width=30px><div class='jhr'>%s</div></img>", "Blues"),
-                                                sprintf("<img src='./palette/BuGn.png' width=30px><div class='jhr'>%s</div></img>", "BuGn"),
-                                                sprintf("<img src='./palette/BuPu.png' width=30px><div class='jhr'>%s</div></img>", "BuPu"),
-                                                sprintf("<img src='./palette/GnBu.png' width=30px><div class='jhr'>%s</div></img>", "GnBu"),
-                                                sprintf("<img src='./palette/Greens.png' width=30px><div class='jhr'>%s</div></img>", "Greens"),
-                                                sprintf("<img src='./palette/Greys.png' width=30px><div class='jhr'>%s</div></img>", "Greys"),
-                                                sprintf("<img src='./palette/Oranges.png' width=30px><div class='jhr'>%s</div></img>", "Oranges"),
-                                                sprintf("<img src='./palette/OrRd.png' width=30px><div class='jhr'>%s</div></img>", "OrRd"),
-                                                sprintf("<img src='./palette/PuBu.png' width=30px><div class='jhr'>%s</div></img>", "PuBu"),
-                                                sprintf("<img src='./palette/PuBuGn.png' width=30px><div class='jhr'>%s</div></img>", "PuBuGn"),
-                                                sprintf("<img src='./palette/PuRd.png' width=30px><div class='jhr'>%s</div></img>", "PuRd"),
-                                                sprintf("<img src='./palette/Purples.png' width=30px><div class='jhr'>%s</div></img>", "Purples"),
-                                                sprintf("<img src='./palette/RdPu.png' width=30px><div class='jhr'>%s</div></img>", "RdPu"),
-                                                sprintf("<img src='./palette/Reds.png' width=30px><div class='jhr'>%s</div></img>", "Reds"),
-                                                sprintf("<img src='./palette/YlGn.png' width=30px><div class='jhr'>%s</div></img>", "YlGn"),
-                                                sprintf("<img src='./palette/YlGnBu.png' width=30px><div class='jhr'>%s</div></img>", "YlGnBu"),
-                                                sprintf("<img src='./palette/YlOrBr.png' width=30px><div class='jhr'>%s</div></img>", "YlOrBr"),
-                                                sprintf("<img src='./palette/YlOrRd.png' width=30px><div class='jhr'>%s</div></img>", "YlOrRd"),
-                                                sprintf("<img src='./palette/BrBG.png' width=30px><div class='jhr'>%s</div></img>", "BrBG"),
-                                                sprintf("<img src='./palette/PiYG.png' width=30px><div class='jhr'>%s</div></img>", "PiYG"),
-                                                sprintf("<img src='./palette/PRGn.png' width=30px><div class='jhr'>%s</div></img>", "PRGn"),
-                                                sprintf("<img src='./palette/PuOr.png' width=30px><div class='jhr'>%s</div></img>", "PuOr"),
-                                                sprintf("<img src='./palette/RdBu.png' width=30px><div class='jhr'>%s</div></img>", "RdBu"),
-                                                sprintf("<img src='./palette/RdGy.png' width=30px><div class='jhr'>%s</div></img>", "RdGy"),
-                                                sprintf("<img src='./palette/RdYlBu.png' width=30px><div class='jhr'>%s</div></img>", "RdYlBu"),
-                                                sprintf("<img src='./palette/RdYlGn.png' width=30px><div class='jhr'>%s</div></img>", "RdYlGn"),
-                                                sprintf("<img src='./palette/Spectral.png' width=30px><div class='jhr'>%s</div></img>", "Spectral"),
-                                                sprintf("<img src='./palette/Set3.png' width=30px><div class='jhr'>%s</div></img>", "Set3"),
-                                                sprintf("<img src='./palette/Set2.png' width=30px><div class='jhr'>%s</div></img>", "Set2"),
-                                                sprintf("<img src='./palette/Set1.png' width=30px><div class='jhr'>%s</div></img>", "Set1"),
-                                                sprintf("<img src='./palette/Pastel2.png' width=30px><div class='jhr'>%s</div></img>", "Pastel2"),
-                                                sprintf("<img src='./palette/Pastel1.png' width=30px><div class='jhr'>%s</div></img>", "Pastel1"),
-                                                sprintf("<img src='./palette/Paired.png' width=30px><div class='jhr'>%s</div></img>", "Paired"),
-                                                sprintf("<img src='./palette/Dark2.png' width=30px><div class='jhr'>%s</div></img>", "Dark2"),
-                                                sprintf("<img src='./palette/Accent.png' width=30px><div class='jhr'>%s</div></img>", "Accent")
+                  choicesOpt = list(content = c(sprintf("<img src='palettes/blues.png' width=30px><div class='jhr'>%s</div></img>", "Blues"),
+                                                sprintf("<img src='palettes/BuGn.png' width=30px><div class='jhr'>%s</div></img>", "BuGn"),
+                                                sprintf("<img src='palettes/BuPu.png' width=30px><div class='jhr'>%s</div></img>", "BuPu"),
+                                                sprintf("<img src='palettes/GnBu.png' width=30px><div class='jhr'>%s</div></img>", "GnBu"),
+                                                sprintf("<img src='palettes/Greens.png' width=30px><div class='jhr'>%s</div></img>", "Greens"),
+                                                sprintf("<img src='palettes/Greys.png' width=30px><div class='jhr'>%s</div></img>", "Greys"),
+                                                sprintf("<img src='palettes/Oranges.png' width=30px><div class='jhr'>%s</div></img>", "Oranges"),
+                                                sprintf("<img src='palettes/OrRd.png' width=30px><div class='jhr'>%s</div></img>", "OrRd"),
+                                                sprintf("<img src='palettes/PuBu.png' width=30px><div class='jhr'>%s</div></img>", "PuBu"),
+                                                sprintf("<img src='palettes/PuBuGn.png' width=30px><div class='jhr'>%s</div></img>", "PuBuGn"),
+                                                sprintf("<img src='palettes/PuRd.png' width=30px><div class='jhr'>%s</div></img>", "PuRd"),
+                                                sprintf("<img src='palettes/Purples.png' width=30px><div class='jhr'>%s</div></img>", "Purples"),
+                                                sprintf("<img src='palettes/RdPu.png' width=30px><div class='jhr'>%s</div></img>", "RdPu"),
+                                                sprintf("<img src='palettes/Reds.png' width=30px><div class='jhr'>%s</div></img>", "Reds"),
+                                                sprintf("<img src='palettes/YlGn.png' width=30px><div class='jhr'>%s</div></img>", "YlGn"),
+                                                sprintf("<img src='palettes/YlGnBu.png' width=30px><div class='jhr'>%s</div></img>", "YlGnBu"),
+                                                sprintf("<img src='palettes/YlOrBr.png' width=30px><div class='jhr'>%s</div></img>", "YlOrBr"),
+                                                sprintf("<img src='palettes/YlOrRd.png' width=30px><div class='jhr'>%s</div></img>", "YlOrRd"),
+                                                sprintf("<img src='palettes/BrBG.png' width=30px><div class='jhr'>%s</div></img>", "BrBG"),
+                                                sprintf("<img src='palettes/PiYG.png' width=30px><div class='jhr'>%s</div></img>", "PiYG"),
+                                                sprintf("<img src='palettes/PRGn.png' width=30px><div class='jhr'>%s</div></img>", "PRGn"),
+                                                sprintf("<img src='palettes/PuOr.png' width=30px><div class='jhr'>%s</div></img>", "PuOr"),
+                                                sprintf("<img src='palettes/RdBu.png' width=30px><div class='jhr'>%s</div></img>", "RdBu"),
+                                                sprintf("<img src='palettes/RdGy.png' width=30px><div class='jhr'>%s</div></img>", "RdGy"),
+                                                sprintf("<img src='palettes/RdYlBu.png' width=30px><div class='jhr'>%s</div></img>", "RdYlBu"),
+                                                sprintf("<img src='palettes/RdYlGn.png' width=30px><div class='jhr'>%s</div></img>", "RdYlGn"),
+                                                sprintf("<img src='palettes/Spectral.png' width=30px><div class='jhr'>%s</div></img>", "Spectral"),
+                                                sprintf("<img src='palettes/Set3.png' width=30px><div class='jhr'>%s</div></img>", "Set3"),
+                                                sprintf("<img src='palettes/Set2.png' width=30px><div class='jhr'>%s</div></img>", "Set2"),
+                                                sprintf("<img src='palettes/Set1.png' width=30px><div class='jhr'>%s</div></img>", "Set1"),
+                                                sprintf("<img src='palettes/Pastel2.png' width=30px><div class='jhr'>%s</div></img>", "Pastel2"),
+                                                sprintf("<img src='palettes/Pastel1.png' width=30px><div class='jhr'>%s</div></img>", "Pastel1"),
+                                                sprintf("<img src='palettes/Paired.png' width=30px><div class='jhr'>%s</div></img>", "Paired"),
+                                                sprintf("<img src='palettes/Dark2.png' width=30px><div class='jhr'>%s</div></img>", "Dark2"),
+                                                sprintf("<img src='palettes/Accent.png' width=30px><div class='jhr'>%s</div></img>", "Accent")
     ))),
 
       radioButtons(ns("jiter"), "Dot of Boxplot",
@@ -206,7 +206,7 @@ mod_settings_pan_ui <- function(id){
       tags$hr(),
       h3("Run analysis"),
       mod_modelfit_ui("modelfit_ui_1"),
-      
+
       h3(),
       tags$hr(),
       h3("Example data"),
@@ -219,13 +219,13 @@ mod_settings_pan_ui <- function(id){
     )
   )
 }
-    
+
 # Module Server
-    
+
 #' @rdname mod_settings_pan
 #' @export
 #' @keywords internal
-    
+
 mod_settings_pan_server <- function(input, output, session,datas,parent){
   ns <- session$ns
 
@@ -236,11 +236,11 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
       utils::write.table(vici::ICS_ex, file, row.names = FALSE, sep="\t", quote = FALSE)
     }
   )
-  
+
   observeEvent(input$loadExample,{
 
     datas$df <<- vici::ICS_ex
-    
+
     clean_output(output)
 
     parent$output$table2render <- DT::renderDataTable(datas$df,
@@ -336,14 +336,14 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
       }
     })
   })
-  
-  
+
+
   observeEvent({input$datafile; input$header; input$sep}, {
     req(input$datafile)
     datas$df <- {
       # when reading semicolon separated files,
       # having a comma separator causes `read.csv` to error
-     
+
       tryCatch(
         {
           df <- utils::read.csv(input$datafile$datapath,
@@ -353,13 +353,13 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
         },
         error = function(e){ stop(safeError(e)) } # return a safeError if a parsing error occurs
       )
-      
-      #Setters 
+
+      #Setters
       clean_output(parent$output)
       parent$output$mod <- reactive(NULL)
       parent$output$mod_display <- reactive(FALSE)
       df}
-    
+
     available_vars_init <- colnames(datas$df)
     updateSelectizeInput(session, "selectSubject",
                          selected = '',
@@ -413,15 +413,15 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
     )
     updateTabsetPanel(parent, "inTabset", selected = "dataTab")
   })
-  
+
   parent$output$table2render <- DT::renderDataTable(
     {
       datas$df
     },
     options = list(pageLength = 10, lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')))
   )
-  
-  
+
+
   # update available variables for selection ----
   # observeEvent available_vars ----
   observeEvent(datas$available_vars, {
@@ -455,14 +455,14 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
                          options = list(placeholder = 'Please select a variable below')
     )}
   )
-  
+
   observeEvent(input$selectSubject, {
     if (input$selectSubject != ''){
-      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df)) 
+      datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
     }
     clean_output(output)
   })
-  
+
   observeEvent(input$selectStim, {
     if (input$selectStim != ''){
       datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
@@ -491,24 +491,24 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
     }
     clean_output(output)
   })
-  
+
   observeEvent(input$selectResponse, {
     if (length(input$selectResponse) >= 1){
       if (input$selectResponse[1] != ''){
-        
+
         datas$available_vars <- update_vars(input, possibilities = colnames(datas$df))
-        
+
         clean_output(output)
       }
     }
   })
-  
+
   observeEvent(input$selectArmInter, {
     if (input$selectArmInter != ''){
-      
+
       datas$available_vars <- update_vars(input, possibilities = colnames(datas$df))
-      
-      
+
+
       if (input$selectArmInter %in% colnames(datas$df)){
         selected_arm_var <- factor(datas$df[, input$selectArmInter])
         if(is.factor(selected_arm_var)){
@@ -538,25 +538,25 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
         output$armisfactor <- reactive(FALSE)
         output$warningarmisfactor <- reactive(NULL)
         datas$fact_arm_OK <- FALSE
-        
+
         datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df)) #A tester
-        
+
       }
     }else{
-      
+
       datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
-      
+
     }
     clean_output(output)
   })
-  
-  
+
+
   observeEvent(input$selectArmIntra, {
     if (input$selectArmIntra != ''){
-      
+
       datas$available_vars <-  update_vars(input, possibilities = colnames(datas$df))
-      
-      
+
+
       if (input$selectArmIntra %in% colnames(datas$df)){
         selected_arm2_var <- factor(datas$df[, input$selectArmIntra])
         if(is.factor(selected_arm2_var)){
@@ -566,7 +566,7 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
           datas$fact_arm2_OK <- TRUE
         }else{
           output$arm2isfactor <- reactive(FALSE)
-          output$warningarm2isfactor <- reactive(paste0("WARNING: '", input$selectArmIntra, 
+          output$warningarm2isfactor <- reactive(paste0("WARNING: '", input$selectArmIntra,
                                                         "' is not a factor"))
           datas$fact_arm2_OK <- FALSE
           possible_arm2s <- paste0("Error: '", input$selectArmIntra,
@@ -593,7 +593,7 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
     }
     clean_output(output)
   })
-  
+
   observeEvent(input$selectModel, {
     if(!is.null(datas$available_vars)){
       updateSelectizeInput(session, "selectArmInter",
@@ -628,7 +628,7 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
     clean_output(output)
   }
   )
-  
+
   # observe time ----
   observeEvent(input$selectTimeIntra, {
     if (input$selectTimeIntra != ''){
@@ -640,7 +640,7 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
         possible_times <- levels(selected_time_var)
         output$warnintimeisfactor <- reactive(NULL)
         datas$fact_time_OK <- TRUE
-        
+
         updateSelectizeInput(session, "selectRefTimeIntra",
                              choices = c(possible_times[1], possible_times),
                              selected = ifelse(is.null(input$selectRefTimeIntra) | (length(input$selectRefTimeIntra)>0 && input$selectRefTimeIntra==''),
@@ -662,7 +662,7 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
     }
     clean_output(output)
   })
-  
+
   # observe time ----
   observeEvent(input$selectTimeInter, {
     if (input$selectTimeInter != ''){
@@ -674,7 +674,7 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
         possible_times2 <- levels(selected_time2_var)
         output$warnintime2isfactor <- reactive(NULL)
         datas$fact_time2_OK <- TRUE
-        
+
         updateSelectizeInput(session, "selectRefTimeInter",
                              choices = c(possible_times2[1], possible_times2),
                              selected = ifelse(is.null(input$selectRefTimeInter) | (length(input$selectRefTimeInter)>0 && input$selectRefTimeInter==''),
@@ -696,24 +696,42 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
     }
     clean_output(output)
   })
-  
-  
+
+
   observeEvent(input$ddf, {
 
     clean_output(parent$output)
   })
-  
-  
+
+
   observeEvent({input$selectRefArmInter; input$selectRefArmIntra; input$selectRefStim; input$selectRefTimeIntra; input$selectRefTimeInter}, {
     clean_output(output)
   })
-  
+
   return(input)
 }
-    
+
 ## To be copied in the UI
 # mod_settings_pan_ui("settings_pan_ui_1")
-    
+
 ## To be copied in the server
 # callModule(mod_settings_pan_server, "settings_pan_ui_1")
- 
+
+
+
+## Code to generate the png files:
+# library(ggplot2)
+ # listPal <- list("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu",
+ #                  "PuBuGn","PuRd","Purples","RdPu","Reds","YlGn","YlGnBu","YlOrBr","YlOrRd",
+ #                  "BrBG","PiYG","PRGn","PuOr","RdBu","RdGy","RdYlBu","RdYlGn","Spectral",
+ #                  "Set3","Set2","Set1","Pastel2","Pastel1","Paired","Dark2","Accent")
+ # n <- 5
+ # for(pal in listPal){
+ #   ggplot(data.frame(x=as.character(1:5), y=1)) +
+ #     geom_tile(aes(x=x, y=y, fill=x)) +
+ #     scale_fill_manual(values = RColorBrewer::brewer.pal(n = n, name = pal)) +
+ #     theme_void() +
+ #     guides(fill="none") +
+ #     scale_x_discrete(expand=c(0,0)) +
+ #     scale_y_continuous(expand=c(0,0))
+ # }
