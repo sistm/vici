@@ -1,7 +1,9 @@
 #' @import shiny
 app_ui <- function() {
   fluidPage(
-    titlePanel("VICI: accurate estimation of Vaccine Induced Cellular Immunogenicity with bivariate modeling", windowTitle = "VICI"),
+    tags$head(tags$link(rel="shortcut icon", href="www/favicon.ico")),
+    titlePanel(div("VICI: accurate estimation of Vaccine Induced Cellular Immunogenicity with bivariate modeling", img(src='www/logo.svg', align="right", height="120")),
+               windowTitle = "VICI"),
     h6("v0.7.1"),
     h5(),
 
