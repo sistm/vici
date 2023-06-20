@@ -717,8 +717,6 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
 ## To be copied in the server
 # callModule(mod_settings_pan_server, "settings_pan_ui_1")
 
-
-
 ## Code to generate the png files:
 # library(ggplot2)
  # listPal <- list("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu",
