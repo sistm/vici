@@ -93,17 +93,17 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             responses_res[[response]]$res_error <- NULL
             responses_res[[response]]$postprocess_res <- interarm_postprocessres(data_df, fit_res)
 
-            boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-                                                      response_name = response, input = parent)
-            
-            # if(parent$plot == "boxplot"){
             # boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
             #                                           response_name = response, input = parent)
-            # }
-            # if(parent$plot == "histogram"){
-            #   boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-            #                                             response_name = response, input = parent)
-            # }
+            
+            if(parent$plot == "boxplot"){
+            boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+                                                      response_name = response, input = parent)
+            }
+            if(parent$plot == "histogram"){
+              boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+                                                        response_name = response, input = parent)
+            }
             #browser()
             heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
             heatmap_data2plot[[response]]$response <- response
@@ -139,7 +139,15 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             origin$output$res_error <- reactive(paste0("Too many observation in time point ", parent$selectRefTimeIntra,
                                                 "... Perhaps the Arm to analyzed was not specified"))
           }else{
+            #browser()
             for(i in ncol(transformed_data):3){
+              #browser()
+              if(!is.numeric(transformed_data[, 3])){
+                transformed_data[, 3] <- as.numeric(transformed_data[, 3])
+              }
+              if(!is.numeric(transformed_data[, i])){
+                transformed_data[, i] <- as.numeric(transformed_data[, i])
+              }
               transformed_data[, i] <- (transformed_data[, i] - transformed_data[, 3])
             }
 
@@ -177,26 +185,26 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
               responses_res[[response]]$postprocess_res <- intraarm_postprocessres(data_df, fit_res)
               #res_data <<- responses_res[[response]]$postprocess_res
               #responses_res[[response]]$postprocess_res$pval_2plot <- do.call(rbind, responses_res[[response]]$postprocess_res$pval_2plot)
-              boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-                                                        response_name = response,
-                                                        input = parent,
-                                                        inter = FALSE,
-                                                        baseline = parent$selectRefTimeIntra)
+              # boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+              #                                           response_name = response,
+              #                                           input = parent,
+              #                                           inter = FALSE,
+              #                                           baseline = parent$selectRefTimeIntra)
               
-              # if(parent$plot == "boxplot"){
-              #   boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-              #                                             response_name = response,
-              #                                             input = parent,
-              #                                             inter = FALSE,
-              #                                             baseline = parent$selectRefTimeIntra)
-              # }
-              # if(parent$plot == "histogram"){
-              #   boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-              #                                             response_name = response,
-              #                                             input = parent,
-              #                                             inter = FALSE,
-              #                                             baseline = parent$selectRefTimeIntra)
-              # }
+              if(parent$plot == "boxplot"){
+                boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+                                                          response_name = response,
+                                                          input = parent,
+                                                          inter = FALSE,
+                                                          baseline = parent$selectRefTimeIntra)
+              }
+              if(parent$plot == "histogram"){
+                boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+                                                          response_name = response,
+                                                          input = parent,
+                                                          inter = FALSE,
+                                                          baseline = parent$selectRefTimeIntra)
+              }
               #browser()
               responses_res[[response]]$res_tab <- do.call(rbind, lapply(fit_res, "[[", "res_tab"))
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
@@ -206,8 +214,10 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
                                                                  breaks = c(0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1),
                                                                  right = FALSE)
               }
+              
               heatmap_data2plot[[response]] <- do.call(rbind.data.frame,
                                                        heatmap_data2plot[[response]])
+              #browser()
               #output$res_tab <- renderTable(fit_res$res_tab, rownames = TRUE, digits=5)
             }
           }

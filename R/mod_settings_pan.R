@@ -28,30 +28,31 @@ mod_settings_pan_ui <- function(id){
   tagList(
     sidebarPanel(
       # Input: Select a file ----
-       # h3("Data input"),
-       # fileInput(ns("datafile"), label = "Choose a CSV/TXT file to import",
-       #           multiple = FALSE,
-       #           accept = c("text/csv",
-       #                      "text/comma-separated-values,text/plain",
-       #                      ".csv")),
-       # 
-       # # Input: Checkbox if file has header ----
-       # checkboxInput(ns("header"), "Header", TRUE),
-       # 
-       # # Input: Select separator ----
-       # radioButtons(ns("sep"), "Separator",
-       #              choices = c(Comma = ",",
-       #                          Semicolon = ";",
-       #                          Tab = "\t"),
-       #              selected = "\t"),
-
-      # Input: Select quotes ----
-      # radioButtons("quote", "Quote",
-      #              choices = c(None = "",
-      #                          "Double Quote" = '"',
-      #                          "Single Quote" = "'"),
-      #              selected = '"'),
       
+      #   h3("Data input"),
+      #   fileInput(ns("datafile"), label = "Choose a CSV/TXT file to import",
+      #             multiple = FALSE,
+      #             accept = c("text/csv",
+      #                        "text/comma-separated-values,text/plain",
+      #                        ".csv")),
+      #  
+      #   # Input: Checkbox if file has header ----
+      #   checkboxInput(ns("header"), "Header", TRUE),
+      #  
+      #   # Input: Select separator ----
+      #   radioButtons(ns("sep"), "Separator",
+      #                choices = c(Comma = ",",
+      #                            Semicolon = ";",
+      #                            Tab = "\t"),
+      #                selected = "\t"),
+      # 
+      # # Input: Select quotes ----
+      #  radioButtons("quote", "Quote",
+      #               choices = c(None = "",
+      #                           "Double Quote" = '"',
+      #                           "Single Quote" = "'"),
+      #               selected = '"'),
+      # 
       # Horizontal line ----
        tags$hr(),
       
@@ -160,10 +161,10 @@ mod_settings_pan_ui <- function(id){
 #                     selected = "RdGy"
 #      ),
       
-      # radioButtons(ns("plot"), "Choose the type of plot",
-      #              choices = c(Boxplot = "boxplot",
-      #                          Histogram = "histogram"),
-      #              selected = "boxplot"),
+      radioButtons(ns("plot"), "Choose the type of plot",
+                   choices = c(Boxplot = "boxplot"),
+                               #Histogram = "histogram"),
+                   selected = "boxplot"),
       pickerInput(inputId = ns("color"),
                   label = "pickerInput Palettes",
                   choices =       listPal <- list("Blues","BuGn","BuPu","GnBu","Greens","Greys","Oranges","OrRd","PuBu",
@@ -377,84 +378,84 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
   })
   
   
-  observeEvent({input$datafile; input$header; input$sep}, {
-    #cat("observe datainput", "\n")
-    #browser()
-    #cat(str(datas))
-    req(input$datafile)
-    datas$df <- {
-      # when reading semicolon separated files,
-      # having a comma separator causes `read.csv` to error
-     
-      tryCatch(
-        {
-          df <- utils::read.csv(input$datafile$datapath,
-                                header = input$header,
-                                sep = input$sep)
-
-        },
-        error = function(e){ stop(safeError(e)) } # return a safeError if a parsing error occurs
-      )
-      
-      #Setters 
-      clean_output(parent$output)
-      parent$output$mod <- reactive(NULL)
-      parent$output$mod_display <- reactive(FALSE)
-      df}
-    
-    available_vars_init <- colnames(datas$df)
-    updateSelectizeInput(session, "selectSubject",
-                         selected = '',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectResponse",
-                         selected = '',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectStim",
-                         selected = '',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectArmInter",
-                         selected = '',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectArmIntra",
-                         selected = '',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectTimeIntra",
-                         selected = '',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectTimeInter",
-                         selected = '',
-                         choices = c('', available_vars_init),
-                         options = list(placeholder = 'Please select a variable below')
-    )
-    updateSelectizeInput(session, "selectRefTimeIntra",
-                         selected = ''
-    )
-    updateSelectizeInput(session, "selectRefTimeInter",
-                         selected = ''
-    )
-    updateSelectizeInput(session, "selectRefArmInter",
-                         selected = ''
-    )
-    updateSelectizeInput(session, "selectRefArmIntra",
-                         selected = ''
-    )
-    updateSelectizeInput(session, "selectRefStim",
-                         selected = ''
-    )
-    updateTabsetPanel(parent, "inTabset", selected = "dataTab")
-  })
+  # observeEvent({input$datafile; input$header; input$sep}, {
+  #   #cat("observe datainput", "\n")
+  #   #browser()
+  #   #cat(str(datas))
+  #   req(input$datafile)
+  #   datas$df <- {
+  #     # when reading semicolon separated files,
+  #     # having a comma separator causes `read.csv` to error
+  #    
+  #     tryCatch(
+  #       {
+  #         df <- utils::read.csv(input$datafile$datapath,
+  #                               header = input$header,
+  #                               sep = input$sep)
+  # 
+  #       },
+  #       error = function(e){ stop(safeError(e)) } # return a safeError if a parsing error occurs
+  #     )
+  #     
+  #     #Setters 
+  #     clean_output(parent$output)
+  #     parent$output$mod <- reactive(NULL)
+  #     parent$output$mod_display <- reactive(FALSE)
+  #     df}
+  #   
+  #   available_vars_init <- colnames(datas$df)
+  #   updateSelectizeInput(session, "selectSubject",
+  #                        selected = '',
+  #                        choices = c('', available_vars_init),
+  #                        options = list(placeholder = 'Please select a variable below')
+  #   )
+  #   updateSelectizeInput(session, "selectResponse",
+  #                        selected = '',
+  #                        choices = c('', available_vars_init),
+  #                        options = list(placeholder = 'Please select a variable below')
+  #   )
+  #   updateSelectizeInput(session, "selectStim",
+  #                        selected = '',
+  #                        choices = c('', available_vars_init),
+  #                        options = list(placeholder = 'Please select a variable below')
+  #   )
+  #   updateSelectizeInput(session, "selectArmInter",
+  #                        selected = '',
+  #                        choices = c('', available_vars_init),
+  #                        options = list(placeholder = 'Please select a variable below')
+  #   )
+  #   updateSelectizeInput(session, "selectArmIntra",
+  #                        selected = '',
+  #                        choices = c('', available_vars_init),
+  #                        options = list(placeholder = 'Please select a variable below')
+  #   )
+  #   updateSelectizeInput(session, "selectTimeIntra",
+  #                        selected = '',
+  #                        choices = c('', available_vars_init),
+  #                        options = list(placeholder = 'Please select a variable below')
+  #   )
+  #   updateSelectizeInput(session, "selectTimeInter",
+  #                        selected = '',
+  #                        choices = c('', available_vars_init),
+  #                        options = list(placeholder = 'Please select a variable below')
+  #   )
+  #   updateSelectizeInput(session, "selectRefTimeIntra",
+  #                        selected = ''
+  #   )
+  #   updateSelectizeInput(session, "selectRefTimeInter",
+  #                        selected = ''
+  #   )
+  #   updateSelectizeInput(session, "selectRefArmInter",
+  #                        selected = ''
+  #   )
+  #   updateSelectizeInput(session, "selectRefArmIntra",
+  #                        selected = ''
+  #   )
+  #   updateSelectizeInput(session, "selectRefStim",
+  #                        selected = ''
+  #   )
+  #   updateTabsetPanel(parent, "inTabset", selected = "dataTab")
+  # })
   
   parent$output$table2render <- DT::renderDataTable(
     {
