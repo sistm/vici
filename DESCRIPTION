@@ -1,6 +1,6 @@
 Package: vici
 Title: Vaccine Induced Cellular Immunogenicity with Bivariate Modeling
-Version: 0.6.0
+Version: 0.7.0
 Date: 2022-06-27
 Authors@R: c(person('Boris', 'Hejblum', email = 'boris.hejblum@u-bordeaux.fr', role = c('cre', 'aut')),
              person('Melanie', 'Huchon', email = 'melanie.huchon@u-bordeaux.fr', role = c('aut')),
@@ -26,7 +26,10 @@ Imports:
     stats,
     stringr,
     tidyr,
-    utils
+    utils,
+    scales,
+    shinyWidgets,
+    RColorBrewer
 Suggests:
     testthat
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3

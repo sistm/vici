@@ -10,7 +10,8 @@ boxplot_VICI(
   response_name,
   input,
   inter = TRUE,
-  baseline = NULL
+  baseline = NULL,
+  fill = FALSE
 )
 }
 \arguments{
@@ -21,6 +22,9 @@ Default is \code{TRUE}.}
 
 \item{baseline}{baseline value used in title when \code{inter} is \code{FALSE}.
 Default is \code{NULL}.}
+
+\item{fill}{a logical flag indicating if the boxplot is filled
+Default if \code{FALSE}}
 
 \item{res_2plot}{a \code{data.frame}.}
 }

@@ -7,7 +7,7 @@
 \usage{
 mod_settings_pan_ui(id)
 
-mod_settings_pan_server(input, output, session, data, parent)
+mod_settings_pan_server(input, output, session, datas, parent)
 }
 \arguments{
 \item{id}{shiny id}
@@ -18,9 +18,9 @@ mod_settings_pan_server(input, output, session, data, parent)
 
 \item{session}{internal}
 
-\item{data}{internal}
-
 \item{parent}{}
+
+\item{data}{internal}
 }
 \description{
 A shiny Module.

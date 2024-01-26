@@ -8,6 +8,8 @@
 #'Default is \code{TRUE}.
 #'@param baseline baseline value used in title when \code{inter} is \code{FALSE}.
 #'Default is \code{NULL}.
+#'@param fill a logical flag indicating if the boxplot is filled
+#'Default if \code{FALSE}
 #'
 #'@return a \code{ggpubr} plot object
 #'
