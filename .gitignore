@@ -2,4 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+<<<<<<< HEAD
 *.DS_Store
+=======
+*.Rproj
+*.DS_Store
+>>>>>>> 4b702d8f21a61cae9312b45b8a221d3949aaf732

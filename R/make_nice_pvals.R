@@ -1,8 +1,13 @@
 make_nice_pvals <- function(res_2plot, data_df, auxvar = "arm"){
+  #browser()
   data_df$stim <- as.factor(as.numeric(data_df$stim))
   pval_2plot <- res_2plot
   naux <- nlevels(data_df[, auxvar])
   nstim <- nlevels(data_df$stim)
+  #browser()
+  if(!is.numeric(data_df$response)){
+    data_df$response <- as.numeric(data_df$response)
+  }
   pval_2plot$y.position <- as.vector(by(data_df$response, INDICES = data_df$stim, FUN = max, na.rm=TRUE)) +
     0.05*max(data_df$response, na.rm = TRUE)
   pval_2plot$group1 <- 1:nlevels(data_df$stim) - (naux-1)*0.4/naux
