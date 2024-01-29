@@ -88,7 +88,7 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
             heatmap_data2plot[[response]]$response <- response
             heatmap_data2plot[[response]]$pvalue <- cut(heatmap_data2plot[[response]]$pvalue,
-                                                        breaks = c(0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1),
+                                                        breaks = c(0, 0.001, 0.01, 0.05, 0.1, 0.5, 1),
                                                         right = FALSE)
             responses_res[[response]]$res_tab <- fit_res$res_tab
             
@@ -156,7 +156,7 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
               for(l in 1:length(heatmap_data2plot[[response]])){
                 heatmap_data2plot[[response]][[l]]$response <- response
                 heatmap_data2plot[[response]][[l]]$pvalue <- cut(heatmap_data2plot[[response]][[l]]$pvalue,
-                                                                 breaks = c(0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1),
+                                                                 breaks = c(0, 0.001, 0.01, 0.05, 0.1, 0.5, 1),
                                                                  right = FALSE)
               }
               heatmap_data2plot[[response]] <- do.call(rbind.data.frame,

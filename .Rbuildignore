@@ -10,3 +10,4 @@ $run_dev.*
 ^appveyor\.yml$
 ^cran-comments\.md$
 ^\.github$
+^CRAN-SUBMISSION$
