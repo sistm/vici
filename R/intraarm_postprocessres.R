@@ -1,4 +1,5 @@
 intraarm_postprocessres <- function(data_df, fit_res){
+  #browser()
   m2resloglik <- sapply(fit_res, function(x){-2*x$mgls$logLik})
   s_mgls <- lapply(fit_res, function(x){summary(x$mgls)})
   aic <- sapply(s_mgls, "[[", "AIC")
@@ -22,7 +23,7 @@ intraarm_postprocessres <- function(data_df, fit_res){
     colnames(temp)[1:2] <- c("Stimulation", "Timepoint")
     return(temp)
   })
-
+  #browser()
   pval_2plot <- make_nice_pvals(do.call(rbind.data.frame, res_2plot), data_df, auxvar = "time")
   #maybe TODO compute group2 correctly when more than 2 Timepoints
   #pval_2plot <- do.call(rbind, pval_2plot)

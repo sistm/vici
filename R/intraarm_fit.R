@@ -10,8 +10,11 @@ intraarm_fit <- function(transformed_data, tested_time, input,resp){
   res_error <- NULL
 
   bkg_inter_mat <- model.matrix(data = stats::na.omit(transformed_data), ~ -1 + stim:bkg)[, -1, drop=FALSE]
+  #browser()
   colnames(bkg_inter_mat) <- gsub(":", "_", colnames(bkg_inter_mat), fixed = TRUE)
+  colnames(bkg_inter_mat) <- gsub(" ","",colnames(bkg_inter_mat), fixed = TRUE)
   transformed_data <- cbind.data.frame(stats::na.omit(transformed_data), bkg_inter_mat)
+  #browser()
   myformul <- as.formula(paste0("response ~ -1 + stim", "+", paste(colnames(bkg_inter_mat), collapse = " + ")))
 
   mgls <- mygls(myformul,

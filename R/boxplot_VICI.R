@@ -19,9 +19,11 @@
 #'@import ggpubr
 #'@import RColorBrewer
 
-boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, baseline=NULL){
+boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, baseline=NULL,fill=FALSE){
   
-  
+  if(!is.numeric(data_df$response)){
+    data_df$response <- as.numeric(data_df$response)
+  }
   p <- NULL
   #browser()
   if(inter){
@@ -29,7 +31,7 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
     data_df$arm <- relevel(data_df$arm, ref=input$selectRefArmInter)
     suppressWarnings(
       if(input$jiter == "None"){
-        p <- ggboxplot(na.omit(data_df), x="stim", y="response", color= "arm", palette = "RdGy",#c("Red","Blue","Black"),#"RdBu",
+        p <- ggboxplot(na.omit(data_df), x="stim", y="response", color= "arm", palette = "RdGy",fill = "stim",#c("Red","Blue","Black"),#"RdBu",
                        #fill="white",#"arm",
                        alpha=0.3,)+
           #theme_bw() +
@@ -47,7 +49,8 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
                   subtitle = "p-values taking into account background response levels through bivariate modeling") +
           labs(caption = "made with VICI")
       }else{
-      p <- ggboxplot(na.omit(data_df), x="stim", y="response", color= "arm", palette = "RdGy",#c("Red","Blue","Black"),#"RdBu",
+      p <- ggboxplot(na.omit(data_df), x="stim", y="response", color= "arm", palette = "RdGy",fill = "stim",#c("Red","Blue","Black"),#"RdBu",
+                  
                   #fill="white",#"arm",
                   alpha=0.3,
                   add="jitter",
