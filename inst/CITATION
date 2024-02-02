@@ -10,7 +10,7 @@ bibentry(
   number   = "",
   pages    = "112711",
   url      = "https://doi.org/10.1016/j.jim.2019.112711",
-  note   = "R package version 0.7.2",
+  note   = "R package version 0.7.3",
   textVersion = paste("Lhomme E, Hejblum BP, Lacabaratz C, Wiedemann A, Lelièvre J-D, Levy Y, Thiébaut R, Richert L (2020). Analyzing cellular immunogenicity in vaccine clinical trials: a new statistical method including non-specific responses for accurate estimation of vaccine efficacy. Journal of Immunological Methods, 477:112711. <doi:10.1016/j.jim.2019.112711>.")
 )
 
