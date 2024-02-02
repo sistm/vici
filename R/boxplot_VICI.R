@@ -2,7 +2,7 @@
 #'
 #'Internal function for displaying significance boxplots
 #'
-#'@param res_2plot a \code{data.frame}.
+#'@param data_df a \code{data.frame}.
 #'@param pval_2plot a \code{data.frame} with the p-values to display.
 #'@param inter a logical flag indicating whether we are in the interarm setting or not.
 #'Default is \code{TRUE}.
