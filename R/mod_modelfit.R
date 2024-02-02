@@ -91,9 +91,6 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
                                                           response_name = response, input = parent)
             }
             
-            boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-                                                      response_name = response, input = parent)
-            
             heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
             heatmap_data2plot[[response]]$response <- response
             heatmap_data2plot[[response]]$pvalue <- cut(heatmap_data2plot[[response]]$pvalue,
