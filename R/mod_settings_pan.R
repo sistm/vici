@@ -152,6 +152,11 @@ mod_settings_pan_ui <- function(id){
                                "Kenward-Roger"),
                    selected = "Between-Within"),
 
+      radioButtons(ns("plot"), "Choose the type of plot",
+                   choices = c(Boxplot = "boxplot"),
+                   #Histogram = "histogram"),
+                   selected = "boxplot"),
+      
 
       pickerInput(inputId = ns("color"),
                   label = "Color palette",
