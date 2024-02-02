@@ -82,6 +82,15 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             responses_res[[response]]$res_error <- NULL
             responses_res[[response]]$postprocess_res <- interarm_postprocessres(data_df, fit_res)
 
+            if(parent$plot == "boxplot"){
+              boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+                                                        response_name = response, input = parent)
+            }
+            if(parent$plot == "histogram"){
+              boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+                                                          response_name = response, input = parent)
+            }
+            
             boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
                                                       response_name = response, input = parent)
             
@@ -118,6 +127,14 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
                                                 "... Perhaps the Arm to analyzed was not specified"))
           }else{
             for(i in ncol(transformed_data):3){
+              
+              if(!is.numeric(transformed_data[, 3])){
+                transformed_data[, 3] <- as.numeric(transformed_data[, 3])
+              }
+              if(!is.numeric(transformed_data[, i])){
+                transformed_data[, i] <- as.numeric(transformed_data[, i])
+              }
+              
               transformed_data[, i] <- (transformed_data[, i] - transformed_data[, 3])
             }
 
@@ -145,12 +162,22 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             if(!prod(sapply(fit_res, function(x){inherits(x$mgls, "try-error")}))){
               responses_res[[response]]$res_error <- NULL
               responses_res[[response]]$postprocess_res <- intraarm_postprocessres(data_df, fit_res)
-              boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
-                                                        response_name = response,
-                                                        input = parent,
-                                                        inter = FALSE,
-                                                        baseline = parent$selectRefTimeIntra)
-
+              
+              if(parent$plot == "boxplot"){
+                boxplot_print[[response]] <- boxplot_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+                                                          response_name = response,
+                                                          input = parent,
+                                                          inter = FALSE,
+                                                          baseline = parent$selectRefTimeIntra)
+              }
+              if(parent$plot == "histogram"){
+                boxplot_print[[response]] <- histogram_VICI(data_df, responses_res[[response]]$postprocess_res$pval_2plot,
+                                                            response_name = response,
+                                                            input = parent,
+                                                            inter = FALSE,
+                                                            baseline = parent$selectRefTimeIntra)
+              }
+              
               responses_res[[response]]$res_tab <- do.call(rbind, lapply(fit_res, "[[", "res_tab"))
               heatmap_data2plot[[response]] <- responses_res[[response]]$postprocess_res$res_2plot
               for(l in 1:length(heatmap_data2plot[[response]])){
