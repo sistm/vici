@@ -14,15 +14,19 @@ histogram_VICI(
 )
 }
 \arguments{
+\item{data_df}{a \code{data.frame}.}
+
 \item{pval_2plot}{a \code{data.frame} with the p-values to display.}
+
+\item{response_name}{a character string indicating the name of the response.}
+
+\item{input}{internal input from UI.}
 
 \item{inter}{a logical flag indicating whether we are in the interarm setting or not.
 Default is \code{TRUE}.}
 
 \item{baseline}{baseline value used in title when \code{inter} is \code{FALSE}.
 Default is \code{NULL}.}
-
-\item{res_2plot}{a \code{data.frame}.}
 }
 \value{
 a \code{ggpubr} plot object

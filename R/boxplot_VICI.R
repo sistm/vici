@@ -4,6 +4,8 @@
 #'
 #'@param data_df a \code{data.frame}.
 #'@param pval_2plot a \code{data.frame} with the p-values to display.
+#'@param response_name a character string indicating the name of the response.
+#'@param input internal input from UI.
 #'@param inter a logical flag indicating whether we are in the interarm setting or not.
 #'Default is \code{TRUE}.
 #'@param baseline baseline value used in title when \code{inter} is \code{FALSE}.

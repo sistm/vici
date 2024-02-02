@@ -19,6 +19,10 @@ boxplot_VICI(
 
 \item{pval_2plot}{a \code{data.frame} with the p-values to display.}
 
+\item{response_name}{a character string indicating the name of the response.}
+
+\item{input}{internal input from UI.}
+
 \item{inter}{a logical flag indicating whether we are in the interarm setting or not.
 Default is \code{TRUE}.}
 
