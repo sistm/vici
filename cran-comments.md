@@ -11,6 +11,10 @@
 ## R CMD check results  
 0 errors | 0 warnings | 0 note
 
+All all existing problems at
+https://cran.r-project.org/web/checks/check_results_vici.html
+have been fixed.
+
 Thanks, Boris Hejblum
 
 ---
