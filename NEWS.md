@@ -1,3 +1,6 @@
+This branch contains an attempt at getting Kenward-Roger dfs working 
+(but it is not working properly as of now) 
+
 # vici 0.5.3
 
  * Added source code & CRAN link buttons
