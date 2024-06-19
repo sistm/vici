@@ -24,21 +24,46 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
   if(!is.numeric(data_df$response)){
     data_df$response <- as.numeric(data_df$response)
   }
+  
+  listRowClass <<- unique(data_df$time)
+  listCol <- c()
+  for (x in 1:length(listRowClass)) {
+    #browser()
+    cat(paste("\n color of ",listRowClass[x]))
+    #browser()
+    cat(input[[paste0("color",listRowClass[x])]])
+    #newColor <- list(input[[paste0("color",listRowClass[x])]])
+    listCol <- c(listCol,input[[paste0("color",listRowClass[x])]])
+  }
+  
   p <- NULL
   #browser()
   if(inter){
     #browser()
+    
+    listRowClass <<- unique(data_df$arm)
+    listCol <- c()
+    for (x in 1:length(listRowClass)) {
+      #browser()
+      cat(paste("\n color of ",listRowClass[x]))
+      #browser()
+      cat(input[[paste0("color",listRowClass[x])]])
+      #newColor <- list(input[[paste0("color",listRowClass[x])]])
+      listCol <- c(listCol,input[[paste0("color",listRowClass[x])]])
+    }
+    
     data_df$arm <- relevel(data_df$arm, ref=input$selectRefArmInter)
     suppressWarnings(
       if(input$jiter == "None"){
+        browser()
         p <- ggboxplot(na.omit(data_df), x="stim", y="response", color= "arm", palette = "RdGy",fill = "stim",#c("Red","Blue","Black"),#"RdBu",
                        #fill="white",#"arm",
                        alpha=0.3,)+
           #theme_bw() +
           theme_grey() + 
           theme(panel.grid.major.x = element_blank()) +
-          #scale_colour_manual(values = CPCOLS) +
-          scale_color_brewer(palette = input$color) +#"RdGy") +
+          scale_colour_manual(values = listCol) +
+          #scale_color_brewer(palette = input$color) +#"RdGy") +
           #scale_fill_viridis_d("Arm: ") +
           #scale_color_viridis_d("Arm: ") +
           stat_pvalue_manual(data = pval_2plot, label = "pvalue_format",
@@ -49,6 +74,7 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
                   subtitle = "p-values taking into account background response levels through bivariate modeling") +
           labs(caption = "made with VICI")
       }else{
+      #browser()
       p <- ggboxplot(na.omit(data_df), x="stim", y="response", color= "arm", palette = "RdGy",fill = "stim",#c("Red","Blue","Black"),#"RdBu",
                   
                   #fill="white",#"arm",
@@ -58,8 +84,8 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
         #theme_bw() +
         theme_grey() + 
         theme(panel.grid.major.x = element_blank()) +
-        #scale_colour_manual(values = CPCOLS) +
-        scale_color_brewer(palette = input$color) +#"RdGy") +
+        scale_colour_manual(values = listCol) +
+        #scale_color_brewer(palette = input$color) +#"RdGy") +
         #scale_fill_viridis_d("Arm: ") +
         #scale_color_viridis_d("Arm: ") +
         stat_pvalue_manual(data = pval_2plot, label = "pvalue_format",
@@ -87,6 +113,8 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
         # labs(caption = "made with VICI")
     )
   }else{
+    #browser()
+
     data_df$time <- relevel(data_df$time, ref=input$selectRefTimeIntra)
     #browser()
     #suppressWarnings(
@@ -98,8 +126,8 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
         #theme_bw() +
         theme_grey() + 
         theme(panel.grid.major.x = element_blank()) +
-        #scale_colour_manual(values = CPCOLS) +
-        scale_color_brewer(palette = input$color)+#"RdGy") +
+        scale_colour_manual(values = listCol) +
+        #scale_color_brewer(palette = input$color)+#"RdGy") +
         #scale_fill_viridis_d("Time-point: ") +
         #scale_color_viridis_d("Time-point: ") +
         stat_pvalue_manual(data = pval_2plot, label = "pvalue_format",
@@ -119,8 +147,8 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
         #theme_bw() +
         theme_grey() + 
         theme(panel.grid.major.x = element_blank()) +
-        #scale_colour_manual(values = CPCOLS) +
-        scale_color_brewer(palette = input$color)+#"RdGy") +
+        scale_colour_manual(values = listCol) +
+        #scale_color_brewer(palette = input$color)+#"RdGy") +
         #scale_fill_viridis_d("Time-point: ") +
         #scale_color_viridis_d("Time-point: ") +
         stat_pvalue_manual(data = pval_2plot, label = "pvalue_format",
