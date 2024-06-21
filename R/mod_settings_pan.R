@@ -236,6 +236,7 @@ mod_settings_pan_ui <- function(id){
                                Empty = "1",
                                None = "None"),
                    selected = "19"),
+      uiOutput(ns("shapes")),
 
       tags$hr(),
       h3("Run analysis"),
@@ -710,6 +711,33 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
           #cat(str(BoxPlotColors))
           do.call(tagList,color)
         })
+        cat("Jitter: ")
+        cat(input$jiter,"\n")
+        cat(input$jiter != "None")
+        #browser()
+        if(input$jiter != "None"){
+          cat("\n ENTER THE VOID \n")
+          output$shapes <- renderUI({
+            #browser()
+            #map(listRowClass(),)
+            shapes <- lapply(listRowClass, function(i){
+              cat(paste0("Create shape",i,"\n"))
+              pickerInput(inputId = ns(paste0("shape",i)),
+                          label = paste("Shape for",i),
+                          choices = listShape <- list("circle","square","diamond","cross"),
+                          selected = "circle",
+                          choicesOpt = list(content = c(sprintf("<img src='./shapes/circle.png' width=30px><div class='jhr'>%s</div></img>", "circle"),#ok
+                                                        sprintf("<img src='./shapes/square.png' width=30px><div class='jhr'>%s</div></img>", "square"),#ok
+                                                        sprintf("<img src='./shapes/diamond.png' width=30px><div class='jhr'>%s</div></img>", "diamond"),#ok
+                                                        sprintf("<img src='./shapes/cross.png' width=30px><div class='jhr'>%s</div></img>", "cross")#ok
+                          )
+                          )
+              )
+            })
+            #cat(str(BoxPlotColors))
+            do.call(tagList,shapes)
+          })
+        }
         
         datas$df[, input$selectTimeIntra] <- as.factor(as.character(datas$df[, input$selectTimeIntra]))
         selected_time_var <- datas$df[, input$selectTimeIntra]
@@ -762,6 +790,33 @@ mod_settings_pan_server <- function(input, output, session,datas,parent){
         #cat(str(BoxPlotColors))
         do.call(tagList,color)
       })
+      cat("Jitter: ")
+      cat(input$jiter,"\n")
+      cat(input$jiter != "None")
+      #browser()
+      if(input$jiter != "None"){
+        cat("\n ENTER THE VOID \n")
+        #browser()
+        output$shapes <- renderUI({
+          #map(listRowClass(),)
+          shapes <- lapply(listRowClass, function(i){
+            cat(paste0("Create shape",i,"\n"))
+            pickerInput(inputId = ns(paste0("shape",i)),
+                        label = paste("Shape for",i),
+                        choices = listShape <- list("circle","square","diamond","cross"),
+                        selected = "circle",
+                        choicesOpt = list(content = c(sprintf("<img src='./shapes/circle.png' width=30px><div class='jhr'>%s</div></img>", "circle"),#ok
+                                                      sprintf("<img src='./shapes/square.png' width=30px><div class='jhr'>%s</div></img>", "square"),#ok
+                                                      sprintf("<img src='./shapes/diamond.png' width=30px><div class='jhr'>%s</div></img>", "diamond"),#ok
+                                                      sprintf("<img src='./shapes/cross.png' width=30px><div class='jhr'>%s</div></img>", "cross")#ok
+                        )
+                        )
+            )
+          })
+          #cat(str(BoxPlotColors))
+          do.call(tagList,shapes)
+        })
+      }
       
       if(input$selectTimeInter %in% colnames(datas$df)){
         datas$df[, input$selectTimeInter] <- as.factor(as.character(datas$df[, input$selectTimeInter]))

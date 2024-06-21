@@ -18,6 +18,7 @@
 #'@import ggplot2
 #'@import ggpubr
 #'@import RColorBrewer
+#'@import rlang
 
 boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, baseline=NULL,fill=FALSE){
   
@@ -25,16 +26,7 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
     data_df$response <- as.numeric(data_df$response)
   }
   
-  listRowClass <<- unique(data_df$time)
-  listCol <- c()
-  for (x in 1:length(listRowClass)) {
-    #browser()
-    cat(paste("\n color of ",listRowClass[x]))
-    #browser()
-    cat(input[[paste0("color",listRowClass[x])]])
-    #newColor <- list(input[[paste0("color",listRowClass[x])]])
-    listCol <- c(listCol,input[[paste0("color",listRowClass[x])]])
-  }
+  
   
   p <- NULL
   #browser()
@@ -52,10 +44,20 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
       listCol <- c(listCol,input[[paste0("color",listRowClass[x])]])
     }
     
+    listShape <- c()
+    for (x in 1:length(listRowClass)) {
+      #browser()
+      cat(paste("\n shape of ",listRowClass[x]))
+      cat(input[[paste0("shape",listRowClass[x])]])
+      #newColor <- list(input[[paste0("color",listRowClass[x])]])
+      #browser()
+      listShape <- c(listShape,rlang::as_string(input[[paste0("shape",listRowClass[x])]]))
+    }
+    
     data_df$arm <- relevel(data_df$arm, ref=input$selectRefArmInter)
     suppressWarnings(
       if(input$jiter == "None"){
-        browser()
+        #browser()
         p <- ggboxplot(na.omit(data_df), x="stim", y="response", color= "arm", palette = "RdGy",fill = "stim",#c("Red","Blue","Black"),#"RdBu",
                        #fill="white",#"arm",
                        alpha=0.3,)+
@@ -80,11 +82,12 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
                   #fill="white",#"arm",
                   alpha=0.3,
                   add="jitter",
-                  shape = as.numeric(input$jiter))+
+                  shape = "arm")+#as.numeric(input$jiter))+
         #theme_bw() +
         theme_grey() + 
         theme(panel.grid.major.x = element_blank()) +
         scale_colour_manual(values = listCol) +
+        scale_shape_manual(values = listShape) +
         #scale_color_brewer(palette = input$color) +#"RdGy") +
         #scale_fill_viridis_d("Arm: ") +
         #scale_color_viridis_d("Arm: ") +
@@ -116,6 +119,30 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
     #browser()
 
     data_df$time <- relevel(data_df$time, ref=input$selectRefTimeIntra)
+    
+    listRowClass <<- unique(data_df$time)
+    #browser()
+    
+    listCol <- c()
+    for (x in 1:length(listRowClass)) {
+      #browser()
+      cat(paste("\n color of ",listRowClass[x]))
+      #browser()
+      cat(input[[paste0("color",listRowClass[x])]])
+      #newColor <- list(input[[paste0("color",listRowClass[x])]])
+      listCol <- c(listCol,input[[paste0("color",listRowClass[x])]])
+    }
+    
+    listShape <- c()
+    for (x in 1:length(listRowClass)) {
+      #browser()
+      cat(paste("\n shape of ",listRowClass[x]))
+      cat(input[[paste0("shape",listRowClass[x])]])
+      #newColor <- list(input[[paste0("color",listRowClass[x])]])
+      #browser()
+      listShape <- c(listShape,rlang::as_string(input[[paste0("shape",listRowClass[x])]]))
+    }
+    
     #browser()
     #suppressWarnings(
     if(input$jiter == "None"){
@@ -142,12 +169,13 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
                      #fill="white",#"arm",
                      alpha=0.3,
                      add="jitter",
-                     shape = as.numeric(input$jiter))+
+                     shape = "time")+#as.numeric(input$jiter))+
         
         #theme_bw() +
         theme_grey() + 
         theme(panel.grid.major.x = element_blank()) +
         scale_colour_manual(values = listCol) +
+        scale_shape_manual( values = listShape)+
         #scale_color_brewer(palette = input$color)+#"RdGy") +
         #scale_fill_viridis_d("Time-point: ") +
         #scale_color_viridis_d("Time-point: ") +

@@ -21,6 +21,7 @@ RUN R -e 'remotes::install_cran("RSelenium")'
 RUN R -e 'remotes::install_cran("Rlabkey")'
 RUN R -e 'remotes::install_cran("RColorBrewer")'
 RUN R -e 'remotes::install_cran("shinyWidgets")'
+RUN R -e 'remotes::install_cran("colourpicker")'
 #RUN R -e 'remotes::install_cran("golem")'
 RUN R -e 'install.packages("golem")'
 COPY vici_*.tar.gz /app.tar.gz
