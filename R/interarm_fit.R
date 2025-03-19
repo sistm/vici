@@ -34,7 +34,7 @@ interarm_fit <- function(transformed_data, input,resp){
     if(input$ddf == "By default"){
       df_residual <- mgls$dims$N - mgls$dims$p
       res_tab <- data.frame(cbind(s_mgls$tTable[, 1:2], rep(df_residual, nrow(s_mgls$tTable)), s_mgls$tTable[, 4]))
-    }else res_tab <- get_coefmat_gls(mgls, ddf=input$ddf)[, c(1,2,3,5)]
+    }else res_tab <- get_coefmat_gls(mgls, ddf=input$ddf, transformed_data, input)[, c(1,2,3,5)] # TODO add input, data
     colnames(res_tab) <- c("Estimate", "Standard error", "ddf", "p-value")
     sigmas <- stats::coef(mgls$modelStruct$varStruct, uncons = FALSE, allCoef = TRUE) * mgls$sigma
     res_nparam <- renderText({paste0("<b>Number of estimated model parameters:</b> ", nrow(res_tab) + length(sigmas))})

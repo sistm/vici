@@ -13,14 +13,14 @@
 #' @importFrom nlme glsEstimate coef<- 
 #' @importFrom numDeriv hessian jacobian
 
-get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger", "Between-Within")) {
+get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger", "Between-Within"), data, input) { # TODO add input, data
   ddf <- match.arg(ddf)
   p <- length(model$coefficients)
   if (p < 1){
-    tab <- as.matrix(contest1D(model, L = numeric(0L), ddf = ddf))
+    tab <- as.matrix(contest1D(model, L = numeric(0L), ddf = ddf, data, input)) # TODO add input, data
   }else{
     Lmat <- diag(p)
-    tab <- rbindall(lapply(1:p, function(i) contest1D(model, L = Lmat[i, ], ddf = ddf)))
+    tab <- lmerTest:::rbindall(lapply(1:p, function(i) contest1D(model, L = Lmat[i, ], ddf = ddf, data, input))) # TODO add input, data
     rownames(tab) <- names(model$coefficients)
     as.matrix(tab)
   }
@@ -29,7 +29,7 @@ get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger", "B
 
 #from lmerTest:::contest1D.lmerModLmerTest
 contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roger",  "Between-Within"), 
-                       confint = FALSE, level = 0.95, ...){
+                       confint = FALSE, level = 0.95, data, input, ...){ # TODO add input, data
   mk_ttable <- function(estimate, se, ddf) {
     tstat <- (estimate - rhs)/se
     pvalue <- 2 * pt(abs(tstat), df = ddf, lower.tail = FALSE)
@@ -63,8 +63,8 @@ contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roge
   
   if(method == "Between-Within"){
     
-    return(mk_ttable(estimate = estimate, se = sqrt(var_con), 
-                       ddf = ddf_BW(model, L)))
+    return(mk_ttable(estimate = estimate, se = sqrt(var_con),
+                       ddf = ddf_BW(model, L, data, input))) # TODO add input, data
   }
   
 
