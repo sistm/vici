@@ -24,6 +24,7 @@ Imports:
     shiny,
     stats,
     tidyr,
+    Rlabkey,
     utils,
     numDeriv, 
     stringr,
@@ -32,4 +33,4 @@ Imports:
     shinyWidgets
 Suggests: 
     testthat
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.3

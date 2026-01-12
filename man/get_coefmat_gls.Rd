@@ -6,7 +6,9 @@
 \usage{
 get_coefmat_gls(
   model,
-  ddf = c("Satterthwaite", "Kenward-Roger", "Between-Within")
+  ddf = c("Satterthwaite", "Kenward-Roger", "Between-Within"),
+  data,
+  input
 )
 }
 \arguments{
