@@ -61,6 +61,53 @@ app_server <- function(input, output, session) {
       utils::write.table(session$userData$res_data,file,row.names = TRUE, sep = "\t", quote = FALSE)
     }
   )
+  library('Rlabkey')
+  observe({
+    query <- parseQueryString(session$clientData$url_search)
+    if (!is.null(query[['key']])) {
+
+      #updateSliderInput(session, "bins", value = query[['bins']])
+      key <<- query[['key']]
+      subF <<- query[['sub']]
+      assay <<- query[['file']]
+      set <<- paste0("apikey|",key)
+      type <- query[['type']]
+      assayType <<- query[['assayType']]
+
+      Rlabkey::labkey.setDefaults(apiKey=key)
+      Rlabkey::labkey.setDefaults(baseUrl = "https://labk.bph.u-bordeaux.fr/")
+      if(type=="assay"){
+        labkey.data <- labkey.selectRows(
+          baseUrl="https://labk.bph.u-bordeaux.fr/",
+          #folderPath="/EBOVAC/assays/EBL2001/ICS",
+          folderPath=subF,  #"/VASI/VICI/SISTM",
+          schemaName=paste0("assay.",assayType,".",assay),#"assay.General.Vici_Sistm",
+          queryName="Data",
+          viewName="",
+          colSort="",
+          #colFilter=makeFilter(c("Run/RowId", "EQUAL", "140"),c("Antigen", "NOT_EQUAL_OR_MISSING", "Negative control")),
+          containerFilter=NULL
+        )
+      }
+      if(type=="dataset"){
+        labkey.data <- labkey.selectRows(
+          baseUrl="https://labk.bph.u-bordeaux.fr/",
+          #folderPath="/EBOVAC/assays/EBL2001/ICS",
+          folderPath=subF,  #"/VASI/VICI/SISTM",
+          schemaName="study",#paste0("assay.General.",assay),#"assay.General.Vici_Sistm",
+          queryName=assay,
+          viewName="",
+          colSort="",
+          #colFilter=makeFilter(c("Run/RowId", "EQUAL", "140"),c("Antigen", "NOT_EQUAL_OR_MISSING", "Negative control")),
+          containerFilter=NULL
+        )
+      }
+
+      #cat("Result request => ")
+      #cat(as.character(labkey.data),"\n")
+      data$df <<- labkey.data
+    }
+  })
   #Module return input so sub module can access it
   inpt <- callModule(module = mod_settings_pan_server, id = "settings_pan_ui_1",data = data,parent = session)
 
