@@ -22,6 +22,7 @@
 #'@import ggplot2
 #'@import ggpubr
 #'@import RColorBrewer
+#'@import rlang
 
 boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, baseline=NULL,fill=FALSE){
   
@@ -43,6 +44,8 @@ boxplot_VICI <- function(data_df, pval_2plot, response_name, input, inter=TRUE, 
       }
     )
   }else{
+    #browser()
+
     data_df$time <- relevel(data_df$time, ref=input$selectRefTimeIntra)
     
     if(input$jiter == "None"){

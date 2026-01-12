@@ -123,6 +123,7 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
             origin$output$res_error <- reactive(paste0("Too many observation in time point ", parent$selectRefTimeIntra,
                                                 "... Perhaps the Arm to analyzed was not specified"))
           }else{
+            #browser()
             for(i in ncol(transformed_data):3){
               
               if(!is.numeric(transformed_data[, 3])){
@@ -183,6 +184,7 @@ mod_modelfit_server <- function(input, output, session, datas,parent,origin){
                                                                  breaks = c(0, 0.001, 0.01, 0.05, 0.1, 0.5, 1),
                                                                  right = FALSE)
               }
+              
               heatmap_data2plot[[response]] <- do.call(rbind.data.frame,
                                                        heatmap_data2plot[[response]])
             }

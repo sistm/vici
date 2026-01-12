@@ -61,7 +61,6 @@ app_server <- function(input, output, session) {
       utils::write.table(session$userData$res_data,file,row.names = TRUE, sep = "\t", quote = FALSE)
     }
   )
-
   #Module return input so sub module can access it
   inpt <- callModule(module = mod_settings_pan_server, id = "settings_pan_ui_1",data = data,parent = session)
 
