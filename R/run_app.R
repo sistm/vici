@@ -11,7 +11,7 @@
 #'
 #' @export
 #' @importFrom shiny runApp
-run_app <- function(host="127.0.0.1", port=3838, ...) {
+run_app <- function(host="0.0.0.0", port=8080, ...) {
   shiny::runApp(system.file("app", package = "vici"), port=port, host=host, ...)
 }
 

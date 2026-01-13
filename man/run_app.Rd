@@ -4,7 +4,7 @@
 \alias{run_app}
 \title{Launch VICI Shiny App}
 \usage{
-run_app(host = "127.0.0.1", port = 3838, ...)
+run_app(host = "0.0.0.0", port = 8080, ...)
 }
 \arguments{
 \item{host}{Default is "127.0.0.1", see \link[shiny]{runApp} for details.}
