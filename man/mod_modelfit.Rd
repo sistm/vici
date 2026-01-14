@@ -7,7 +7,7 @@
 \usage{
 mod_modelfit_ui(id)
 
-mod_modelfit_server(input, output, session, data, parent, origin)
+mod_modelfit_server(input, output, session, datas, parent, origin)
 }
 \arguments{
 \item{id}{shiny id}
@@ -18,7 +18,7 @@ mod_modelfit_server(input, output, session, data, parent, origin)
 
 \item{session}{internal}
 
-\item{data}{internal}
+\item{datas}{internal}
 
 \item{parent}{internal}
 

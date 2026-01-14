@@ -12,7 +12,6 @@ app_server <- function(input, output, session) {
   output$mod <- reactive(NULL)
   output$mod_display <- reactive(FALSE)
   output$res_sentence <- reactive(NULL)
-  #output$res_tab <- reactive(NULL)
   output$res_error <- reactive(NULL)
   output$res_lik <- reactive(NULL)
   output$heatmap <- reactive(NULL)
@@ -66,7 +65,7 @@ app_server <- function(input, output, session) {
   observe({
     query <- parseQueryString(session$clientData$url_search)
     if (!is.null(query[['key']])) {
-      
+
       #updateSliderInput(session, "bins", value = query[['bins']])
       key <<- query[['key']]
       subF <<- query[['sub']]
@@ -74,9 +73,9 @@ app_server <- function(input, output, session) {
       set <<- paste0("apikey|",key)
       type <- query[['type']]
       assayType <<- query[['assayType']]
-      
-      Rlabkey::labkey.setDefaults(apiKey=key)#"apikey|73ea3ff0973f38d52f5b1bbd8980f62c")
-      Rlabkey::labkey.setDefaults(baseUrl = "https://labk.bph.u-bordeaux.fr/")#(baseUrl="https://labkey.bph.u-bordeaux.fr:8443/")
+
+      Rlabkey::labkey.setDefaults(apiKey=key)
+      Rlabkey::labkey.setDefaults(baseUrl = "https://labk.bph.u-bordeaux.fr/")
       if(type=="assay"){
         labkey.data <- labkey.selectRows(
           baseUrl="https://labk.bph.u-bordeaux.fr/",
@@ -103,41 +102,34 @@ app_server <- function(input, output, session) {
           containerFilter=NULL
         )
       }
-      
+
       #cat("Result request => ")
       #cat(as.character(labkey.data),"\n")
       data$df <<- labkey.data
     }
   })
-  
-  #cat("Data: \n")
-  #cat(str(data))
   #Module return input so sub module can access it
   inpt <- callModule(module = mod_settings_pan_server, id = "settings_pan_ui_1",data = data,parent = session)
 
-  #browser()
   callModule(module = mod_modelfit_server, id = "modelfit_ui_1",datas = data,parent = inpt,origin = session)
-  # cat("before write Latex", "\n")
    observeEvent({
-     input$selectModel
-     input$selectStim
-     input$selectRefStim
-     input$selectArmInter 
-     input$selectArmIntra
-     input$selectRefArmInter 
-     input$selectRefArmIntra
-     input$selectTimeInter 
-     input$selectTimeIntra
-     input$selectRefTimeInter 
-     input$selectRefTimeIntra
-     }, {
+     input$selectModel;
+     input$selectStim;
+     input$selectRefStim;
+     input$selectArmInter; 
+     input$selectArmIntra;
+     input$selectRefArmInter ;
+     input$selectRefArmIntra;
+     input$selectTimeInter ;
+     input$selectTimeIntra;
+     input$selectRefTimeInter ;
+     input$selectRefTimeIntra}, {
        #appelé data load
 
        # write LaTeX model ----
-      # cat("can write Latex", "\n")
+       
        if(input$selectModel == 1 & input$selectRefStim != '' & input$selectRefArmInter != '' & input$selectStim !='' &
           input$selectArmInter %in% colnames(data$df) & input$selectStim %in% colnames(data$df)){
-         # cat("write Latex Inter", "\n")
          output$mod_display <- reactive(TRUE)
          arm_coefs <- NULL
          for(a in levels(data$df[, input$selectArmInter])){
@@ -201,7 +193,6 @@ app_server <- function(input, output, session) {
            )
          })
        }else{
-         # cat("no write Latex", "\n")
          output$mod <- reactive(NULL)
          output$mod_display <- reactive(FALSE)
        }

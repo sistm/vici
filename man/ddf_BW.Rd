@@ -4,7 +4,7 @@
 \alias{ddf_BW}
 \title{Between-Within functions to obtain Denominator degrees of freedom}
 \usage{
-ddf_BW(object, L)
+ddf_BW(object, L, data, input)
 }
 \description{
 Between-Within functions to obtain Denominator degrees of freedom

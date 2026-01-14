@@ -1,19 +1,26 @@
-#' Functions to obtain coef, ddf, p-value
-
+#' Functions to obtain coefficient, degree of freedom, p-value
+#' 
+#' This function allows to calculate the different approximations of degrees of 
+#' freedom and returns the table of results in the app.
+#' 
+#' @param model a \code{gls} model.
+#' @param ddf degrees of freedom approximation.
+#' 
+#' @return a matrix containing coefficient, degrees of freedom and p-value 
 #' @keywords internal
+#' 
 #' @importFrom stats vcov sigma pt 
-#' @importFrom nlme glsEstimate 
+#' @importFrom nlme glsEstimate coef<- 
 #' @importFrom numDeriv hessian jacobian
-#' @import lmerTest
 
-get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger", "Between-Within")) {
+get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger", "Between-Within"), data, input) { # TODO add input, data
   ddf <- match.arg(ddf)
   p <- length(model$coefficients)
   if (p < 1){
-    tab <- as.matrix(contest1D(model, L = numeric(0L), ddf = ddf))
+    tab <- as.matrix(contest1D(model, L = numeric(0L), ddf = ddf, data, input)) # TODO add input, data
   }else{
     Lmat <- diag(p)
-    tab <- lmerTest:::rbindall(lapply(1:p, function(i) contest1D(model, L = Lmat[i, ], ddf = ddf)))
+    tab <- lmerTest:::rbindall(lapply(1:p, function(i) contest1D(model, L = Lmat[i, ], ddf = ddf, data, input))) # TODO add input, data
     rownames(tab) <- names(model$coefficients)
     as.matrix(tab)
   }
@@ -22,12 +29,12 @@ get_coefmat_gls <- function (model, ddf = c("Satterthwaite", "Kenward-Roger", "B
 
 #from lmerTest:::contest1D.lmerModLmerTest
 contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roger",  "Between-Within"), 
-                       confint = FALSE, level = 0.95, ...){
+                       confint = FALSE, level = 0.95, data, input, ...){ # TODO add input, data
   mk_ttable <- function(estimate, se, ddf) {
     tstat <- (estimate - rhs)/se
     pvalue <- 2 * pt(abs(tstat), df = ddf, lower.tail = FALSE)
     if (confint) {
-      ci <- lmerTest:::waldCI(estimate, se, ddf, level = level)
+      ci <- waldCI(estimate, se, ddf, level = level)
       data.frame(Estimate = estimate, `Std. Error` = se, 
                  df = ddf, `t value` = tstat, lower = unname(ci[, 
                                                                 "lower"]), upper = unname(ci[, "upper"]), `Pr(>|t|)` = pvalue, 
@@ -54,24 +61,10 @@ contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roge
   var_con <- sum(L * (model$varBeta %*% L))
   
   
-  if (method == "Kenward-Roger") {
-    # browser()
-    ans <- get_KR1D(model, L)
-    if (!ans$error) {
-      return(mk_ttable(estimate = estimate, se = sqrt(ans$var_con), 
-                       ddf = ans$ddf))
-    }
-    else {
-      warning("Unable to compute Kenward-Roger t-test: using Satterthwaite instead", 
-              call. = FALSE)
-      if (!inherits(model, "gls")) 
-        stop("'model' not a 'gls'")
-    }
-  }  else if(method == "Between-Within"){
+  if(method == "Between-Within"){
     
-    # browser()
-    return(mk_ttable(estimate = estimate, se = sqrt(var_con), 
-                       ddf = ddf_BW(model, L)))
+    return(mk_ttable(estimate = estimate, se = sqrt(var_con),
+                       ddf = ddf_BW(model, L, data, input))) # TODO add input, data
   }
   
 
@@ -86,11 +79,6 @@ contest1D <- function (model, L, rhs = 0, ddf = c("Satterthwaite", "Kenward-Roge
 qform <- function (L, V){
   sum(L * (V %*% L))
 }
-
-
-
-
-
 
 
 # use glsEstimate and to compute the FULL deviance

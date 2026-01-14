@@ -1,10 +1,11 @@
 #'Fitting GLS For Intra-Arm Setting
 #'
-#'
 #' @keywords internal
 #' @importFrom stats na.omit
+#' @importFrom nlme varIdent
+
 intraarm_fit <- function(transformed_data, tested_time, input,resp){
-  #browser()
+  
   res_tab <- NULL
   res_lik <- NULL
   res_error <- NULL
@@ -20,7 +21,7 @@ intraarm_fit <- function(transformed_data, tested_time, input,resp){
   mgls <- mygls(myformul,
                   data = transformed_data,
                   # correlation =  nlme::corCompSymm(form= ~ 1 | stim),
-                  weights = nlme::varIdent(value = c("1" = 1), form = ~ 1 | stim),
+                  weights = varIdent(value = c("1" = 1), form = ~ 1 | stim),
                   method="REML", na.action = stats::na.omit
   )
 
@@ -32,7 +33,7 @@ intraarm_fit <- function(transformed_data, tested_time, input,resp){
     if(input$ddf == "By default"){
       df_residual <- mgls$dims$N - mgls$dims$p
       res_tab <- data.frame(cbind(s_mgls$tTable[, 1:2], rep(df_residual, nrow(s_mgls$tTable)), s_mgls$tTable[, 4]))
-    }else res_tab <- get_coefmat_gls(mgls, ddf=input$ddf)[, c(1,2,3,5)]
+    }else res_tab <- get_coefmat_gls(mgls, ddf=input$ddf, transformed_data, input)[, c(1,2,3,5)] # TODO add input, data
     colnames(res_tab) <- c("Estimate", "Standard error", "ddf", "p-value")
     sigmas <- stats::coef(mgls$modelStruct$varStruct, uncons = FALSE, allCoef = TRUE) * mgls$sigma
     res_nparam <- renderText({paste0("<b>Number of estimated model parameters:</b> ", nrow(res_tab) + length(sigmas))})
